@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <title>ببینتو · جزئیات</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <link rel="shortcut icon" href="favicon.webp" type="image/x-icon">
+
+    <style>
+        [x-cloak] { display: none !important; }
+
+        button, a {
+        cursor: pointer;
+      }
+    </style>
+
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Vazirmatn", system-ui, sans-serif;
+            --font-heading: "Vazirmatn", sans-serif;
+            --color-bg: #09090b;
+            --color-surface: #18181b;
+            --color-surface-highlight: #27272a;
+            --color-text-primary: #f4f4f5;
+            --color-text-secondary: #a1a1aa;
+            --color-border: #27272a;
+            --color-accent: #10b981;
+            --color-accent-text: #020617;
+        }
+        html.light {
+            --color-bg: #f4f4f5;
+            --color-surface: #ffffff;
+            --color-surface-highlight: #f4f4f5;
+            --color-text-primary: #18181b;
+            --color-text-secondary: #52525b;
+            --color-border: #e4e4e7;
+            --color-accent: #0f766e;
+            --color-accent-text: #ffffff;
+        }
+        @layer utilities {
+            .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+            .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+            .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #3f3f46; border-radius: 4px; }
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: #52525b; }
+            .light .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #d4d4d8; }
+            .light .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: #a1a1aa; }
+        }
+    </style>
+</head>
+
+<body
+    x-data="detailsPage()"
+    x-init="init()"
+    @scroll.window="showBackToTop = (window.scrollY > 400)"
+    class="bg-bg text-text-primary font-sans antialiased selection:bg-accent selection:text-accent-text"
+>
+<div class="min-h-screen flex flex-col">
+    <div class="flex-grow p-4 sm:p-6 lg:p-8">
+        <!-- HEADER -->
+        <header class="w-full max-w-7xl mx-auto flex items-center justify-between gap-4 mb-8">
+            <a href="/" class="flex items-center gap-3 group">
+                <div class="h-10 w-10 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold tracking-tighter text-lg shadow-lg group-hover:scale-105 transition-transform">
+                  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
+<dotlottie-wc src="https://lottie.host/da80b7f6-c288-48b9-a3dc-376f9d276f06/W739BOuqrX.lottie" style="width: 300px;height: 300px" autoplay loop></dotlottie-wc>
+                </div>
+                <div><h1 class="text-lg font-bold tracking-tight text-text-primary">ببینتو</h1><p class="text-xs text-text-secondary">صفحهٔ جزئیات فیلم / سریال</p></div>
+            </a>
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-text-secondary" x-text="theme === 'dark' ? 'تاریک' : 'روشن'"></span>
+                <button @click="toggleTheme()" class="w-12 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg focus:ring-accent" :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'">
+                    <span class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white" :class="theme === 'light' ? 'translate-x-6' : 'translate-x-0'"></span>
+                </button>
+            </div>
+        </header>
+
+        <main class="w-full max-w-7xl mx-auto flex-1 flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+                <button @click="goBack()" class="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                    بازگشت
+                </button>
+                <template x-if="item">
+                    <div class="flex items-center gap-2 text-xs text-text-secondary">
+                        <span x-text="type === 'series' ? 'سریال' : 'فیلم'"></span><span class="w-1 h-1 rounded-full bg-zinc-500"></span><span x-text="item.year || '—'"></span>
+                        <template x-if="item.imdb"><span class="flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-zinc-500"></span><span x-text="'IMDb ' + item.imdb"></span></span></template>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Skeleton Loading -->
+            <template x-if="loading">
+                <section class="grid gap-8 lg:grid-cols-[300px_1fr] animate-pulse">
+                    <aside class="space-y-4"><div class="aspect-[2/3] bg-surface-highlight rounded-xl"></div><div class="h-32 bg-surface-highlight rounded-xl"></div></aside>
+                    <div class="space-y-6 mt-2"><div class="space-y-3"><div class="h-8 bg-surface-highlight rounded-lg w-3/4"></div><div class="h-4 bg-surface-highlight rounded-lg w-1/2"></div></div><div class="h-40 bg-surface-highlight rounded-xl"></div><div class="h-48 bg-surface-highlight rounded-xl"></div></div>
+                </section>
+            </template>
+            
+            <!-- Error / Empty State -->
+            <template x-if="error">
+                <div class="flex-1 flex flex-col items-center justify-center text-center p-4">
+                    <div class="bg-surface p-8 rounded-2xl border border-border max-w-lg w-full">
+                        <svg class="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 class="text-xl font-semibold mb-2">خطایی رخ داد</h3>
+                        <p class="text-text-secondary mb-6" x-text="error"></p>
+                        <a href="/" class="bg-accent text-accent-text font-semibold px-6 py-3 rounded-lg hover:opacity-80 transition-opacity">بازگشت به صفحه اصلی</a>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Main Content -->
+            <template x-if="!loading && item">
+                <section class="grid gap-8 lg:grid-cols-[300px_1fr]">
+                    <aside class="space-y-4 lg:sticky lg:top-8 h-fit">
+                        <div class="relative rounded-xl overflow-hidden shadow-lg shadow-black/20 aspect-[2/3] bg-surface-highlight flex items-center justify-center">
+                            <img :src="item.image || item.cover" @error="$event.target.style.display = 'none'; $event.target.closest('.relative').innerHTML += '<p class=\'text-sm text-text-secondary\'>تصویر موجود نیست</p>'" class="w-full h-full object-contain" loading="lazy">
+                            <div x-show="item.imdb" class="absolute top-3 right-3 flex items-center gap-1 bg-yellow-400 text-black font-bold text-xs px-2 py-1 rounded-md shadow-lg"><span>IMDb</span><span x-text="item.imdb"></span></div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-surface border border-border light:shadow-sm space-y-3 text-sm">
+                            <div class="flex justify-between items-center"><span class="text-text-secondary">سال:</span><span class="font-medium" x-text="item.year || 'نامشخص'"></span></div>
+                            <div class="flex justify-between items-center"><span class="text-text-secondary">کشور:</span><span class="font-medium text-right" x-text="displayCountry(item) || '—'"></span></div>
+                            <div x-show="item.classification" class="flex justify-between items-center"><span class="text-text-secondary">رده سنی:</span><span class="font-medium" x-text="item.classification !== 'N/A' ? item.classification : 'نامشخص'"></span></div>
+                            <div x-show="item.duration" class="flex justify-between items-center"><span class="text-text-secondary">مدت:</span><span class="font-medium" x-text="item.duration !== 'N/A' ? item.duration + ' دقیقه' : 'نامشخص'"></span></div>
+                            <div x-show="item.rating" class="flex justify-between items-center"><span class="text-text-secondary">امتیاز برنامه:</span><span class="font-medium flex items-center gap-1">⭐ <span x-text="item.rating"></span></span></div>
+                        </div>
+                        <section x-show="type === 'movie' && item.sources && item.sources.length" class="p-4 rounded-xl bg-surface border border-border light:shadow-sm">
+                            <h3 class="text-base font-semibold mb-3">لینک‌های دانلود</h3>
+                            <div class="flex flex-col gap-2 max-h-60 overflow-y-auto custom-scrollbar pr-1">
+                                <template x-for="src in item.sources" :key="src.id">
+                                    <a :href="src.url" target="_blank" rel="noopener" class="flex items-center justify-between text-sm px-3 py-2 rounded-lg bg-surface-highlight hover:bg-accent hover:text-accent-text group transition-all duration-200 border border-border">
+                                        <div class="flex items-center gap-2"><span class="font-semibold text-accent group-hover:text-accent-text transition-colors" x-text="src.quality"></span><span class="text-xs text-text-secondary group-hover:text-accent-text transition-colors" x-text="src.type.toUpperCase()"></span></div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-text-secondary group-hover:text-accent-text transition-all transform opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                    </a>
+                                </template>
+                            </div>
+                        </section>
+                    </aside>
+                    <div class="space-y-6">
+                        <header>
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="flex-grow">
+                                    <h2 class="text-3xl lg:text-4xl font-bold font-heading" x-text="displayTitle(item)"></h2>
+                                    <p class="text-sm text-text-secondary mt-1" x-show="item.original_title" x-text="item.original_title"></p>
+                                </div>
+                                <button @click="toggleWatchlist(item.id)" title="افزودن به لیست من" class="p-2 rounded-full hover:bg-surface-highlight transition-colors flex-shrink-0">
+                                    <svg class="w-7 h-7" :class="isInWatchlist(item.id) ? 'fill-current text-red-500' : 'text-text-secondary'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.5l1.318-1.182a4.5 4.5 0 116.364 6.364L12 21l-7.682-7.318a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                            </div>
+                            <div class="mt-4 flex flex-wrap gap-2"><template x-for="g in displayGenres(item)" :key="g"><span class="text-xs text-text-secondary bg-surface-highlight px-3 py-1 rounded-full border border-border" x-text="g"></span></template></div>
+                        </header>
+                        <section x-show="plotText(item)" class="p-4 rounded-xl bg-surface border border-border light:shadow-sm"><h3 class="text-base font-semibold mb-2">خلاصه داستان</h3><p class="text-sm leading-7 text-text-primary whitespace-pre-line" x-text="plotText(item)"></p></section>
+                        <section x-show="metaLines(item).length" class="p-4 rounded-xl bg-surface border border-border light:shadow-sm"><h3 class="text-base font-semibold mb-3">اطلاعات بیشتر</h3><ul class="space-y-2 text-sm text-text-primary"><template x-for="(line, idx) in metaLines(item)" :key="idx"><li class="border-b border-border last:border-0 pb-2 mb-2" x-text="line"></li></template></ul></section>
+                        <section x-show="type === 'series' && seasons && seasons.length" class="p-4 rounded-xl bg-surface border border-border light:shadow-sm">
+                            <h3 class="text-base font-semibold mb-3">فصل‌ها و قسمت‌ها</h3>
+                            <div class="space-y-3 max-h-[500px] overflow-y-auto custom-scrollbar pr-1">
+                                <template x-for="season in seasons" :key="season.id">
+                                    <div class="border border-border rounded-xl overflow-hidden">
+                                        <button @click="toggleSeason(season.id)" class="w-full flex items-center justify-between px-4 py-3 bg-surface-highlight hover:bg-zinc-700/60 light:hover:bg-zinc-200/80 transition-colors">
+                                            <div class="flex items-center gap-3"><span class="font-bold text-accent" x-text="season.title"></span><span class="text-xs text-text-secondary" x-text="season.episodes ? (season.episodes.length + ' قسمت') : ''"></span></div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-text-secondary transition-transform duration-300" :class="openSeasons.includes(season.id) ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                                        </button>
+                                        <div x-show="openSeasons.includes(season.id)" x-collapse class="p-2 bg-surface">
+                                            <div class="p-2 space-y-2">
+                                                <template x-for="ep in season.episodes" :key="ep.id">
+                                                    <div class="rounded-lg bg-surface-highlight px-3 py-2 text-sm">
+                                                        <div class="flex items-center justify-between"><span class="font-medium" x-text="ep.title"></span><span x-show="ep.duration" class="text-xs text-text-secondary" x-text="ep.duration + ' دقیقه'"></span></div>
+                                                        <p x-show="ep.description" class="text-xs text-text-secondary mt-1 border-t border-border pt-2" x-text="ep.description"></p>
+                                                        <div class="flex flex-wrap gap-2 mt-2 pt-2 border-t border-border" x-show="ep.sources && ep.sources.length">
+                                                            <template x-for="src in ep.sources" :key="src.id">
+                                                                <a :href="src.url" target="_blank" rel="noopener" class="px-2 py-1 rounded-md bg-accent text-accent-text text-xs font-semibold hover:opacity-80 transition-opacity flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg><span x-text="src.quality"></span></a>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </template>
+        </main>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button x-show="showBackToTop" @click="window.scrollTo({ top: 0, behavior: 'smooth' })" x-transition class="fixed bottom-6 right-6 bg-accent text-accent-text p-3 rounded-full shadow-lg hover:scale-110 transition-transform z-20">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+    </button>
+    
+    <!-- FOOTER -->
+    <footer class="w-full py-8 mt-auto border-t border-border bg-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4"><p class="text-sm text-text-secondary">&copy; <span x-text="new Date().getFullYear()"></span> ببینتو. تمامی حقوق محفوظ است.</p></div>
+    </footer>
+</div>
+
+<script>
+    function detailsPage() {
+        return {
+            // --- Core ---
+            baseUrl: 'https://cinemaplus-app.vercel.app', theme: 'dark', showBackToTop: false,
+            // --- State ---
+            loading: true, error: '',
+            // --- Data ---
+            item: null, type: 'movie', seasons: [], openSeasons: [], watchlist: [],
+            
+            init() {
+                this.loadTheme();
+                this.loadWatchlist();
+                this.fetchData();
+            },
+            loadTheme() { const saved = localStorage.getItem('cinemaplus-theme'); this.theme = (saved === 'light' || saved === 'dark') ? saved : 'dark'; document.documentElement.className = this.theme; },
+            toggleTheme() { this.theme = this.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('cinemaplus-theme', this.theme); document.documentElement.className = this.theme; },
+            getQueryParam(name) { return new URLSearchParams(window.location.search).get(name); },
+            goBack() { document.referrer && document.referrer.includes(window.location.hostname) ? history.back() : (window.location.href = '/'); },
+            
+            // --- Data Fetching ---
+            async fetchJson(path) { try { const res = await fetch(new URL(path, this.baseUrl)); if (!res.ok) throw new Error('Network response was not ok'); return res.json(); } catch (error) { throw error; } },
+            async fetchData() {
+                this.loading = true;
+                const id = this.getQueryParam('id');
+                this.type = this.getQueryParam('type') === 'series' ? 'series' : 'movie';
+                if (!id) { this.error = 'شناسه آیتم نامعتبر است. لطفاً از صفحه اصلی یک عنوان را انتخاب کنید.'; this.loading = false; return; }
+                try {
+                    const raw = localStorage.getItem('cinemaplus-last-item');
+                    const parsed = JSON.parse(raw);
+                    if (parsed && String(parsed.id) === String(id)) this.item = parsed;
+                } catch (e) {}
+                if (!this.item) { this.error = 'برای مشاهده جزئیات، لطفاً از صفحه اصلی وارد شوید.'; this.loading = false; return; }
+                if (this.type === 'series') {
+                    try { const data = await this.fetchJson(`/api/seasons/${id}`); this.seasons = Array.isArray(data) ? data : [data]; } catch (e) { console.error('Failed to fetch seasons', e); }
+                }
+                this.loading = false;
+            },
+            
+            // --- Watchlist ---
+            loadWatchlist() { try { const list = localStorage.getItem('cinemaWatchlist'); this.watchlist = list ? JSON.parse(list) : []; } catch(e) { this.watchlist = []; } },
+            saveWatchlist() { localStorage.setItem('cinemaWatchlist', JSON.stringify(this.watchlist)); },
+            isInWatchlist(id) { return this.watchlist.includes(id); },
+            toggleWatchlist(id) {
+                if (this.isInWatchlist(id)) { this.watchlist = this.watchlist.filter(itemId => itemId !== id); } 
+                else { this.watchlist.push(id); }
+                this.saveWatchlist();
+            },
+
+            // --- Display Helpers ---
+            toggleSeason(id) { if (this.openSeasons.includes(id)) { this.openSeasons = this.openSeasons.filter(s => s !== id); } else { this.openSeasons.push(id); } },
+            parseDescription(desc = '') { const parts = desc.split(/\r?\n\r?\n/).map(p => p.trim()).filter(Boolean); const plotIndex = parts.findIndex(p => p.startsWith('خلاصه داستان')); if (plotIndex !== -1) { return { meta: parts.slice(0, plotIndex), plot: parts.slice(plotIndex + 1).join('\n\n') }; } return { meta: [], plot: desc }; },
+            metaLines(item) { return item?.description ? this.parseDescription(item.description).meta : []; },
+            plotText(item) { if (!item) return ''; if (item.plot) return item.plot; if (item.description) { const { plot } = this.parseDescription(item.description); return plot || item.description; } return 'خلاصه داستانی برای این عنوان ثبت نشده است.'; },
+            displayTitle(item) { return item?.title || item?.name || 'بدون عنوان'; },
+            displayCountry(item) { return Array.isArray(item?.country) ? item.country.map(c => c.title || c).join('، ') : ''; },
+            displayGenres(item) { return Array.isArray(item?.genres) ? item.genres.map(g => g.title || g) : []; }
+        };
+    }
+</script>
+</body>
+</html>
