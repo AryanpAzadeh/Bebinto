@@ -1,291 +1,784 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>ببینتو · خانه</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
 
-    <link rel="shortcut icon" href="favicon.webp" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.webp" type="image/x-icon" />
 
     <style>
-        [x-cloak] { display: none !important; }
+      [x-cloak] {
+        display: none !important;
+      }
 
-        button, a {
+      button,
+      a {
         cursor: pointer;
       }
     </style>
 
     <style type="text/tailwindcss">
-        @theme {
-            --font-sans: "Vazirmatn", system-ui, sans-serif;
-            --font-heading: "Vazirmatn", sans-serif;
-            --color-bg: #09090b;
-            --color-surface: #18181b;
-            --color-surface-highlight: #27272a;
-            --color-text-primary: #f4f4f5;
-            --color-text-secondary: #a1a1aa;
-            --color-border: #27272a;
-            --color-accent: #10b981;
-            --color-accent-text: #020617;
+      @theme {
+        --font-sans: "Vazirmatn", system-ui, sans-serif;
+        --font-heading: "Vazirmatn", sans-serif;
+        --color-bg: #09090b;
+        --color-surface: #18181b;
+        --color-surface-highlight: #27272a;
+        --color-text-primary: #f4f4f5;
+        --color-text-secondary: #a1a1aa;
+        --color-border: #27272a;
+        --color-accent: #10b981;
+        --color-accent-text: #020617;
+      }
+      html.light {
+        --color-bg: #f4f4f5;
+        --color-surface: #ffffff;
+        --color-surface-highlight: #f4f4f5;
+        --color-text-primary: #18181b;
+        --color-text-secondary: #52525b;
+        --color-border: #e4e4e7;
+        --color-accent: #0f766e;
+        --color-accent-text: #ffffff;
+      }
+      @layer utilities {
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
         }
-        html.light {
-            --color-bg: #f4f4f5;
-            --color-surface: #ffffff;
-            --color-surface-highlight: #f4f4f5;
-            --color-text-primary: #18181b;
-            --color-text-secondary: #52525b;
-            --color-border: #e4e4e7;
-            --color-accent: #0f766e;
-            --color-accent-text: #ffffff;
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
         }
-        @layer utilities {
-            .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-            .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-            .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #3f3f46; border-radius: 4px; }
-            .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: #52525b; }
-            .light .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #d4d4d8; }
-            .light .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: #a1a1aa; }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: #3f3f46;
+          border-radius: 4px;
         }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background-color: #52525b;
+        }
+        .light .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: #d4d4d8;
+        }
+        .light .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background-color: #a1a1aa;
+        }
+      }
     </style>
-</head>
+  </head>
 
-<body
+  <body
     x-data="cinemaApp()"
     x-init="init()"
     @scroll.window="showBackToTop = (window.scrollY > 400)"
     class="bg-bg text-text-primary font-sans antialiased selection:bg-accent selection:text-accent-text"
->
-<div class="min-h-screen flex flex-col">
-    <div class="flex-grow flex justify-center p-4 sm:p-6 lg:p-8">
-        <div class="w-full max-w-screen-2xl grid gap-8 lg:grid-cols-[280px_1fr]">
+  >
+    <div class="min-h-screen flex flex-col">
+      <div class="flex-grow flex justify-center p-4 sm:p-6 lg:p-8">
+        <div
+          class="w-full max-w-screen-2xl grid gap-8 lg:grid-cols-[280px_1fr]"
+        >
+          <!-- SIDEBAR -->
+          <aside
+            class="flex flex-col gap-6 order-2 lg:order-1 h-fit lg:sticky lg:top-8"
+          >
+            <header class="flex items-center gap-3">
+              <a
+                href="https://aryanpazadeh.github.io/BebinTo/"
+                class="flex items-center gap-3 group"
+              >
+                <div
+                  class="h-10 w-10 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold tracking-tighter text-lg shadow-lg"
+                >
+                  <script
+                    src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js"
+                    type="module"
+                  ></script>
+                  <dotlottie-wc
+                    src="https://lottie.host/da80b7f6-c288-48b9-a3dc-376f9d276f06/W739BOuqrX.lottie"
+                    style="width: 300px; height: 300px"
+                    autoplay
+                    loop
+                  ></dotlottie-wc>
+                </div>
+                <h1
+                  class="text-xl font-bold font-heading tracking-tight text-text-primary"
+                >
+                  ببینتو
+                </h1>
+              </a>
+            </header>
 
-            <!-- SIDEBAR -->
-            <aside class="flex flex-col gap-6 order-2 lg:order-1 h-fit lg:sticky lg:top-8">
-                <header class="flex items-center gap-3">
-                    <div class="h-10 w-10 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold tracking-tighter text-lg shadow-lg">
-                      <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
-<dotlottie-wc src="https://lottie.host/da80b7f6-c288-48b9-a3dc-376f9d276f06/W739BOuqrX.lottie" style="width: 300px;height: 300px" autoplay loop></dotlottie-wc>
+            <!-- Search -->
+            <form @submit.prevent="redirectToSearchPage()" class="relative">
+              <input
+                type="text"
+                x-model.debounce.300ms="searchQuery"
+                placeholder="جستجوی فیلم و سریال..."
+                class="w-full bg-surface border border-border rounded-lg py-2.5 pr-10 pl-4 text-sm text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent/80 transition-all"
+              />
+              <div
+                class="absolute inset-y-0 right-3 flex items-center pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-text-secondary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </div>
+            </form>
+
+            <!-- Inline Search Results -->
+            <div
+              x-show="searchQuery"
+              x-transition
+              x-cloak
+              class="flex flex-col gap-2 max-h-96 overflow-y-auto custom-scrollbar -mt-4 p-2 bg-surface-highlight rounded-lg border border-border"
+            >
+              <template x-if="loadingSearch"
+                ><span
+                  class="text-xs text-text-secondary text-center p-2 animate-pulse"
+                  >در حال جستجو...</span
+                ></template
+              >
+              <template x-for="item in searchResults" :key="'s-'+item.id">
+                <div
+                  @click="goToDetails(item)"
+                  class="flex items-center gap-3 p-2 rounded-md hover:bg-surface transition-colors cursor-pointer group"
+                >
+                  <img
+                    :src="item.image"
+                    class="w-10 h-14 object-cover rounded bg-surface"
+                    @error="$event.target.style.display='none'"
+                  />
+                  <div class="min-w-0 flex-1">
+                    <div
+                      class="text-sm font-medium text-text-primary truncate"
+                      x-text="displayTitle(item)"
+                    ></div>
+                    <div
+                      class="text-xs text-text-secondary"
+                      x-text="displayYear(item)"
+                    ></div>
+                  </div>
+                </div>
+              </template>
+              <template x-if="!loadingSearch && searchResults.length > 0">
+                <button
+                  @click="redirectToSearchPage()"
+                  class="w-full text-center p-2 mt-2 text-sm bg-accent text-accent-text rounded-md hover:opacity-90 transition-opacity"
+                >
+                  مشاهده همه نتایج
+                </button>
+              </template>
+              <template
+                x-if="!loadingSearch && searchQuery && searchResults.length === 0"
+                ><p class="text-xs text-text-secondary text-center p-2">
+                  نتیجه‌ای یافت نشد. عبارت دیگری را امتحان کنید.
+                </p></template
+              >
+            </div>
+
+            <!-- Tabs -->
+            <nav class="flex flex-col gap-1">
+              <template x-for="tab in tabs" :key="tab.id">
+                <button
+                  @click="setTab(tab.id)"
+                  class="text-right px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-between group"
+                  :class="activeTab === tab.id ? 'bg-accent text-accent-text shadow-md shadow-accent/10' : 'text-text-secondary hover:bg-surface-highlight hover:text-text-primary'"
+                >
+                  <span x-text="tab.label"></span>
+                </button>
+              </template>
+            </nav>
+
+            <!-- Smart Filter -->
+            <section
+              class="flex flex-col gap-3 p-3 rounded-xl bg-surface border border-border"
+            >
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-7 h-7 rounded-full bg-accent/10 flex items-center justify-center text-sm"
+                >
+                  💡
+                </div>
+                <div>
+                  <h3
+                    class="text-sm font-semibold font-heading text-text-primary"
+                  >
+                    فیلتر هوشمند
+                  </h3>
+                  <p class="text-xs text-text-secondary">
+                    ژانر یا کلمه کلیدی را انتخاب کنید
+                  </p>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <button
+                  @click="smartFilter('اکشن')"
+                  class="text-xs bg-surface-highlight px-2 py-1 rounded-md hover:bg-accent hover:text-accent-text transition-colors"
+                >
+                  🚀 اکشن
+                </button>
+                <button
+                  @click="smartFilter('کمدی')"
+                  class="text-xs bg-surface-highlight px-2 py-1 rounded-md hover:bg-accent hover:text-accent-text transition-colors"
+                >
+                  😂 کمدی
+                </button>
+                <button
+                  @click="smartFilter('درام')"
+                  class="text-xs bg-surface-highlight px-2 py-1 rounded-md hover:bg-accent hover:text-accent-text transition-colors"
+                >
+                  🎭 درام
+                </button>
+                <button
+                  @click="smartFilter('ترسناک')"
+                  class="text-xs bg-surface-highlight px-2 py-1 rounded-md hover:bg-accent hover:text-accent-text transition-colors"
+                >
+                  👻 ترسناک
+                </button>
+              </div>
+              <form
+                @submit.prevent="smartFilter(smartFilterInput)"
+                class="mt-1 flex items-center gap-2"
+              >
+                <input
+                  type="text"
+                  x-model="smartFilterInput"
+                  placeholder="یا کلمه‌ای تایپ کنید (مثلا: 'زامبی')"
+                  class="flex-1 bg-surface-highlight border border-border rounded-lg px-3 py-2 text-xs placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+                />
+                <button
+                  type="submit"
+                  class="px-4 py-2 rounded-lg text-xs font-medium bg-accent text-accent-text"
+                  :disabled="!smartFilterInput.trim()"
+                >
+                  فیلتر
+                </button>
+              </form>
+            </section>
+
+            <!-- Theme Switcher -->
+            <div
+              class="flex items-center justify-between bg-surface px-3 py-2 rounded-xl border border-border mt-2"
+            >
+              <span class="text-sm font-medium"
+                >حالت <span x-text="theme === 'dark' ? 'تاریک' : 'روشن'"></span
+              ></span>
+              <button
+                @click="toggleTheme()"
+                class="w-12 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-accent"
+                :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'"
+              >
+                <span
+                  class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white"
+                  :class="theme === 'light' ? 'translate-x-6' : 'translate-x-0'"
+                ></span>
+              </button>
+            </div>
+          </aside>
+
+          <!-- MAIN CONTENT -->
+          <main class="order-1 lg:order-2 min-w-0">
+            <div class="flex items-center justify-between mb-6">
+              <h2
+                class="text-2xl font-bold tracking-tight font-heading text-text-primary"
+                x-text="currentTabLabel()"
+              ></h2>
+            </div>
+
+            <!-- Skeleton Loading -->
+            <div
+              x-show="loadingHome"
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6"
+            >
+              <template x-for="i in 10" :key="i"
+                ><div
+                  class="aspect-[2/3] bg-surface rounded-xl animate-pulse"
+                ></div
+              ></template>
+            </div>
+
+            <template x-if="error"
+              ><div
+                class="mb-6 p-4 rounded-xl bg-red-950/30 border border-red-800/50 text-red-300 text-sm"
+              >
+                <p x-text="error"></p></div
+            ></template>
+
+            <div
+              x-show="!loadingHome"
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6"
+            >
+              <template x-for="item in currentItems" :key="item.id">
+                <article
+                  @click.self="goToDetails(item)"
+                  class="group relative flex flex-col rounded-xl bg-surface border border-border light:shadow-sm overflow-hidden hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 cursor-pointer transform hover:-translate-y-1"
+                >
+                  <div
+                    @click="goToDetails(item)"
+                    class="relative aspect-[2/3] overflow-hidden"
+                  >
+                    <img
+                      :src="item.image"
+                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                      @error="$event.target.style.opacity = '0.2'"
+                    />
+                    <div
+                      class="absolute top-2 right-2 bg-black/60 backdrop-blur text-white text-xs px-2 py-1 rounded-full border border-white/10 shadow-sm"
+                      x-text="displayTypeLabel(item)"
+                    ></div>
+                    <div
+                      x-show="item.imdb"
+                      class="absolute bottom-2 left-2 flex items-center gap-1 bg-yellow-400 text-black font-bold text-xs px-1.5 py-0.5 rounded shadow-lg"
+                    >
+                      <span>IMDb</span><span x-text="item.imdb"></span>
                     </div>
-                    <h1 class="text-xl font-bold font-heading tracking-tight text-text-primary">ببینتو</h1>
-                </header>
-
-                <!-- Search -->
-                <form @submit.prevent="redirectToSearchPage()" class="relative">
-                    <input type="text" x-model.debounce.300ms="searchQuery" placeholder="جستجوی فیلم و سریال..." class="w-full bg-surface border border-border rounded-lg py-2.5 pr-10 pl-4 text-sm text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent/80 transition-all">
-                    <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none"><svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
-                </form>
-
-                <!-- Inline Search Results -->
-                <div x-show="searchQuery" x-transition x-cloak class="flex flex-col gap-2 max-h-96 overflow-y-auto custom-scrollbar -mt-4 p-2 bg-surface-highlight rounded-lg border border-border">
-                    <template x-if="loadingSearch"><span class="text-xs text-text-secondary text-center p-2 animate-pulse">در حال جستجو...</span></template>
-                    <template x-for="item in searchResults" :key="'s-'+item.id">
-                        <div @click="goToDetails(item)" class="flex items-center gap-3 p-2 rounded-md hover:bg-surface transition-colors cursor-pointer group">
-                            <img :src="item.image" class="w-10 h-14 object-cover rounded bg-surface" @error="$event.target.style.display='none'">
-                            <div class="min-w-0 flex-1"><div class="text-sm font-medium text-text-primary truncate" x-text="displayTitle(item)"></div><div class="text-xs text-text-secondary" x-text="displayYear(item)"></div></div>
-                        </div>
-                    </template>
-                    <template x-if="!loadingSearch && searchResults.length > 0">
-                        <button @click="redirectToSearchPage()" class="w-full text-center p-2 mt-2 text-sm bg-accent text-accent-text rounded-md hover:opacity-90 transition-opacity">مشاهده همه نتایج</button>
-                    </template>
-                    <template x-if="!loadingSearch && searchQuery && searchResults.length === 0"><p class="text-xs text-text-secondary text-center p-2">نتیجه‌ای یافت نشد. عبارت دیگری را امتحان کنید.</p></template>
-                </div>
-
-                <!-- Tabs -->
-                <nav class="flex flex-col gap-1">
-                    <template x-for="tab in tabs" :key="tab.id">
-                        <button @click="setTab(tab.id)" class="text-right px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-between group" :class="activeTab === tab.id ? 'bg-accent text-accent-text shadow-md shadow-accent/10' : 'text-text-secondary hover:bg-surface-highlight hover:text-text-primary'">
-                            <span x-text="tab.label"></span>
-                        </button>
-                    </template>
-                </nav>
-
-                 
-                <!-- Smart Filter -->
-                <section class="flex flex-col gap-3 p-3 rounded-xl bg-surface border border-border">
-                    <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-full bg-accent/10 flex items-center justify-center text-sm">💡</div>
-                        <div>
-                            <h3 class="text-sm font-semibold font-heading text-text-primary">فیلتر هوشمند</h3>
-                            <p class="text-xs text-text-secondary">ژانر یا کلمه کلیدی را انتخاب کنید</p>
-                        </div>
+                  </div>
+                  <button
+                    @click.stop="toggleWatchlist(item.id)"
+                    class="absolute top-2 left-2 z-10 p-1.5 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-accent hover:text-accent-text transition-colors"
+                  >
+                    <svg
+                      class="w-5 h-5"
+                      :class="{'fill-current text-red-500': isInWatchlist(item.id)}"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.5l1.318-1.182a4.5 4.5 0 116.364 6.364L12 21l-7.682-7.318a4.5 4.5 0 010-6.364z"
+                      ></path>
+                    </svg>
+                  </button>
+                  <div
+                    @click="goToDetails(item)"
+                    class="flex flex-col gap-1 p-3"
+                  >
+                    <h3
+                      class="font-semibold text-base truncate text-text-primary"
+                      x-text="displayTitle(item)"
+                    ></h3>
+                    <div
+                      class="flex items-center text-xs text-text-secondary gap-2"
+                    >
+                      <span x-text="displayYear(item) || 'Unknown'"></span
+                      ><span
+                        class="w-1 h-1 bg-text-secondary/50 rounded-full"
+                      ></span
+                      ><span
+                        x-text="displayCountry(item)"
+                        class="truncate max-w-24"
+                      ></span>
                     </div>
-                    <div class="flex flex-wrap gap-2">
-                        <button @click="smartFilter('اکشن')" class="text-xs bg-surface-highlight px-2 py-1 rounded-md hover:bg-accent hover:text-accent-text transition-colors">🚀 اکشن</button>
-                        <button @click="smartFilter('کمدی')" class="text-xs bg-surface-highlight px-2 py-1 rounded-md hover:bg-accent hover:text-accent-text transition-colors">😂 کمدی</button>
-                        <button @click="smartFilter('درام')" class="text-xs bg-surface-highlight px-2 py-1 rounded-md hover:bg-accent hover:text-accent-text transition-colors">🎭 درام</button>
-                        <button @click="smartFilter('ترسناک')" class="text-xs bg-surface-highlight px-2 py-1 rounded-md hover:bg-accent hover:text-accent-text transition-colors">👻 ترسناک</button>
+                    <div class="mt-2 flex flex-wrap gap-1.5">
+                      <template x-for="g in displayGenres(item)" :key="g"
+                        ><span
+                          class="text-xs text-text-secondary bg-surface-highlight px-2 py-0.5 rounded border border-border"
+                          x-text="g"
+                        ></span
+                      ></template>
                     </div>
-                    <form @submit.prevent="smartFilter(smartFilterInput)" class="mt-1 flex items-center gap-2">
-                        <input type="text" x-model="smartFilterInput" placeholder="یا کلمه‌ای تایپ کنید (مثلا: 'زامبی')" class="flex-1 bg-surface-highlight border border-border rounded-lg px-3 py-2 text-xs placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent">
-                        <button type="submit" class="px-4 py-2 rounded-lg text-xs font-medium bg-accent text-accent-text" :disabled="!smartFilterInput.trim()">فیلتر</button>
-                    </form>
-                </section>
+                  </div>
+                </article>
+              </template>
+            </div>
 
-                <!-- Theme Switcher -->
-                <div class="flex items-center justify-between bg-surface px-3 py-2 rounded-xl border border-border mt-2">
-                    <span class="text-sm font-medium">حالت <span x-text="theme === 'dark' ? 'تاریک' : 'روشن'"></span></span>
-                    <button @click="toggleTheme()" class="w-12 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-accent" :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'">
-                        <span class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white" :class="theme === 'light' ? 'translate-x-6' : 'translate-x-0'"></span>
-                    </button>
-                </div>
-            </aside>
-
-            <!-- MAIN CONTENT -->
-            <main class="order-1 lg:order-2 min-w-0">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold tracking-tight font-heading text-text-primary" x-text="currentTabLabel()"></h2>
-                </div>
-                
-                <!-- Skeleton Loading -->
-                <div x-show="loadingHome" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
-                    <template x-for="i in 10" :key="i"><div class="aspect-[2/3] bg-surface rounded-xl animate-pulse"></div></template>
-                </div>
-
-                <template x-if="error"><div class="mb-6 p-4 rounded-xl bg-red-950/30 border border-red-800/50 text-red-300 text-sm"><p x-text="error"></p></div></template>
-
-                <div x-show="!loadingHome" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
-                    <template x-for="item in currentItems" :key="item.id">
-                        <article @click.self="goToDetails(item)" class="group relative flex flex-col rounded-xl bg-surface border border-border light:shadow-sm overflow-hidden hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 cursor-pointer transform hover:-translate-y-1">
-                            <div @click="goToDetails(item)" class="relative aspect-[2/3] overflow-hidden">
-                                <img :src="item.image" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" @error="$event.target.style.opacity = '0.2'">
-                                <div class="absolute top-2 right-2 bg-black/60 backdrop-blur text-white text-xs px-2 py-1 rounded-full border border-white/10 shadow-sm" x-text="displayTypeLabel(item)"></div>
-                                <div x-show="item.imdb" class="absolute bottom-2 left-2 flex items-center gap-1 bg-yellow-400 text-black font-bold text-xs px-1.5 py-0.5 rounded shadow-lg"><span>IMDb</span><span x-text="item.imdb"></span></div>
-                            </div>
-                            <button @click.stop="toggleWatchlist(item.id)" class="absolute top-2 left-2 z-10 p-1.5 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-accent hover:text-accent-text transition-colors">
-                                <svg class="w-5 h-5" :class="{'fill-current text-red-500': isInWatchlist(item.id)}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.5l1.318-1.182a4.5 4.5 0 116.364 6.364L12 21l-7.682-7.318a4.5 4.5 0 010-6.364z"></path></svg>
-                            </button>
-                            <div @click="goToDetails(item)" class="flex flex-col gap-1 p-3">
-                                <h3 class="font-semibold text-base truncate text-text-primary" x-text="displayTitle(item)"></h3>
-                                <div class="flex items-center text-xs text-text-secondary gap-2"><span x-text="displayYear(item) || 'Unknown'"></span><span class="w-1 h-1 bg-text-secondary/50 rounded-full"></span><span x-text="displayCountry(item)" class="truncate max-w-24"></span></div>
-                                <div class="mt-2 flex flex-wrap gap-1.5"><template x-for="g in displayGenres(item)" :key="g"><span class="text-xs text-text-secondary bg-surface-highlight px-2 py-0.5 rounded border border-border" x-text="g"></span></template></div>
-                            </div>
-                        </article>
-                    </template>
-                </div>
-                
-                <div x-show="!loadingHome && currentItems.length > 0 && canLoadMore" class="mt-8 text-center">
-                    <button @click="loadMore()" :disabled="loadingMore" class="bg-accent text-accent-text font-semibold px-6 py-3 rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-wait">
-                        <span x-show="!loadingMore">بارگذاری بیشتر</span><span x-show="loadingMore">در حال بارگذاری...</span>
-                    </button>
-                </div>
-                 <template x-if="!loadingHome && currentItems.length === 0 && (activeTab === 'my-list' || activeTab === 'smart-results')">
-                    <p class="text-center p-8 text-text-secondary" x-text="activeTab === 'my-list' ? 'لیست شما خالی است. با کلیک روی ♡ روی پوسترها، آیتم‌ها را به لیست خود اضافه کنید.' : 'نتیجه‌ای با این فیلتر یافت نشد.'"></p>
-                </template>
-            </main>
+            <div
+              x-show="!loadingHome && currentItems.length > 0 && canLoadMore"
+              class="mt-8 text-center"
+            >
+              <button
+                @click="loadMore()"
+                :disabled="loadingMore"
+                class="bg-accent text-accent-text font-semibold px-6 py-3 rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-wait"
+              >
+                <span x-show="!loadingMore">بارگذاری بیشتر</span
+                ><span x-show="loadingMore">در حال بارگذاری...</span>
+              </button>
+            </div>
+            <template
+              x-if="!loadingHome && currentItems.length === 0 && (activeTab === 'my-list' || activeTab === 'smart-results')"
+            >
+              <p
+                class="text-center p-8 text-text-secondary"
+                x-text="activeTab === 'my-list' ? 'لیست شما خالی است. با کلیک روی ♡ روی پوسترها، آیتم‌ها را به لیست خود اضافه کنید.' : 'نتیجه‌ای با این فیلتر یافت نشد.'"
+              ></p>
+            </template>
+          </main>
         </div>
+      </div>
+
+      <!-- Back to Top Button -->
+      <button
+        x-show="showBackToTop"
+        @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
+        x-transition
+        class="fixed bottom-6 right-6 bg-accent text-accent-text p-3 rounded-full shadow-lg hover:scale-110 transition-transform z-20"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 15l7-7 7 7"
+          ></path>
+        </svg>
+      </button>
+
+      <!-- FOOTER -->
+      <footer class="w-full py-8 mt-auto border-t border-border bg-bg">
+        <div
+          class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4"
+        >
+          <p class="text-sm text-text-secondary">
+            &copy; <span x-text="new Date().getFullYear()"></span> ببینتو. تمامی
+            حقوق محفوظ است.
+          </p>
+        </div>
+      </footer>
     </div>
 
-    <!-- Back to Top Button -->
-    <button x-show="showBackToTop" @click="window.scrollTo({ top: 0, behavior: 'smooth' })" x-transition class="fixed bottom-6 right-6 bg-accent text-accent-text p-3 rounded-full shadow-lg hover:scale-110 transition-transform z-20">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-    </button>
-
-    <!-- FOOTER -->
-    <footer class="w-full py-8 mt-auto border-t border-border bg-bg">
-        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p class="text-sm text-text-secondary">&copy; <span x-text="new Date().getFullYear()"></span> ببینتو. تمامی حقوق محفوظ است.</p>
-        </div>
-    </footer>
-</div>
-
-<script>
-    function cinemaApp() {
+    <script>
+      function cinemaApp() {
         return {
-            // --- Core ---
-            baseUrl: 'https://cinemaplus-app.vercel.app', detailsPagePath: 'details.html', searchPagePath: 'search.html', activeTab: 'movies-new', theme: 'dark', itemsPerPage: 15, showBackToTop: false,
-            
-            // --- Caching ---
-            cache: {}, cacheKey: 'cinemaPlusCache_v6', cacheTTL: 1000 * 60 * 30, // 30 minutes
+          // --- Core ---
+          baseUrl: "https://cinemaplus-app.vercel.app",
+          detailsPagePath: "details.html",
+          searchPagePath: "search.html",
+          activeTab: "movies-new",
+          theme: "dark",
+          itemsPerPage: 15,
+          showBackToTop: false,
 
-            // --- State ---
-            loadingHome: true, loadingSearch: false, loadingMore: false, canLoadMore: true, error: '',
-            
-            // --- Data ---
-            searchQuery: '', searchResults: [],
-            tabsData: {'movies-new': [], 'movies-top': [], 'series-new': [], 'series-top': [], 'series-upd': [], 'series-best': [], 'my-list': [], 'smart-results': []},
-            tabPagination: {'movies-new': 0, 'movies-top': 0, 'series-new': 0, 'series-top': 0, 'series-upd': 0, 'series-best': 0},
-            watchlist: [], smartFilterInput: '',
+          // --- Caching ---
+          cache: {},
+          cacheKey: "cinemaPlusCache_v6",
+          cacheTTL: 1000 * 60 * 30, // 30 minutes
 
-            // --- Tabs ---
-            tabs: [
-                { id: 'movies-new',  label: 'فیلم‌های جدید', endpoint: '/api/movies/new' },
-                { id: 'movies-top',  label: 'فیلم‌های برتر', endpoint: '/api/movies/top-rated' },
-                { id: 'series-new',  label: 'سریال‌های جدید', endpoint: '/api/series/new' },
-                { id: 'series-top',  label: 'سریال‌های برتر', endpoint: '/api/series/top-rated' },
-                { id: 'series-upd',  label: 'سریال‌های بروزشده', endpoint: '/api/series/updated' },
-                { id: 'series-best', label: 'پیشنهاد سردبیر', endpoint: '/api/series/best' },
-                { id: 'my-list',     label: '♥ لیست من', endpoint: null },
-            ],
-            
-            init() { this.loadCache(); this.loadTheme(); this.loadWatchlist(); this.fetchTabData(this.activeTab, true); this.$watch('searchQuery', (value) => { if (value.trim()) this.doSearch(); else this.searchResults = []; }); },
-            get currentItems() { return this.tabsData[this.activeTab] || []; },
-            get allItems() { const all = new Map(); Object.entries(this.tabsData).forEach(([key, items]) => { if (key !== 'smart-results' && key !== 'my-list') { items.flat().forEach(item => { if (item && item.id) all.set(item.id, item); }); } }); return Array.from(all.values()); },
-            loadCache() { try { const data = localStorage.getItem(this.cacheKey); if (data) this.cache = JSON.parse(data); } catch (e) {} },
-            saveCache() { try { localStorage.setItem(this.cacheKey, JSON.stringify(this.cache)); } catch (e) {} },
-            async getCachedOrFetch(key, fetcher) { const now = Date.now(); if (this.cache[key] && (now - this.cache[key].timestamp < this.cacheTTL)) return this.cache[key].data; const data = await fetcher(); this.cache[key] = { data, timestamp: now }; this.saveCache(); return data; },
-            loadTheme() { const saved = localStorage.getItem('cinemaplus-theme'); this.theme = (saved === 'light' || saved === 'dark') ? saved : 'dark'; document.documentElement.className = this.theme; },
-            toggleTheme() { this.theme = this.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('cinemaplus-theme', this.theme); document.documentElement.className = this.theme; },
-            async fetchTabData(tabId, isFirstLoad = false) {
-                if (isFirstLoad) this.loadingHome = true; else this.loadingMore = true; this.error = '';
-                try {
-                    const tabInfo = this.tabs.find(t => t.id === tabId);
-                    if (!tabInfo?.endpoint) { this.canLoadMore = false; throw new Error("No endpoint."); }
-                    const page = this.tabPagination[tabId]; const url = `${this.baseUrl}${tabInfo.endpoint}?page=${page}`;
-                    const newItems = await this.getCachedOrFetch(url, () => fetch(url).then(res => res.json()));
-                    if (Array.isArray(newItems) && newItems.length > 0) {
-                        const type = tabId.startsWith('series') ? 'series' : 'movie';
-                        const enrichedItems = newItems.map(item => ({ ...item, __type: type }));
-                        const existingIds = new Set(this.tabsData[tabId].map(i => i.id));
-                        this.tabsData[tabId].push(...enrichedItems.filter(i => !existingIds.has(i.id)));
-                        this.canLoadMore = newItems.length >= this.itemsPerPage;
-                    } else this.canLoadMore = false;
-                } catch (e) { if(e.message !== "No endpoint.") this.error = 'خطا در ارتباط با سرور.'; } 
-                finally { if (isFirstLoad) this.loadingHome = false; this.loadingMore = false; }
+          // --- State ---
+          loadingHome: true,
+          loadingSearch: false,
+          loadingMore: false,
+          canLoadMore: true,
+          error: "",
+
+          // --- Data ---
+          searchQuery: "",
+          searchResults: [],
+          tabsData: {
+            "movies-new": [],
+            "movies-top": [],
+            "series-new": [],
+            "series-top": [],
+            "series-upd": [],
+            "series-best": [],
+            "my-list": [],
+            "smart-results": [],
+          },
+          tabPagination: {
+            "movies-new": 0,
+            "movies-top": 0,
+            "series-new": 0,
+            "series-top": 0,
+            "series-upd": 0,
+            "series-best": 0,
+          },
+          watchlist: [],
+          smartFilterInput: "",
+
+          // --- Tabs ---
+          tabs: [
+            {
+              id: "movies-new",
+              label: "فیلم‌های جدید",
+              endpoint: "/api/movies/new",
             },
-            loadMore() { if (this.loadingMore || !this.canLoadMore) return; this.tabPagination[this.activeTab]++; this.fetchTabData(this.activeTab, false); },
-            setTab(id) {
-                if(this.activeTab === 'smart-results' && id !== 'smart-results') { const i = this.tabs.findIndex(t => t.id === 'smart-results'); if (i > -1) this.tabs.splice(i, 1); }
-                this.activeTab = id; this.canLoadMore = true;
-                if (id === 'my-list') { this.loadWatchlistItems(); this.canLoadMore = false; return; }
-                if (id === 'smart-results') { this.canLoadMore = false; return; }
-                if ((this.tabsData[id] || []).length === 0) this.fetchTabData(id, true);
+            {
+              id: "movies-top",
+              label: "فیلم‌های برتر",
+              endpoint: "/api/movies/top-rated",
             },
-            smartFilter(keyword) {
-                if (!keyword || !keyword.trim()) return;
-                const lowerKeyword = keyword.trim().toLowerCase();
-                const results = this.allItems.filter(item => (item.title?.toLowerCase().includes(lowerKeyword)) || (Array.isArray(item.genres) && item.genres.some(g => g.title?.toLowerCase().includes(lowerKeyword))));
-                const smartTab = this.tabs.find(t => t.id === 'smart-results'); const label = `نتایج برای: '${keyword}'`;
-                if (!smartTab) this.tabs.push({ id: 'smart-results', label, endpoint: null }); else smartTab.label = label;
-                this.tabsData['smart-results'] = results; this.setTab('smart-results'); this.smartFilterInput = '';
+            {
+              id: "series-new",
+              label: "سریال‌های جدید",
+              endpoint: "/api/series/new",
             },
-            async doSearch() {
-                if (!this.searchQuery.trim()) return; this.loadingSearch = true;
-                try {
-                    const url = `${this.baseUrl}/api/search?q=${this.searchQuery.trim()}`;
-                    const data = await this.getCachedOrFetch(url, () => fetch(url).then(res => res.json()));
-                    this.searchResults = data && Array.isArray(data.posters) ? data.posters.slice(0, 5) : [];
-                } catch (e) { this.searchResults = []; } finally { this.loadingSearch = false; }
+            {
+              id: "series-top",
+              label: "سریال‌های برتر",
+              endpoint: "/api/series/top-rated",
             },
-            redirectToSearchPage() { if (this.searchQuery.trim()) window.location.href = `${this.searchPagePath}?q=${encodeURIComponent(this.searchQuery.trim())}`; },
-            loadWatchlist() { try { const list = localStorage.getItem('cinemaWatchlist'); this.watchlist = list ? JSON.parse(list) : []; } catch(e) { this.watchlist = []; } },
-            saveWatchlist() { localStorage.setItem('cinemaWatchlist', JSON.stringify(this.watchlist)); },
-            isInWatchlist(id) { return this.watchlist.includes(id); },
-            toggleWatchlist(id) { if (this.isInWatchlist(id)) { this.watchlist = this.watchlist.filter(itemId => itemId !== id); } else { this.watchlist.push(id); } this.saveWatchlist(); if(this.activeTab === 'my-list') this.loadWatchlistItems(); },
-            loadWatchlistItems() { this.tabsData['my-list'] = this.allItems.filter(item => this.isInWatchlist(item.id)); },
-            goToDetails(item) { try { localStorage.setItem('cinemaplus-last-item', JSON.stringify(item)); const itemType = item.__type || item.type; const finalType = (itemType === 'serie' || itemType === 'series') ? 'series' : 'movie'; window.location.href = `${this.detailsPagePath}?id=${item.id}&type=${finalType}`; } catch (e) {} },
-            currentTabLabel() { return this.tabs.find(t => t.id === this.activeTab)?.label || ''; },
-            displayTitle: (item) => item?.title || 'بدون عنوان',
-            displayYear: (item) => item?.year || '',
-            displayTypeLabel(item) { const itemType = item.__type || item.type; return (itemType === 'serie' || itemType === 'series') ? 'سریال' : 'فیلم'; },
-            displayCountry(item) { return item?.country?.[0]?.title || ''; },
-            displayGenres(item) { return Array.isArray(item?.genres) ? item.genres.map(g => g.title).slice(0, 2) : []; }
+            {
+              id: "series-upd",
+              label: "سریال‌های بروزشده",
+              endpoint: "/api/series/updated",
+            },
+            {
+              id: "series-best",
+              label: "پیشنهاد سردبیر",
+              endpoint: "/api/series/best",
+            },
+            { id: "my-list", label: "♥ لیست من", endpoint: null },
+          ],
+
+          init() {
+            this.loadCache();
+            this.loadTheme();
+            this.loadWatchlist();
+            this.fetchTabData(this.activeTab, true);
+            this.$watch("searchQuery", (value) => {
+              if (value.trim()) this.doSearch();
+              else this.searchResults = [];
+            });
+          },
+          get currentItems() {
+            return this.tabsData[this.activeTab] || [];
+          },
+          get allItems() {
+            const all = new Map();
+            Object.entries(this.tabsData).forEach(([key, items]) => {
+              if (key !== "smart-results" && key !== "my-list") {
+                items.flat().forEach((item) => {
+                  if (item && item.id) all.set(item.id, item);
+                });
+              }
+            });
+            return Array.from(all.values());
+          },
+          loadCache() {
+            try {
+              const data = localStorage.getItem(this.cacheKey);
+              if (data) this.cache = JSON.parse(data);
+            } catch (e) {}
+          },
+          saveCache() {
+            try {
+              localStorage.setItem(this.cacheKey, JSON.stringify(this.cache));
+            } catch (e) {}
+          },
+          async getCachedOrFetch(key, fetcher) {
+            const now = Date.now();
+            if (
+              this.cache[key] &&
+              now - this.cache[key].timestamp < this.cacheTTL
+            )
+              return this.cache[key].data;
+            const data = await fetcher();
+            this.cache[key] = { data, timestamp: now };
+            this.saveCache();
+            return data;
+          },
+          loadTheme() {
+            const saved = localStorage.getItem("cinemaplus-theme");
+            this.theme = saved === "light" || saved === "dark" ? saved : "dark";
+            document.documentElement.className = this.theme;
+          },
+          toggleTheme() {
+            this.theme = this.theme === "dark" ? "light" : "dark";
+            localStorage.setItem("cinemaplus-theme", this.theme);
+            document.documentElement.className = this.theme;
+          },
+          async fetchTabData(tabId, isFirstLoad = false) {
+            if (isFirstLoad) this.loadingHome = true;
+            else this.loadingMore = true;
+            this.error = "";
+            try {
+              const tabInfo = this.tabs.find((t) => t.id === tabId);
+              if (!tabInfo?.endpoint) {
+                this.canLoadMore = false;
+                throw new Error("No endpoint.");
+              }
+              const page = this.tabPagination[tabId];
+              const url = `${this.baseUrl}${tabInfo.endpoint}?page=${page}`;
+              const newItems = await this.getCachedOrFetch(url, () =>
+                fetch(url).then((res) => res.json())
+              );
+              if (Array.isArray(newItems) && newItems.length > 0) {
+                const type = tabId.startsWith("series") ? "series" : "movie";
+                const enrichedItems = newItems.map((item) => ({
+                  ...item,
+                  __type: type,
+                }));
+                const existingIds = new Set(
+                  this.tabsData[tabId].map((i) => i.id)
+                );
+                this.tabsData[tabId].push(
+                  ...enrichedItems.filter((i) => !existingIds.has(i.id))
+                );
+                this.canLoadMore = newItems.length >= this.itemsPerPage;
+              } else this.canLoadMore = false;
+            } catch (e) {
+              if (e.message !== "No endpoint.")
+                this.error = "خطا در ارتباط با سرور.";
+            } finally {
+              if (isFirstLoad) this.loadingHome = false;
+              this.loadingMore = false;
+            }
+          },
+          loadMore() {
+            if (this.loadingMore || !this.canLoadMore) return;
+            this.tabPagination[this.activeTab]++;
+            this.fetchTabData(this.activeTab, false);
+          },
+          setTab(id) {
+            if (this.activeTab === "smart-results" && id !== "smart-results") {
+              const i = this.tabs.findIndex((t) => t.id === "smart-results");
+              if (i > -1) this.tabs.splice(i, 1);
+            }
+            this.activeTab = id;
+            this.canLoadMore = true;
+            if (id === "my-list") {
+              this.loadWatchlistItems();
+              this.canLoadMore = false;
+              return;
+            }
+            if (id === "smart-results") {
+              this.canLoadMore = false;
+              return;
+            }
+            if ((this.tabsData[id] || []).length === 0)
+              this.fetchTabData(id, true);
+          },
+          smartFilter(keyword) {
+            if (!keyword || !keyword.trim()) return;
+            const lowerKeyword = keyword.trim().toLowerCase();
+            const results = this.allItems.filter(
+              (item) =>
+                item.title?.toLowerCase().includes(lowerKeyword) ||
+                (Array.isArray(item.genres) &&
+                  item.genres.some((g) =>
+                    g.title?.toLowerCase().includes(lowerKeyword)
+                  ))
+            );
+            const smartTab = this.tabs.find((t) => t.id === "smart-results");
+            const label = `نتایج برای: '${keyword}'`;
+            if (!smartTab)
+              this.tabs.push({ id: "smart-results", label, endpoint: null });
+            else smartTab.label = label;
+            this.tabsData["smart-results"] = results;
+            this.setTab("smart-results");
+            this.smartFilterInput = "";
+          },
+          async doSearch() {
+            if (!this.searchQuery.trim()) return;
+            this.loadingSearch = true;
+            try {
+              const url = `${
+                this.baseUrl
+              }/api/search?q=${this.searchQuery.trim()}`;
+              const data = await this.getCachedOrFetch(url, () =>
+                fetch(url).then((res) => res.json())
+              );
+              this.searchResults =
+                data && Array.isArray(data.posters)
+                  ? data.posters.slice(0, 5)
+                  : [];
+            } catch (e) {
+              this.searchResults = [];
+            } finally {
+              this.loadingSearch = false;
+            }
+          },
+          redirectToSearchPage() {
+            if (this.searchQuery.trim())
+              window.location.href = `${
+                this.searchPagePath
+              }?q=${encodeURIComponent(this.searchQuery.trim())}`;
+          },
+          loadWatchlist() {
+            try {
+              const list = localStorage.getItem("cinemaWatchlist");
+              this.watchlist = list ? JSON.parse(list) : [];
+            } catch (e) {
+              this.watchlist = [];
+            }
+          },
+          saveWatchlist() {
+            localStorage.setItem(
+              "cinemaWatchlist",
+              JSON.stringify(this.watchlist)
+            );
+          },
+          isInWatchlist(id) {
+            return this.watchlist.includes(id);
+          },
+          toggleWatchlist(id) {
+            if (this.isInWatchlist(id)) {
+              this.watchlist = this.watchlist.filter((itemId) => itemId !== id);
+            } else {
+              this.watchlist.push(id);
+            }
+            this.saveWatchlist();
+            if (this.activeTab === "my-list") this.loadWatchlistItems();
+          },
+          loadWatchlistItems() {
+            this.tabsData["my-list"] = this.allItems.filter((item) =>
+              this.isInWatchlist(item.id)
+            );
+          },
+          goToDetails(item) {
+            try {
+              localStorage.setItem(
+                "cinemaplus-last-item",
+                JSON.stringify(item)
+              );
+              const itemType = item.__type || item.type;
+              const finalType =
+                itemType === "serie" || itemType === "series"
+                  ? "series"
+                  : "movie";
+              window.location.href = `${this.detailsPagePath}?id=${item.id}&type=${finalType}`;
+            } catch (e) {}
+          },
+          currentTabLabel() {
+            return this.tabs.find((t) => t.id === this.activeTab)?.label || "";
+          },
+          displayTitle: (item) => item?.title || "بدون عنوان",
+          displayYear: (item) => item?.year || "",
+          displayTypeLabel(item) {
+            const itemType = item.__type || item.type;
+            return itemType === "serie" || itemType === "series"
+              ? "سریال"
+              : "فیلم";
+          },
+          displayCountry(item) {
+            return item?.country?.[0]?.title || "";
+          },
+          displayGenres(item) {
+            return Array.isArray(item?.genres)
+              ? item.genres.map((g) => g.title).slice(0, 2)
+              : [];
+          },
         };
-    }
-</script>
-</body>
+      }
+    </script>
+  </body>
 </html>
