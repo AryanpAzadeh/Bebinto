@@ -5,6 +5,8 @@
   <title>ببینتو · خانه</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <meta name="author" content="Arya Azadeh">
+
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -294,7 +296,7 @@
         </div>
 
         <!-- Loading -->
-        <div x-show="loadingHome" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
+        <div x-show="loadingHome" class="mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
           <template x-for="i in 10" :key="'sk-'+i">
             <div class="aspect-[2/3] bg-surface rounded-2xl animate-pulse motion-reduce:animate-none"></div>
           </template>
@@ -307,7 +309,7 @@
         </template>
 
         <!-- Grid -->
-        <div x-show="!loadingHome" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
+        <div x-show="!loadingHome" class="mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
           <template x-for="item in currentItems" :key="'c-'+item.id">
             <article
                     role="link"
@@ -445,7 +447,7 @@
   <!-- Floating Bottom Nav (Mobile) -->
   <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40">
     <div class="px-4 pb-4" style="padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);">
-      <div class="mx-auto max-w-md rounded-[28px] border border-border/60 bg-surface/70 backdrop-blur-2xl shadow-2xl">
+      <div class="mx-auto max-w-sm rounded-[35px] border border-border/60 bg-surface/50 backdrop-blur-sm shadow-2xl">
         <div class="flex items-center justify-between px-3 py-2">
 
           <button
