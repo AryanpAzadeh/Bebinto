@@ -121,7 +121,8 @@
               <dotlottie-wc
                       src="https://lottie.host/da80b7f6-c288-48b9-a3dc-376f9d276f06/W739BOuqrX.lottie"
                       style="width: 44px; height: 44px"
-                      autoplay loop
+                      autoplay
+                      loop
               ></dotlottie-wc>
             </div>
             <h1 class="text-xl font-bold font-heading tracking-tight text-text-primary">ببینتو</h1>
@@ -249,6 +250,7 @@
             <span class="text-sm font-medium">
               حالت <span x-text="theme === 'dark' ? 'تاریک' : 'روشن'"></span>
             </span>
+
           <button
                   type="button"
                   @click="haptic('light'); toggleTheme()"
@@ -266,7 +268,7 @@
 
       <!-- MAIN -->
       <main class="order-1 lg:order-2 min-w-0">
-        <!-- Mobile header: لوگو+اسم راست / عنوان وسط -->
+        <!-- Mobile header -->
         <div class="lg:hidden sticky top-0 z-30 -mx-4 px-4 py-2 bg-bg/70 backdrop-blur-xl border-b border-border">
           <div class="relative h-10 flex items-center">
             <a href="https://aryanpazadeh.github.io/Bebinto/" class="flex items-center gap-2 shrink-0">
@@ -274,15 +276,14 @@
                 <dotlottie-wc
                         src="https://lottie.host/da80b7f6-c288-48b9-a3dc-376f9d276f06/W739BOuqrX.lottie"
                         style="width: 40px; height: 40px"
-                        autoplay loop
+                        autoplay
+                        loop
                 ></dotlottie-wc>
               </div>
               <span class="text-sm font-bold">ببینتو</span>
             </a>
 
             <h1 class="absolute left-1/2 -translate-x-1/2 text-sm font-bold truncate max-w-[62%]" x-text="currentTabLabel()"></h1>
-
-            <!-- spacer (برای تعادل بصری) -->
             <div class="w-20"></div>
           </div>
         </div>
@@ -315,10 +316,10 @@
                     @keydown.enter.prevent="goToDetails(item)"
                     @keydown.space.prevent="goToDetails(item)"
                     class="group relative flex flex-col rounded-2xl bg-surface border border-border overflow-hidden
-                       hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30
-                       cursor-pointer transform hover:-translate-y-1
-                       motion-reduce:transition-none motion-reduce:transform-none
-                       focus:outline-none focus:ring-2 focus:ring-accent/80"
+                  hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30
+                  cursor-pointer transform hover:-translate-y-1
+                  motion-reduce:transition-none motion-reduce:transform-none
+                  focus:outline-none focus:ring-2 focus:ring-accent/80"
             >
               <div class="relative aspect-[2/3] overflow-hidden">
                 <img
@@ -329,6 +330,7 @@
                         alt=""
                 />
                 <div class="absolute top-2 right-2 bg-black/60 backdrop-blur text-white text-xs px-2 py-1 rounded-full border border-white/10 shadow-sm" x-text="displayTypeLabel(item)"></div>
+
                 <div x-show="item.imdb" class="absolute bottom-2 left-2 flex items-center gap-1 bg-yellow-400 text-black font-bold text-xs px-1.5 py-0.5 rounded-full shadow-lg">
                   <span>IMDb</span>
                   <span x-text="item.imdb"></span>
@@ -348,11 +350,13 @@
 
               <div class="flex flex-col gap-1 p-3">
                 <h3 class="font-semibold text-base truncate text-text-primary" x-text="displayTitle(item)"></h3>
+
                 <div class="flex items-center text-xs text-text-secondary gap-2">
                   <span x-text="displayYear(item) || '—'"></span>
                   <span class="w-1 h-1 bg-text-secondary/50 rounded-full"></span>
                   <span x-text="displayCountry(item)" class="truncate max-w-24"></span>
                 </div>
+
                 <div class="mt-2 flex flex-wrap gap-1.5">
                   <template x-for="g in displayGenres(item)" :key="'g-'+item.id+'-'+g">
                     <span class="text-xs text-text-secondary bg-surface-highlight px-2 py-0.5 rounded-full border border-border" x-text="g"></span>
@@ -438,13 +442,12 @@
     </div>
   </div>
 
-  <!-- Floating Modern Bottom Nav -->
+  <!-- Floating Bottom Nav (Mobile) -->
   <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40">
     <div class="px-4 pb-4" style="padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);">
       <div class="mx-auto max-w-md rounded-[28px] border border-border/60 bg-surface/70 backdrop-blur-2xl shadow-2xl">
         <div class="flex items-center justify-between px-3 py-2">
 
-          <!-- Categories / Tabs (ACTIVE وقتی تب‌ها فعاله) -->
           <button
                   type="button"
                   @click="haptic('light'); toggleTabsSheet()"
@@ -460,7 +463,6 @@
             <span x-show="isCategoriesNavActive" class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-accent"></span>
           </button>
 
-          <!-- Search -->
           <button
                   type="button"
                   @click="haptic('light'); toggleSearchSheet()"
@@ -476,7 +478,6 @@
             <span x-show="searchSheetOpen" class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-accent"></span>
           </button>
 
-          <!-- My List -->
           <button
                   type="button"
                   @click="haptic('light'); setTab('my-list'); closeAllSheets(); window.scrollTo({top:0, behavior:'smooth'})"
@@ -502,7 +503,6 @@
             <span x-show="activeTab === 'my-list'" class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-accent"></span>
           </button>
 
-          <!-- Settings -->
           <button
                   type="button"
                   @click="haptic('light'); toggleSettingsSheet()"
@@ -542,7 +542,6 @@
             x-transition:enter="sheet-in"
             x-transition:leave="sheet-out"
     >
-      <!-- Drag handle -->
       <div class="sheet-grab pt-2 pb-1 flex items-center justify-center"
            @pointerdown.prevent="startSheetDrag($event,'tabs')">
         <div class="h-1.5 w-12 rounded-full bg-text-secondary/40"></div>
@@ -551,7 +550,9 @@
       <div class="px-4 pt-2 pb-4">
         <div class="flex items-center justify-between">
           <div class="font-bold text-base">دسته‌بندی</div>
-          <button type="button" class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
+          <button
+                  type="button"
+                  class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
                   @click="haptic('light'); closeTabsSheet()"
                   aria-label="بستن"
           >✕</button>
@@ -590,7 +591,6 @@
             </div>
           </div>
 
-          <!-- Smart Filter (Mobile) -->
           <div class="rounded-2xl border border-border bg-surface-highlight/30 p-3">
             <div class="flex items-center gap-2">
               <div class="w-7 h-7 rounded-full bg-accent/10 flex items-center justify-center text-sm">💡</div>
@@ -628,7 +628,6 @@
     </div>
   </div>
 
-
   <!-- Search Sheet (mobile) -->
   <div x-show="searchSheetOpen" x-cloak class="lg:hidden fixed inset-0 z-50">
     <div
@@ -647,7 +646,6 @@
             x-transition:enter="sheet-in"
             x-transition:leave="sheet-out"
     >
-      <!-- Drag handle -->
       <div class="sheet-grab pt-2 pb-1 flex items-center justify-center"
            @pointerdown.prevent="startSheetDrag($event,'search')">
         <div class="h-1.5 w-12 rounded-full bg-text-secondary/40"></div>
@@ -656,7 +654,9 @@
       <div class="px-4 pt-2 pb-3">
         <div class="flex items-center justify-between">
           <div class="font-bold text-base">جستجو</div>
-          <button type="button" class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
+          <button
+                  type="button"
+                  class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
                   @click="haptic('light'); closeSearchSheet()"
                   aria-label="بستن"
           >✕</button>
@@ -740,7 +740,6 @@
     </div>
   </div>
 
-
   <!-- Settings Sheet (mobile) -->
   <div x-show="settingsOpen" x-cloak class="lg:hidden fixed inset-0 z-50">
     <div
@@ -759,7 +758,6 @@
             x-transition:enter="sheet-in"
             x-transition:leave="sheet-out"
     >
-      <!-- Drag handle -->
       <div class="sheet-grab pt-2 pb-1 flex items-center justify-center"
            @pointerdown.prevent="startSheetDrag($event,'settings')">
         <div class="h-1.5 w-12 rounded-full bg-text-secondary/40"></div>
@@ -768,7 +766,9 @@
       <div class="px-4 pt-2 pb-4">
         <div class="flex items-center justify-between">
           <div class="font-bold text-base">تنظیمات</div>
-          <button type="button" class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
+          <button
+                  type="button"
+                  class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
                   @click="haptic('light'); closeSettings()"
                   aria-label="بستن"
           >✕</button>
@@ -779,6 +779,7 @@
             <div class="text-sm font-semibold">حالت نمایش</div>
             <div class="text-xs text-text-secondary" x-text="theme === 'dark' ? 'تاریک' : 'روشن'"></div>
           </div>
+
           <button
                   type="button"
                   @click="haptic('light'); toggleTheme()"
@@ -786,1409 +787,15 @@
                   :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'"
                   :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
           >
-          <span
-                  class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white"
-                  :class="theme === 'light' ? 'translate-x-6' : 'translate-x-0'"
-          ></span><!DOCTYPE html>
-            <html lang="fa" dir="rtl">
-            <head>
-              <meta charset="UTF-8" />
-              <title>ببینتو · خانه</title>
-              <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-              <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
-              <link rel="preconnect" href="https://fonts.googleapis.com" />
-              <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-              <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet" />
-
-              <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-              <script type="module" src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js"></script>
-
-              <link rel="shortcut icon" href="favicon.webp" type="image/x-icon" />
-
-              <style>
-                [x-cloak] { display: none !important; }
-                button, a { cursor: pointer; }
-
-                /* iOS-like sheet animations */
-                @keyframes sheetIn {
-                  0%   { transform: translateY(28px) scale(.985); opacity: 0; }
-                  72%  { transform: translateY(-3px) scale(1);    opacity: 1; }
-                  100% { transform: translateY(0)   scale(1);     opacity: 1; }
-                }
-                @keyframes sheetOut {
-                  0%   { transform: translateY(0) scale(1); opacity: 1; }
-                  100% { transform: translateY(24px) scale(.99); opacity: 0; }
-                }
-                @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
-                @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-
-                .sheet-in  { animation: sheetIn 360ms cubic-bezier(.18,.95,.18,1) both; }
-                .sheet-out { animation: sheetOut 220ms ease-in both; }
-                .fade-in   { animation: fadeIn 180ms ease-out both; }
-                .fade-out  { animation: fadeOut 140ms ease-in both; }
-
-                @media (prefers-reduced-motion: reduce) {
-                  .sheet-in,.sheet-out,.fade-in,.fade-out { animation: none !important; }
-                }
-
-                /* Scroll lock (iOS-friendly) */
-                body.scroll-locked {
-                  overflow: hidden;
-                  touch-action: none;
-                }
-
-                /* Drag handle */
-                .sheet-grab {
-                  touch-action: none;
-                  user-select: none;
-                  -webkit-user-select: none;
-                }
-              </style>
-
-              <style type="text/tailwindcss">
-                @theme {
-                  --font-sans: "Vazirmatn", system-ui, sans-serif;
-                  --font-heading: "Vazirmatn", sans-serif;
-
-                  --color-bg: #09090b;
-                  --color-surface: #18181b;
-                  --color-surface-highlight: #27272a;
-
-                  --color-text-primary: #f4f4f5;
-                  --color-text-secondary: #a1a1aa;
-
-                  --color-border: #27272a;
-
-                  --color-accent: #10b981;
-                  --color-accent-text: #020617;
-                }
-
-                html.light {
-                  --color-bg: #f4f4f5;
-                  --color-surface: #ffffff;
-                  --color-surface-highlight: #f4f4f5;
-
-                  --color-text-primary: #18181b;
-                  --color-text-secondary: #52525b;
-
-                  --color-border: #e4e4e7;
-
-                  --color-accent: #0f766e;
-                  --color-accent-text: #ffffff;
-                }
-
-                @layer utilities {
-                  .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-                  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-                  .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #3f3f46; border-radius: 9999px; }
-                  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: #52525b; }
-                  .light .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #d4d4d8; }
-                  .light .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: #a1a1aa; }
-
-                  .hide-scrollbar::-webkit-scrollbar { display: none; }
-                  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-                }
-              </style>
-            </head>
-
-            <body
-                    x-data="cinemaApp()"
-                    x-init="init()"
-                    @scroll.window="showBackToTop = (window.scrollY > 400)"
-                    @keydown.escape.window="handleEscape()"
-                    class="bg-bg text-text-primary font-sans antialiased selection:bg-accent selection:text-accent-text"
-            >
-            <div class="min-h-screen flex flex-col pb-28 lg:pb-0">
-              <div class="flex-grow flex justify-center p-4 sm:p-6 lg:p-8">
-                <div class="w-full max-w-screen-2xl grid gap-8 lg:grid-cols-[280px_1fr]">
-
-                  <!-- SIDEBAR (Desktop) -->
-                  <aside class="hidden lg:flex flex-col gap-6 order-2 lg:order-1 h-fit lg:sticky lg:top-8">
-                    <header class="flex items-center gap-3">
-                      <a href="https://aryanpazadeh.github.io/Bebinto/" class="flex items-center gap-3 group">
-                        <div class="h-10 w-10 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg overflow-hidden">
-                          <dotlottie-wc
-                                  src="https://lottie.host/da80b7f6-c288-48b9-a3dc-376f9d276f06/W739BOuqrX.lottie"
-                                  style="width: 44px; height: 44px"
-                                  autoplay loop
-                          ></dotlottie-wc>
-                        </div>
-                        <h1 class="text-xl font-bold font-heading tracking-tight text-text-primary">ببینتو</h1>
-                      </a>
-                    </header>
-
-                    <!-- Desktop Search -->
-                    <div class="relative" @click.outside="closeSearch()">
-                      <form @submit.prevent="redirectToSearchPage()" class="relative">
-                        <input
-                                type="search"
-                                x-model.debounce.250ms="searchQuery"
-                                @focus="openSearch()"
-                                placeholder="جستجوی فیلم و سریال..."
-                                class="w-full bg-surface border border-border rounded-2xl py-2.5 pr-10 pl-10 text-sm text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent/80 transition-all"
-                                aria-label="جستجو"
-                                :aria-expanded="searchOpen"
-                        />
-                        <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                          <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                          </svg>
-                        </div>
-
-                        <button
-                                type="button"
-                                x-show="searchQuery"
-                                x-transition
-                                @click="clearSearch(); haptic('light')"
-                                class="absolute inset-y-0 left-2 my-1 px-2 rounded-xl hover:bg-surface-highlight text-text-secondary"
-                                aria-label="پاک کردن جستجو"
-                        >✕</button>
-                      </form>
-
-                      <div
-                              x-show="searchOpen"
-                              x-transition
-                              x-cloak
-                              class="absolute mt-2 w-full bg-surface-highlight rounded-2xl border border-border overflow-hidden shadow-2xl"
-                              role="listbox"
-                      >
-                        <div class="max-h-96 overflow-y-auto custom-scrollbar p-2">
-                          <template x-if="loadingSearch">
-                            <div class="text-xs text-text-secondary text-center p-3 animate-pulse motion-reduce:animate-none">در حال جستجو...</div>
-                          </template>
-
-                          <template x-for="item in searchResults" :key="'s-'+item.id">
-                            <button
-                                    type="button"
-                                    @click="haptic('medium'); goToDetails(item); closeSearch()"
-                                    class="w-full text-right flex items-center gap-3 p-2 rounded-2xl hover:bg-surface transition-colors"
-                                    role="option"
-                            >
-                              <img :src="item.image" class="w-10 h-14 object-cover rounded-xl bg-surface" @error="$event.target.style.display='none'"/>
-                              <div class="min-w-0 flex-1">
-                                <div class="text-sm font-medium text-text-primary truncate" x-text="displayTitle(item)"></div>
-                                <div class="text-xs text-text-secondary" x-text="displayYear(item)"></div>
-                              </div>
-                            </button>
-                          </template>
-
-                          <template x-if="!loadingSearch && searchQuery && searchResults.length === 0">
-                            <div class="text-xs text-text-secondary text-center p-3">نتیجه‌ای یافت نشد.</div>
-                          </template>
-                        </div>
-
-                        <div class="p-2 border-t border-border">
-                          <button
-                                  type="button"
-                                  @click="haptic('light'); redirectToSearchPage()"
-                                  class="w-full text-center py-2 text-sm bg-accent text-accent-text rounded-2xl hover:opacity-90 transition-opacity disabled:opacity-50"
-                                  :disabled="!searchQuery.trim()"
-                          >مشاهده همه نتایج</button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Desktop tabs -->
-                    <nav class="flex flex-col gap-1">
-                      <template x-for="tab in tabs" :key="tab.id">
-                        <button
-                                type="button"
-                                @click="haptic('light'); setTab(tab.id)"
-                                class="text-right px-3 py-2 rounded-2xl text-sm font-medium transition-all duration-200 flex items-center justify-between"
-                                :class="activeTab === tab.id ? 'bg-accent text-accent-text shadow-md shadow-accent/10' : 'text-text-secondary hover:bg-surface-highlight hover:text-text-primary'"
-                        >
-                          <span x-text="tab.label"></span>
-                        </button>
-                      </template>
-                    </nav>
-
-                    <!-- Smart filter (Desktop) -->
-                    <section class="flex flex-col gap-3 p-3 rounded-2xl bg-surface border border-border">
-                      <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-full bg-accent/10 flex items-center justify-center text-sm">💡</div>
-                        <div>
-                          <h3 class="text-sm font-semibold font-heading text-text-primary">فیلتر هوشمند</h3>
-                          <p class="text-xs text-text-secondary">ژانر یا کلمه کلیدی را انتخاب کنید</p>
-                        </div>
-                      </div>
-
-                      <div class="flex flex-wrap gap-2">
-                        <button type="button" @click="haptic('light'); smartFilter('اکشن')" class="text-xs bg-surface-highlight px-2 py-1 rounded-xl hover:bg-accent hover:text-accent-text transition-colors">🚀 اکشن</button>
-                        <button type="button" @click="haptic('light'); smartFilter('کمدی')" class="text-xs bg-surface-highlight px-2 py-1 rounded-xl hover:bg-accent hover:text-accent-text transition-colors">😂 کمدی</button>
-                        <button type="button" @click="haptic('light'); smartFilter('درام')" class="text-xs bg-surface-highlight px-2 py-1 rounded-xl hover:bg-accent hover:text-accent-text transition-colors">🎭 درام</button>
-                        <button type="button" @click="haptic('light'); smartFilter('ترسناک')" class="text-xs bg-surface-highlight px-2 py-1 rounded-xl hover:bg-accent hover:text-accent-text transition-colors">👻 ترسناک</button>
-                      </div>
-
-                      <form @submit.prevent="haptic('medium'); smartFilter(smartFilterInput)" class="mt-1 flex items-center gap-2">
-                        <input
-                                type="text"
-                                x-model="smartFilterInput"
-                                placeholder="یا کلمه‌ای تایپ کنید..."
-                                class="flex-1 bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-xs placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
-                        />
-                        <button
-                                type="submit"
-                                class="px-4 py-2 rounded-2xl text-xs font-medium bg-accent text-accent-text disabled:opacity-50"
-                                :disabled="!smartFilterInput.trim()"
-                        >فیلتر</button>
-                      </form>
-                    </section>
-
-                    <div class="flex items-center justify-between bg-surface px-3 py-2 rounded-2xl border border-border mt-2">
-            <span class="text-sm font-medium">
-              حالت <span x-text="theme === 'dark' ? 'تاریک' : 'روشن'"></span>
-            </span>
-                      <button
-                              type="button"
-                              @click="haptic('light'); toggleTheme()"
-                              class="w-12 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-accent"
-                              :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'"
-                              :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
-                      >
               <span
                       class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white"
                       :class="theme === 'light' ? 'translate-x-6' : 'translate-x-0'"
               ></span>
-                      </button>
-                    </div>
-                  </aside>
-
-                  <!-- MAIN -->
-                  <main class="order-1 lg:order-2 min-w-0">
-                    <!-- Mobile header: لوگو+اسم راست / عنوان وسط -->
-                    <div class="lg:hidden sticky top-0 z-30 -mx-4 px-4 py-2 bg-bg/70 backdrop-blur-xl border-b border-border">
-                      <div class="relative h-10 flex items-center">
-                        <a href="https://aryanpazadeh.github.io/Bebinto/" class="flex items-center gap-2 shrink-0">
-                          <div class="h-9 w-9 rounded-2xl bg-zinc-900 flex items-center justify-center shadow overflow-hidden">
-                            <dotlottie-wc
-                                    src="https://lottie.host/da80b7f6-c288-48b9-a3dc-376f9d276f06/W739BOuqrX.lottie"
-                                    style="width: 40px; height: 40px"
-                                    autoplay loop
-                            ></dotlottie-wc>
-                          </div>
-                          <span class="text-sm font-bold">ببینتو</span>
-                        </a>
-
-                        <h1 class="absolute left-1/2 -translate-x-1/2 text-sm font-bold truncate max-w-[62%]" x-text="currentTabLabel()"></h1>
-
-                        <!-- spacer (برای تعادل بصری) -->
-                        <div class="w-20"></div>
-                      </div>
-                    </div>
-
-                    <!-- Desktop title -->
-                    <div class="hidden lg:flex items-center justify-between mb-6">
-                      <h2 class="text-2xl font-bold tracking-tight font-heading text-text-primary" x-text="currentTabLabel()"></h2>
-                    </div>
-
-                    <!-- Loading -->
-                    <div x-show="loadingHome" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
-                      <template x-for="i in 10" :key="'sk-'+i">
-                        <div class="aspect-[2/3] bg-surface rounded-2xl animate-pulse motion-reduce:animate-none"></div>
-                      </template>
-                    </div>
-
-                    <template x-if="error">
-                      <div class="mb-6 p-4 rounded-2xl bg-red-950/30 border border-red-800/50 text-red-300 text-sm">
-                        <p x-text="error"></p>
-                      </div>
-                    </template>
-
-                    <!-- Grid -->
-                    <div x-show="!loadingHome" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
-                      <template x-for="item in currentItems" :key="'c-'+item.id">
-                        <article
-                                role="link"
-                                tabindex="0"
-                                @click="goToDetails(item)"
-                                @keydown.enter.prevent="goToDetails(item)"
-                                @keydown.space.prevent="goToDetails(item)"
-                                class="group relative flex flex-col rounded-2xl bg-surface border border-border overflow-hidden
-                       hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30
-                       cursor-pointer transform hover:-translate-y-1
-                       motion-reduce:transition-none motion-reduce:transform-none
-                       focus:outline-none focus:ring-2 focus:ring-accent/80"
-                        >
-                          <div class="relative aspect-[2/3] overflow-hidden">
-                            <img
-                                    :src="item.image"
-                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
-                                    loading="lazy"
-                                    @error="$event.target.style.opacity = '0.2'"
-                                    alt=""
-                            />
-                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur text-white text-xs px-2 py-1 rounded-full border border-white/10 shadow-sm" x-text="displayTypeLabel(item)"></div>
-                            <div x-show="item.imdb" class="absolute bottom-2 left-2 flex items-center gap-1 bg-yellow-400 text-black font-bold text-xs px-1.5 py-0.5 rounded-full shadow-lg">
-                              <span>IMDb</span>
-                              <span x-text="item.imdb"></span>
-                            </div>
-                          </div>
-
-                          <button
-                                  type="button"
-                                  @click.stop="haptic('light'); toggleWatchlist(item.id)"
-                                  class="absolute top-2 left-2 z-10 p-1.5 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-accent hover:text-accent-text transition-colors"
-                                  :aria-label="isInWatchlist(item.id) ? 'حذف از لیست من' : 'افزودن به لیست من'"
-                          >
-                            <svg class="w-5 h-5" :class="{'fill-current text-red-500': isInWatchlist(item.id)}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.5l1.318-1.182a4.5 4.5 0 116.364 6.364L12 21l-7.682-7.318a4.5 4.5 0 010-6.364z"></path>
-                            </svg>
-                          </button>
-
-                          <div class="flex flex-col gap-1 p-3">
-                            <h3 class="font-semibold text-base truncate text-text-primary" x-text="displayTitle(item)"></h3>
-                            <div class="flex items-center text-xs text-text-secondary gap-2">
-                              <span x-text="displayYear(item) || '—'"></span>
-                              <span class="w-1 h-1 bg-text-secondary/50 rounded-full"></span>
-                              <span x-text="displayCountry(item)" class="truncate max-w-24"></span>
-                            </div>
-                            <div class="mt-2 flex flex-wrap gap-1.5">
-                              <template x-for="g in displayGenres(item)" :key="'g-'+item.id+'-'+g">
-                                <span class="text-xs text-text-secondary bg-surface-highlight px-2 py-0.5 rounded-full border border-border" x-text="g"></span>
-                              </template>
-                            </div>
-                          </div>
-                        </article>
-                      </template>
-                    </div>
-
-                    <div x-show="!loadingHome && currentItems.length > 0 && canLoadMore" class="mt-8 text-center">
-                      <button
-                              type="button"
-                              @click="haptic('light'); loadMore()"
-                              :disabled="loadingMore"
-                              class="bg-accent text-accent-text font-semibold px-6 py-3 rounded-2xl hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-wait"
-                      >
-                        <span x-show="!loadingMore">بارگذاری بیشتر</span>
-                        <span x-show="loadingMore">در حال بارگذاری...</span>
-                      </button>
-                    </div>
-
-                    <template x-if="!loadingHome && currentItems.length === 0 && (activeTab === 'my-list' || activeTab === 'smart-results')">
-                      <p
-                              class="text-center p-8 text-text-secondary"
-                              x-text="activeTab === 'my-list'
-                ? 'لیست شما خالی است. با کلیک روی ♡ روی پوسترها، آیتم‌ها را به لیست خود اضافه کنید.'
-                : 'نتیجه‌ای با این فیلتر یافت نشد.'"
-                      ></p>
-                    </template>
-                  </main>
-                </div>
-              </div>
-
-              <!-- Back to top: Desktop -->
-              <button
-                      x-show="showBackToTop"
-                      @click="haptic('light'); window.scrollTo({ top: 0, behavior: 'smooth' })"
-                      x-transition
-                      class="hidden lg:flex fixed bottom-6 right-6 z-30 bg-accent text-accent-text p-3 rounded-full shadow-lg hover:scale-110 transition-transform motion-reduce:transition-none motion-reduce:transform-none"
-                      aria-label="بازگشت به بالا"
-              >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                </svg>
-              </button>
-
-              <!-- Back to top: Mobile -->
-              <button
-                      x-show="showBackToTop"
-                      @click="haptic('light'); window.scrollTo({ top: 0, behavior: 'smooth' })"
-                      x-transition
-                      class="lg:hidden fixed right-6 z-30 bg-accent text-accent-text p-3 rounded-full shadow-lg hover:scale-110 transition-transform motion-reduce:transition-none motion-reduce:transform-none"
-                      style="bottom: calc(6.5rem + env(safe-area-inset-bottom));"
-                      aria-label="بازگشت به بالا"
-              >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                </svg>
-              </button>
-
-              <!-- Toast: Desktop -->
-              <div class="hidden lg:block fixed left-1/2 -translate-x-1/2 bottom-6 z-50 pointer-events-none" aria-live="polite" aria-atomic="true">
-                <div
-                        x-show="toast.show"
-                        x-transition
-                        x-cloak
-                        class="pointer-events-auto max-w-sm rounded-2xl border border-border bg-surface/90 backdrop-blur-xl px-4 py-3 shadow-2xl"
-                >
-                  <div class="text-sm font-semibold text-center" x-text="toast.message"></div>
-                </div>
-              </div>
-
-              <!-- Toast: Mobile -->
-              <div class="lg:hidden fixed left-1/2 -translate-x-1/2 z-50 pointer-events-none" style="bottom: calc(6.5rem + env(safe-area-inset-bottom));" aria-live="polite" aria-atomic="true">
-                <div
-                        x-show="toast.show"
-                        x-transition
-                        x-cloak
-                        class="pointer-events-auto max-w-sm rounded-2xl border border-border bg-surface/90 backdrop-blur-xl px-4 py-3 shadow-2xl"
-                >
-                  <div class="text-sm font-semibold text-center" x-text="toast.message"></div>
-                </div>
-              </div>
-
-              <!-- Floating Modern Bottom Nav -->
-              <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40">
-                <div class="px-4 pb-4" style="padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);">
-                  <div class="mx-auto max-w-md rounded-[28px] border border-border/60 bg-surface/70 backdrop-blur-2xl shadow-2xl">
-                    <div class="flex items-center justify-between px-3 py-2">
-
-                      <!-- Categories / Tabs (ACTIVE وقتی تب‌ها فعاله) -->
-                      <button
-                              type="button"
-                              @click="haptic('light'); toggleTabsSheet()"
-                              class="relative flex-1 py-2 flex flex-col items-center justify-center gap-1"
-                              :class="isCategoriesNavActive ? 'text-accent' : 'text-text-secondary'"
-                              aria-label="دسته‌بندی"
-                      >
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h7v7H4V6zM13 6h7v7h-7V6zM4 13h7v7H4v-7zM13 13h7v7h-7v-7z"/>
-                        </svg>
-                        <span class="text-[11px] leading-none font-semibold">دسته‌بندی</span>
-                        <span x-show="isCategoriesNavActive" class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-accent"></span>
-                      </button>
-
-                      <!-- Search -->
-                      <button
-                              type="button"
-                              @click="haptic('light'); toggleSearchSheet()"
-                              class="relative flex-1 py-2 flex flex-col items-center justify-center gap-1"
-                              :class="searchSheetOpen ? 'text-accent' : 'text-text-secondary'"
-                              aria-label="جستجو"
-                      >
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        <span class="text-[11px] leading-none font-semibold">جستجو</span>
-                        <span x-show="searchSheetOpen" class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-accent"></span>
-                      </button>
-
-                      <!-- My List -->
-                      <button
-                              type="button"
-                              @click="haptic('light'); setTab('my-list'); closeAllSheets(); window.scrollTo({top:0, behavior:'smooth'})"
-                              class="relative flex-1 py-2 flex flex-col items-center justify-center gap-1"
-                              :class="activeTab === 'my-list' ? 'text-accent' : 'text-text-secondary'"
-                              aria-label="لیست من"
-                      >
-                        <div class="relative">
-                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.5l1.318-1.182a4.5 4.5 0 116.364 6.364L12 21l-7.682-7.318a4.5 4.5 0 010-6.364z"/>
-                          </svg>
-
-                          <span
-                                  x-show="watchlistCount > 0"
-                                  x-cloak
-                                  class="absolute -top-2 -left-3 min-w-5 h-5 px-1 rounded-full bg-accent text-accent-text text-[10px] font-bold flex items-center justify-center shadow"
-                                  x-text="watchlistCount > 99 ? '99+' : watchlistCount"
-                          ></span>
-                        </div>
-
-                        <span class="text-[11px] leading-none font-semibold">لیست من</span>
-                        <span x-show="activeTab === 'my-list'" class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-accent"></span>
-                      </button>
-
-                      <!-- Settings -->
-                      <button
-                              type="button"
-                              @click="haptic('light'); toggleSettingsSheet()"
-                              class="relative flex-1 py-2 flex flex-col items-center justify-center gap-1"
-                              :class="settingsOpen ? 'text-accent' : 'text-text-secondary'"
-                              aria-label="تنظیمات"
-                      >
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"/>
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19.4 15a7.97 7.97 0 00.1-1 7.97 7.97 0 00-.1-1l2.1-1.6-2-3.4-2.5 1a8.5 8.5 0 00-1.7-1L14.9 2h-3.8L10.7 4a8.5 8.5 0 00-1.7 1l-2.5-1-2 3.4L6.6 13a7.97 7.97 0 00-.1 1 7.97 7.97 0 00.1 1l-2.1 1.6 2 3.4 2.5-1c.5.4 1.1.7 1.7 1l.4 2h3.8l.4-2c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.4L19.4 15z"/>
-                        </svg>
-                        <span class="text-[11px] leading-none font-semibold">تنظیمات</span>
-                        <span x-show="settingsOpen" class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-accent"></span>
-                      </button>
-
-                    </div>
-                  </div>
-                </div>
-              </nav>
-
-              <!-- Tabs Sheet (mobile) -->
-              <div x-show="tabsSheetOpen" x-cloak class="lg:hidden fixed inset-0 z-50">
-                <div
-                        class="absolute inset-0 bg-black/60"
-                        :style="backdropStyle('tabs')"
-                        @click="haptic('light'); closeTabsSheet()"
-                        x-transition:enter="fade-in"
-                        x-transition:leave="fade-out"
-                ></div>
-
-                <div
-                        class="absolute left-0 right-0 bottom-0 bg-surface border-t border-border rounded-t-[28px] shadow-2xl"
-                        style="padding-bottom: env(safe-area-inset-bottom);"
-                        :style="sheetStyle('tabs')"
-                        @click.stop
-                        x-transition:enter="sheet-in"
-                        x-transition:leave="sheet-out"
-                >
-                  <!-- Drag handle -->
-                  <div class="sheet-grab pt-2 pb-1 flex items-center justify-center"
-                       @pointerdown.prevent="startSheetDrag($event,'tabs')">
-                    <div class="h-1.5 w-12 rounded-full bg-text-secondary/40"></div>
-                  </div>
-
-                  <div class="px-4 pt-2 pb-4">
-                    <div class="flex items-center justify-between">
-                      <div class="font-bold text-base">دسته‌بندی</div>
-                      <button type="button" class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
-                              @click="haptic('light'); closeTabsSheet()"
-                              aria-label="بستن"
-                      >✕</button>
-                    </div>
-
-                    <div class="mt-4 space-y-5">
-                      <div class="space-y-2">
-                        <div class="text-xs font-bold text-text-secondary">فیلم</div>
-                        <div class="grid grid-cols-2 gap-2">
-                          <template x-for="t in movieTabs()" :key="'mv-'+t.id">
-                            <button
-                                    type="button"
-                                    @click="haptic('medium'); setTab(t.id); closeTabsSheet(); window.scrollTo({top:0, behavior:'smooth'})"
-                                    class="px-3 py-3 rounded-2xl border border-border bg-surface-highlight/40 hover:bg-surface-highlight text-sm font-semibold text-right"
-                                    :class="activeTab === t.id ? 'ring-2 ring-accent/60' : ''"
-                            >
-                              <span x-text="t.label"></span>
-                            </button>
-                          </template>
-                        </div>
-                      </div>
-
-                      <div class="space-y-2">
-                        <div class="text-xs font-bold text-text-secondary">سریال</div>
-                        <div class="grid grid-cols-2 gap-2">
-                          <template x-for="t in seriesTabs()" :key="'sr-'+t.id">
-                            <button
-                                    type="button"
-                                    @click="haptic('medium'); setTab(t.id); closeTabsSheet(); window.scrollTo({top:0, behavior:'smooth'})"
-                                    class="px-3 py-3 rounded-2xl border border-border bg-surface-highlight/40 hover:bg-surface-highlight text-sm font-semibold text-right"
-                                    :class="activeTab === t.id ? 'ring-2 ring-accent/60' : ''"
-                            >
-                              <span x-text="t.label"></span>
-                            </button>
-                          </template>
-                        </div>
-                      </div>
-
-                      <!-- Smart Filter (Mobile) -->
-                      <div class="rounded-2xl border border-border bg-surface-highlight/30 p-3">
-                        <div class="flex items-center gap-2">
-                          <div class="w-7 h-7 rounded-full bg-accent/10 flex items-center justify-center text-sm">💡</div>
-                          <div class="min-w-0">
-                            <div class="text-sm font-bold">فیلتر هوشمند</div>
-                            <div class="text-xs text-text-secondary">ژانر یا کلمه کلیدی</div>
-                          </div>
-                        </div>
-
-                        <div class="mt-3 flex flex-wrap gap-2">
-                          <button type="button" @click="haptic('light'); smartFilter('اکشن'); closeTabsSheet()" class="text-xs bg-surface-highlight px-3 py-2 rounded-full hover:bg-accent hover:text-accent-text transition-colors">🚀 اکشن</button>
-                          <button type="button" @click="haptic('light'); smartFilter('کمدی'); closeTabsSheet()" class="text-xs bg-surface-highlight px-3 py-2 rounded-full hover:bg-accent hover:text-accent-text transition-colors">😂 کمدی</button>
-                          <button type="button" @click="haptic('light'); smartFilter('درام'); closeTabsSheet()" class="text-xs bg-surface-highlight px-3 py-2 rounded-full hover:bg-accent hover:text-accent-text transition-colors">🎭 درام</button>
-                          <button type="button" @click="haptic('light'); smartFilter('ترسناک'); closeTabsSheet()" class="text-xs bg-surface-highlight px-3 py-2 rounded-full hover:bg-accent hover:text-accent-text transition-colors">👻 ترسناک</button>
-                        </div>
-
-                        <form @submit.prevent="haptic('medium'); smartFilter(smartFilterInput); closeTabsSheet()" class="mt-3 flex items-center gap-2">
-                          <input
-                                  type="text"
-                                  x-model="smartFilterInput"
-                                  placeholder="یا تایپ کنید..."
-                                  class="flex-1 bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent/80"
-                          />
-                          <button
-                                  type="submit"
-                                  class="px-4 py-2 rounded-2xl text-sm font-bold bg-accent text-accent-text disabled:opacity-50"
-                                  :disabled="!smartFilterInput.trim()"
-                          >فیلتر</button>
-                        </form>
-                      </div>
-                    </div>
-
-                    <div class="h-1"></div>
-                  </div>
-                </div>
-              </div>
-
-
-              <!-- Search Sheet (mobile) -->
-              <div x-show="searchSheetOpen" x-cloak class="lg:hidden fixed inset-0 z-50">
-                <div
-                        class="absolute inset-0 bg-black/60"
-                        :style="backdropStyle('search')"
-                        @click="haptic('light'); closeSearchSheet()"
-                        x-transition:enter="fade-in"
-                        x-transition:leave="fade-out"
-                ></div>
-
-                <div
-                        class="absolute left-0 right-0 bottom-0 bg-surface border-t border-border rounded-t-[28px] shadow-2xl"
-                        style="padding-bottom: env(safe-area-inset-bottom);"
-                        :style="sheetStyle('search')"
-                        @click.stop
-                        x-transition:enter="sheet-in"
-                        x-transition:leave="sheet-out"
-                >
-                  <!-- Drag handle -->
-                  <div class="sheet-grab pt-2 pb-1 flex items-center justify-center"
-                       @pointerdown.prevent="startSheetDrag($event,'search')">
-                    <div class="h-1.5 w-12 rounded-full bg-text-secondary/40"></div>
-                  </div>
-
-                  <div class="px-4 pt-2 pb-3">
-                    <div class="flex items-center justify-between">
-                      <div class="font-bold text-base">جستجو</div>
-                      <button type="button" class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
-                              @click="haptic('light'); closeSearchSheet()"
-                              aria-label="بستن"
-                      >✕</button>
-                    </div>
-
-                    <div class="mt-3 relative">
-                      <input
-                              x-ref="searchSheetInput"
-                              type="search"
-                              x-model.debounce.250ms="searchQuery"
-                              placeholder="نام فیلم یا سریال..."
-                              class="w-full bg-surface-highlight border border-border rounded-2xl py-3 pr-11 pl-11 text-sm placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent/80"
-                              aria-label="جستجو"
-                      />
-                      <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                        <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                      </div>
-
-                      <button
-                              type="button"
-                              x-show="searchQuery"
-                              x-transition
-                              @click="haptic('light'); clearSearch()"
-                              class="absolute inset-y-0 left-2 my-1 px-3 rounded-2xl hover:bg-surface text-text-secondary"
-                              aria-label="پاک کردن"
-                      >✕</button>
-                    </div>
-
-                    <div class="mt-3">
-                      <button
-                              type="button"
-                              @click="haptic('light'); clearSearch(); showToast('جستجو پاک شد')"
-                              :disabled="!searchQuery.trim()"
-                              class="w-full rounded-2xl border border-border bg-surface-highlight px-3 py-3 text-sm font-bold hover:opacity-90 disabled:opacity-50"
-                      >
-                        پاکسازی جستجو
-                      </button>
-                    </div>
-
-                    <div class="mt-3 bg-surface-highlight/40 border border-border rounded-2xl overflow-hidden">
-                      <div class="max-h-[42vh] overflow-y-auto custom-scrollbar p-2">
-                        <template x-if="!searchQuery.trim()">
-                          <div class="text-xs text-text-secondary text-center p-6">برای شروع، چیزی تایپ کنید…</div>
-                        </template>
-
-                        <template x-if="loadingSearch">
-                          <div class="text-xs text-text-secondary text-center p-4 animate-pulse motion-reduce:animate-none">در حال جستجو...</div>
-                        </template>
-
-                        <template x-for="item in searchResults" :key="'ms-'+item.id">
-                          <button
-                                  type="button"
-                                  @click="haptic('medium'); goToDetails(item); closeSearchSheet()"
-                                  class="w-full text-right flex items-center gap-3 p-2 rounded-2xl hover:bg-surface transition-colors"
-                          >
-                            <img :src="item.image" class="w-10 h-14 object-cover rounded-xl bg-surface" @error="$event.target.style.display='none'"/>
-                            <div class="min-w-0 flex-1">
-                              <div class="text-sm font-semibold truncate" x-text="displayTitle(item)"></div>
-                              <div class="text-xs text-text-secondary" x-text="displayYear(item)"></div>
-                            </div>
-                          </button>
-                        </template>
-
-                        <template x-if="!loadingSearch && searchQuery.trim() && searchResults.length === 0">
-                          <div class="text-xs text-text-secondary text-center p-4">نتیجه‌ای یافت نشد.</div>
-                        </template>
-                      </div>
-
-                      <div class="p-2 border-t border-border">
-                        <button
-                                type="button"
-                                @click="haptic('light'); redirectToSearchPage()"
-                                class="w-full py-2.5 rounded-2xl bg-accent text-accent-text font-semibold hover:opacity-90 disabled:opacity-50"
-                                :disabled="!searchQuery.trim()"
-                        >مشاهده همه نتایج</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-              <!-- Settings Sheet (mobile) -->
-              <div x-show="settingsOpen" x-cloak class="lg:hidden fixed inset-0 z-50">
-                <div
-                        class="absolute inset-0 bg-black/60"
-                        :style="backdropStyle('settings')"
-                        @click="haptic('light'); closeSettings()"
-                        x-transition:enter="fade-in"
-                        x-transition:leave="fade-out"
-                ></div>
-
-                <div
-                        class="absolute left-0 right-0 bottom-0 bg-surface border-t border-border rounded-t-[28px] shadow-2xl"
-                        style="padding-bottom: env(safe-area-inset-bottom);"
-                        :style="sheetStyle('settings')"
-                        @click.stop
-                        x-transition:enter="sheet-in"
-                        x-transition:leave="sheet-out"
-                >
-                  <!-- Drag handle -->
-                  <div class="sheet-grab pt-2 pb-1 flex items-center justify-center"
-                       @pointerdown.prevent="startSheetDrag($event,'settings')">
-                    <div class="h-1.5 w-12 rounded-full bg-text-secondary/40"></div>
-                  </div>
-
-                  <div class="px-4 pt-2 pb-4">
-                    <div class="flex items-center justify-between">
-                      <div class="font-bold text-base">تنظیمات</div>
-                      <button type="button" class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
-                              @click="haptic('light'); closeSettings()"
-                              aria-label="بستن"
-                      >✕</button>
-                    </div>
-
-                    <div class="mt-4 flex items-center justify-between bg-surface-highlight/60 border border-border rounded-2xl px-3 py-3">
-                      <div>
-                        <div class="text-sm font-semibold">حالت نمایش</div>
-                        <div class="text-xs text-text-secondary" x-text="theme === 'dark' ? 'تاریک' : 'روشن'"></div>
-                      </div>
-                      <button
-                              type="button"
-                              @click="haptic('light'); toggleTheme()"
-                              class="w-12 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent/80"
-                              :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'"
-                              :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
-                      >
-          <span
-                  class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white"
-                  :class="theme === 'light' ? 'translate-x-6' : 'translate-x-0'"
-          ></span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-              <footer class="w-full py-8 mt-auto border-t border-border bg-bg">
-                <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-                  <p class="text-sm text-text-secondary">&copy; <span x-text="new Date().getFullYear()"></span> ببینتو. تمامی حقوق محفوظ است.</p>
-                </div>
-              </footer>
-            </div>
-
-            <script>
-              function cinemaApp() {
-                return {
-                  baseUrl: "https://cinemaplus-app.vercel.app",
-                  detailsPagePath: "details.html",
-                  searchPagePath: "search.html",
-
-                  activeTab: "movies-new",
-
-                  theme: "dark",
-                  itemsPerPage: 15,
-                  showBackToTop: false,
-
-                  cache: {},
-                  cacheKey: "cinemaPlusCache_v6",
-                  cacheTTL: 1000 * 60 * 30,
-
-                  loadingHome: true,
-                  loadingSearch: false,
-                  loadingMore: false,
-                  canLoadMore: true,
-                  error: "",
-
-                  searchQuery: "",
-                  searchResults: [],
-                  searchOpen: false, // desktop dropdown
-
-                  // mobile sheets
-                  searchSheetOpen: false,
-                  settingsOpen: false,
-                  tabsSheetOpen: false,
-
-                  toast: { show: false, message: "" },
-                  toastTimer: null,
-
-                  // scroll lock (iOS-safe)
-                  _scrollLocked: false,
-                  _lockedScrollY: 0,
-
-                  // swipe/drag state
-                  dragPhase: null,     // 'dragging' | 'returning' | null
-                  dragSheet: null,     // 'tabs'|'search'|'settings'
-                  dragY: 0,
-                  _dragStartY: 0,
-                  _dragLastY: 0,
-                  _dragLastT: 0,
-                  _dragVel: 0,
-                  _dragMoveHandler: null,
-                  _dragEndHandler: null,
-
-                  tabsData: {
-                    "movies-new": [],
-                    "movies-top": [],
-                    "series-new": [],
-                    "series-top": [],
-                    "series-upd": [],
-                    "series-best": [],
-                    "my-list": [],
-                    "smart-results": [],
-                  },
-
-                  tabPagination: {
-                    "movies-new": 0,
-                    "movies-top": 0,
-                    "series-new": 0,
-                    "series-top": 0,
-                    "series-upd": 0,
-                    "series-best": 0,
-                  },
-
-                  watchlist: [],
-                  smartFilterInput: "",
-
-                  tabs: [
-                    { id: "movies-new", label: "فیلم‌های جدید", endpoint: "/api/movies/new" },
-                    { id: "movies-top", label: "فیلم‌های برتر", endpoint: "/api/movies/top-rated" },
-                    { id: "series-new", label: "سریال‌های جدید", endpoint: "/api/series/new" },
-                    { id: "series-top", label: "سریال‌های برتر", endpoint: "/api/series/top-rated" },
-                    { id: "series-upd", label: "سریال‌های بروزشده", endpoint: "/api/series/updated" },
-                    { id: "series-best", label: "پیشنهاد سردبیر", endpoint: "/api/series/best" },
-                    { id: "my-list", label: "♥ لیست من", endpoint: null },
-                  ],
-
-                  init() {
-                    this.loadCache();
-                    this.loadTheme();
-                    this.loadWatchlist();
-                    this.fetchTabData(this.activeTab, true);
-
-                    this.$watch("searchQuery", (value) => {
-                      const v = (value || "").trim();
-                      if (v) this.doSearch();
-                      else {
-                        this.searchResults = [];
-                        this.searchOpen = false;
-                      }
-                    });
-
-                    // safety
-                    this.syncScrollLock();
-                  },
-
-                  // Bottom nav: دسته‌بندی وقتی تب‌ها فعاله
-                  get isCategoriesNavActive() {
-                    if (this.tabsSheetOpen) return true;
-                    if (this.searchSheetOpen || this.settingsOpen) return false;
-                    return this.activeTab !== "my-list";
-                  },
-
-                  // ---- Haptic (Android) ----
-                  haptic(level = "light") {
-                    try {
-                      if (!navigator.vibrate) return;
-                      const ms = level === "heavy" ? 30 : level === "medium" ? 20 : 10;
-                      navigator.vibrate(ms);
-                    } catch (e) {}
-                  },
-
-                  // ---- Scroll lock (iOS-like) ----
-                  anySheetOpen() {
-                    return this.tabsSheetOpen || this.searchSheetOpen || this.settingsOpen;
-                  },
-
-                  lockScroll() {
-                    if (this._scrollLocked) return;
-                    this._lockedScrollY = window.scrollY || 0;
-
-                    document.body.classList.add("scroll-locked");
-                    document.body.style.position = "fixed";
-                    document.body.style.top = `-${this._lockedScrollY}px`;
-                    document.body.style.left = "0";
-                    document.body.style.right = "0";
-                    document.body.style.width = "100%";
-
-                    this._scrollLocked = true;
-                  },
-
-                  unlockScroll() {
-                    if (!this._scrollLocked) return;
-
-                    document.body.classList.remove("scroll-locked");
-                    document.body.style.position = "";
-                    document.body.style.top = "";
-                    document.body.style.left = "";
-                    document.body.style.right = "";
-                    document.body.style.width = "";
-
-                    window.scrollTo(0, this._lockedScrollY || 0);
-
-                    this._scrollLocked = false;
-                  },
-
-                  syncScrollLock() {
-                    if (this.anySheetOpen()) this.lockScroll();
-                    else this.unlockScroll();
-                  },
-
-                  // ---- Drag helpers ----
-                  sheetStyle(sheet) {
-                    if (this.dragSheet !== sheet) return "";
-                    const t = this.dragPhase === "dragging"
-                            ? "transition: none;"
-                            : "transition: transform 280ms cubic-bezier(.2,.9,.2,1);";
-                    return `transform: translateY(${this.dragY}px); ${t}`;
-                  },
-
-                  backdropStyle(sheet) {
-                    const active = this.dragSheet === sheet && (this.dragPhase === "dragging" || this.dragPhase === "returning");
-                    if (!active) return "";
-                    const op = Math.max(0.2, 1 - (this.dragY / 320));
-                    const t = this.dragPhase === "dragging"
-                            ? "transition: none;"
-                            : "transition: opacity 240ms ease;";
-                    return `opacity: ${op}; ${t}`;
-                  },
-
-                  resetDrag() {
-                    try {
-                      if (this._dragMoveHandler) window.removeEventListener("pointermove", this._dragMoveHandler);
-                      if (this._dragEndHandler) window.removeEventListener("pointerup", this._dragEndHandler);
-                      if (this._dragEndHandler) window.removeEventListener("pointercancel", this._dragEndHandler);
-                    } catch (e) {}
-
-                    this.dragPhase = null;
-                    this.dragSheet = null;
-                    this.dragY = 0;
-
-                    this._dragStartY = 0;
-                    this._dragLastY = 0;
-                    this._dragLastT = 0;
-                    this._dragVel = 0;
-                    this._dragMoveHandler = null;
-                    this._dragEndHandler = null;
-                  },
-
-                  startSheetDrag(e, sheet) {
-                    if (!this.anySheetOpen()) return;
-
-                    // فقط drag رو برای شیت باز فعال کن
-                    const isOpen = (sheet === "tabs" && this.tabsSheetOpen)
-                            || (sheet === "search" && this.searchSheetOpen)
-                            || (sheet === "settings" && this.settingsOpen);
-
-                    if (!isOpen) return;
-
-                    this.dragSheet = sheet;
-                    this.dragPhase = "dragging";
-                    this.dragY = 0;
-
-                    const y = e.clientY ?? (e.touches?.[0]?.clientY ?? 0);
-                    this._dragStartY = y;
-                    this._dragLastY = y;
-                    this._dragLastT = performance.now();
-                    this._dragVel = 0;
-
-                    this._dragMoveHandler = (ev) => this.onSheetDragMove(ev);
-                    this._dragEndHandler = (ev) => this.endSheetDrag(ev);
-
-                    window.addEventListener("pointermove", this._dragMoveHandler, { passive: false });
-                    window.addEventListener("pointerup", this._dragEndHandler, { passive: true });
-                    window.addEventListener("pointercancel", this._dragEndHandler, { passive: true });
-                  },
-
-                  onSheetDragMove(e) {
-                    if (this.dragPhase !== "dragging") return;
-
-                    const y = e.clientY ?? 0;
-                    const dy = Math.max(0, y - this._dragStartY);
-                    this.dragY = dy;
-
-                    const now = performance.now();
-                    const dt = Math.max(1, now - this._dragLastT);
-                    this._dragVel = (y - this._dragLastY) / dt; // px/ms
-                    this._dragLastY = y;
-                    this._dragLastT = now;
-
-                    // جلوگیری از اسکرول صفحه هنگام درگ
-                    e.preventDefault?.();
-                  },
-
-                  closeSheetByName(sheet) {
-                    this.resetDrag();
-                    if (sheet === "tabs") this.closeTabsSheet();
-                    if (sheet === "search") this.closeSearchSheet();
-                    if (sheet === "settings") this.closeSettings();
-                  },
-
-                  endSheetDrag() {
-                    if (this.dragPhase !== "dragging") return;
-
-                    // remove listeners
-                    try {
-                      if (this._dragMoveHandler) window.removeEventListener("pointermove", this._dragMoveHandler);
-                      if (this._dragEndHandler) window.removeEventListener("pointerup", this._dragEndHandler);
-                      if (this._dragEndHandler) window.removeEventListener("pointercancel", this._dragEndHandler);
-                    } catch (e) {}
-
-                    const dy = this.dragY || 0;
-                    const vel = this._dragVel || 0;
-
-                    // threshold: distance OR velocity
-                    const shouldClose = dy > 110 || vel > 0.75;
-
-                    if (shouldClose) {
-                      const target = this.dragSheet;
-                      this.haptic("light");
-                      this.closeSheetByName(target);
-                      return;
-                    }
-
-                    // snap back (animated)
-                    this.dragPhase = "returning";
-                    requestAnimationFrame(() => { this.dragY = 0; });
-                    setTimeout(() => this.resetDrag(), 320);
-                  },
-
-                  // ---- sheets ----
-                  closeAllSheets() {
-                    this.tabsSheetOpen = false;
-                    this.searchSheetOpen = false;
-                    this.settingsOpen = false;
-                    this.resetDrag();
-                    this.syncScrollLock();
-                  },
-
-                  toggleTabsSheet() {
-                    const next = !this.tabsSheetOpen;
-                    this.closeAllSheets();
-                    this.tabsSheetOpen = next;
-                    this.syncScrollLock();
-                  },
-
-                  closeTabsSheet() {
-                    this.tabsSheetOpen = false;
-                    this.resetDrag();
-                    this.syncScrollLock();
-                  },
-
-                  toggleSearchSheet() {
-                    const next = !this.searchSheetOpen;
-                    this.closeAllSheets();
-                    this.searchSheetOpen = next;
-                    this.syncScrollLock();
-                    if (this.searchSheetOpen) this.$nextTick(() => this.$refs.searchSheetInput?.focus?.());
-                  },
-
-                  closeSearchSheet() {
-                    this.searchSheetOpen = false;
-                    this.resetDrag();
-                    this.syncScrollLock();
-                  },
-
-                  toggleSettingsSheet() {
-                    const next = !this.settingsOpen;
-                    this.closeAllSheets();
-                    this.settingsOpen = next;
-                    this.syncScrollLock();
-                  },
-
-                  closeSettings() {
-                    this.settingsOpen = false;
-                    this.resetDrag();
-                    this.syncScrollLock();
-                  },
-
-                  handleEscape() {
-                    this.closeAllSheets();
-                    this.closeSearch(); // desktop dropdown
-                  },
-
-                  // ---- toast ----
-                  showToast(msg) {
-                    this.toast.message = msg;
-                    this.toast.show = true;
-                    clearTimeout(this.toastTimer);
-                    this.toastTimer = setTimeout(() => (this.toast.show = false), 1800);
-                  },
-
-                  // ---- tab helpers ----
-                  movieTabs() { return this.tabs.filter(t => t.id.startsWith("movies")); },
-                  seriesTabs() { return this.tabs.filter(t => t.id.startsWith("series")); },
-                  get watchlistCount() { return Array.isArray(this.watchlist) ? this.watchlist.length : 0; },
-
-                  // ---- Desktop search dropdown ----
-                  openSearch() { if (this.searchQuery.trim()) this.searchOpen = true; },
-                  closeSearch() { this.searchOpen = false; },
-                  clearSearch() { this.searchQuery = ""; this.searchResults = []; this.searchOpen = false; },
-
-                  // ---- cache/theme ----
-                  loadCache() {
-                    try {
-                      const data = localStorage.getItem(this.cacheKey);
-                      if (data) this.cache = JSON.parse(data);
-                    } catch (e) {}
-                  },
-
-                  saveCache() {
-                    try {
-                      localStorage.setItem(this.cacheKey, JSON.stringify(this.cache));
-                    } catch (e) {}
-                  },
-
-                  async getCachedOrFetch(key, fetcher) {
-                    const now = Date.now();
-                    if (this.cache[key] && now - this.cache[key].timestamp < this.cacheTTL) {
-                      return this.cache[key].data;
-                    }
-                    const data = await fetcher();
-                    this.cache[key] = { data, timestamp: now };
-                    this.saveCache();
-                    return data;
-                  },
-
-                  applyThemeClass() {
-                    const el = document.documentElement;
-                    el.classList.remove("light", "dark");
-                    el.classList.add(this.theme);
-                  },
-
-                  loadTheme() {
-                    const saved = localStorage.getItem("cinemaplus-theme");
-                    this.theme = saved === "light" || saved === "dark" ? saved : "dark";
-                    this.applyThemeClass();
-                  },
-
-                  toggleTheme() {
-                    this.theme = this.theme === "dark" ? "light" : "dark";
-                    localStorage.setItem("cinemaplus-theme", this.theme);
-                    this.applyThemeClass();
-                  },
-
-                  // ---- data ----
-                  get currentItems() { return this.tabsData[this.activeTab] || []; },
-
-                  get allItems() {
-                    const all = new Map();
-                    Object.entries(this.tabsData).forEach(([key, items]) => {
-                      if (key !== "smart-results" && key !== "my-list") {
-                        (items || []).forEach((item) => {
-                          if (item && item.id) all.set(item.id, item);
-                        });
-                      }
-                    });
-                    return Array.from(all.values());
-                  },
-
-                  async fetchTabData(tabId, isFirstLoad = false) {
-                    if (isFirstLoad) this.loadingHome = true;
-                    else this.loadingMore = true;
-
-                    this.error = "";
-
-                    try {
-                      const tabInfo = this.tabs.find((t) => t.id === tabId);
-                      if (!tabInfo?.endpoint) {
-                        this.canLoadMore = false;
-                        throw new Error("No endpoint.");
-                      }
-
-                      const page = this.tabPagination[tabId] || 0;
-                      const url = `${this.baseUrl}${tabInfo.endpoint}?page=${page}`;
-
-                      const newItems = await this.getCachedOrFetch(url, () =>
-                              fetch(url).then((res) => res.json())
-                      );
-
-                      if (Array.isArray(newItems) && newItems.length > 0) {
-                        const type = tabId.startsWith("series") ? "series" : "movie";
-                        const enrichedItems = newItems.map((item) => ({ ...item, __type: type }));
-
-                        const existingIds = new Set(this.tabsData[tabId].map((i) => i.id));
-                        this.tabsData[tabId].push(...enrichedItems.filter((i) => !existingIds.has(i.id)));
-
-                        this.canLoadMore = newItems.length >= this.itemsPerPage;
-                      } else {
-                        this.canLoadMore = false;
-                      }
-                    } catch (e) {
-                      if (e.message !== "No endpoint.") this.error = "خطا در ارتباط با سرور.";
-                    } finally {
-                      if (isFirstLoad) this.loadingHome = false;
-                      this.loadingMore = false;
-                    }
-                  },
-
-                  loadMore() {
-                    if (this.loadingMore || !this.canLoadMore) return;
-                    this.tabPagination[this.activeTab] = (this.tabPagination[this.activeTab] || 0) + 1;
-                    this.fetchTabData(this.activeTab, false);
-                  },
-
-                  setTab(id) {
-                    if (this.activeTab === "smart-results" && id !== "smart-results") {
-                      const i = this.tabs.findIndex((t) => t.id === "smart-results");
-                      if (i > -1) this.tabs.splice(i, 1);
-                    }
-
-                    this.activeTab = id;
-                    this.canLoadMore = true;
-
-                    if (id === "my-list") {
-                      this.loadWatchlistItems();
-                      this.canLoadMore = false;
-                      return;
-                    }
-
-                    if (id === "smart-results") {
-                      this.canLoadMore = false;
-                      return;
-                    }
-
-                    if ((this.tabsData[id] || []).length === 0) this.fetchTabData(id, true);
-                  },
-
-                  smartFilter(keyword) {
-                    if (!keyword || !keyword.trim()) return;
-                    const lowerKeyword = keyword.trim().toLowerCase();
-
-                    const results = this.allItems.filter(
-                            (item) =>
-                                    item.title?.toLowerCase().includes(lowerKeyword) ||
-                                    (Array.isArray(item.genres) &&
-                                            item.genres.some((g) => g.title?.toLowerCase().includes(lowerKeyword)))
-                    );
-
-                    const smartTab = this.tabs.find((t) => t.id === "smart-results");
-                    const label = `نتایج برای: '${keyword}'`;
-
-                    if (!smartTab) this.tabs.push({ id: "smart-results", label, endpoint: null });
-                    else smartTab.label = label;
-
-                    this.tabsData["smart-results"] = results;
-                    this.setTab("smart-results");
-                    this.smartFilterInput = "";
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  },
-
-                  async doSearch() {
-                    const q = this.searchQuery.trim();
-                    if (!q) {
-                      this.searchResults = [];
-                      this.searchOpen = false;
-                      return;
-                    }
-
-                    this.loadingSearch = true;
-                    this.searchOpen = true;
-
-                    try {
-                      const url = `${this.baseUrl}/api/search?q=${encodeURIComponent(q)}`;
-                      const data = await this.getCachedOrFetch(url, () =>
-                              fetch(url).then((res) => res.json())
-                      );
-
-                      this.searchResults =
-                              data && Array.isArray(data.posters) ? data.posters.slice(0, 6) : [];
-                    } catch (e) {
-                      this.searchResults = [];
-                    } finally {
-                      this.loadingSearch = false;
-                    }
-                  },
-
-                  redirectToSearchPage() {
-                    const q = this.searchQuery.trim();
-                    if (q) window.location.href = `${this.searchPagePath}?q=${encodeURIComponent(q)}`;
-                  },
-
-                  // ---- watchlist ----
-                  loadWatchlist() {
-                    try {
-                      const list = localStorage.getItem("cinemaWatchlist");
-                      this.watchlist = list ? JSON.parse(list) : [];
-                    } catch (e) {
-                      this.watchlist = [];
-                    }
-                  },
-
-                  saveWatchlist() {
-                    localStorage.setItem("cinemaWatchlist", JSON.stringify(this.watchlist));
-                  },
-
-                  isInWatchlist(id) { return this.watchlist.includes(id); },
-
-                  toggleWatchlist(id) {
-                    const wasIn = this.isInWatchlist(id);
-                    if (wasIn) this.watchlist = this.watchlist.filter((itemId) => itemId !== id);
-                    else this.watchlist.push(id);
-
-                    this.saveWatchlist();
-                    this.showToast(wasIn ? "از لیست شما حذف شد" : "به لیست شما اضافه شد");
-
-                    if (this.activeTab === "my-list") this.loadWatchlistItems();
-                  },
-
-                  loadWatchlistItems() {
-                    this.tabsData["my-list"] = this.allItems.filter((item) => this.isInWatchlist(item.id));
-                  },
-
-                  // ---- navigation ----
-                  goToDetails(item) {
-                    try {
-                      localStorage.setItem("cinemaplus-last-item", JSON.stringify(item));
-                      const itemType = item.__type || item.type;
-                      const finalType = itemType === "serie" || itemType === "series" ? "series" : "movie";
-                      window.location.href = `${this.detailsPagePath}?id=${item.id}&type=${finalType}`;
-                    } catch (e) {}
-                  },
-
-                  currentTabLabel() {
-                    return this.tabs.find((t) => t.id === this.activeTab)?.label || (this.activeTab === "smart-results" ? "نتایج" : "");
-                  },
-
-                  displayTitle: (item) => item?.title || "بدون عنوان",
-                  displayYear: (item) => item?.year || "",
-                  displayTypeLabel(item) {
-                    const itemType = item.__type || item.type;
-                    return itemType === "serie" || itemType === "series" ? "سریال" : "فیلم";
-                  },
-                  displayCountry(item) { return item?.country?.[0]?.title || ""; },
-                  displayGenres(item) { return Array.isArray(item?.genres) ? item.genres.map((g) => g.title).slice(0, 2) : []; },
-                };
-              }
-            </script>
-
-            </body>
-            </html>
-
           </button>
         </div>
       </div>
     </div>
   </div>
-
 
   <footer class="w-full py-8 mt-auto border-t border-border bg-bg">
     <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -2205,7 +812,6 @@
       searchPagePath: "search.html",
 
       activeTab: "movies-new",
-
       theme: "dark",
       itemsPerPage: 15,
       showBackToTop: false,
@@ -2222,9 +828,8 @@
 
       searchQuery: "",
       searchResults: [],
-      searchOpen: false, // desktop dropdown
+      searchOpen: false,
 
-      // mobile sheets
       searchSheetOpen: false,
       settingsOpen: false,
       tabsSheetOpen: false,
@@ -2232,13 +837,11 @@
       toast: { show: false, message: "" },
       toastTimer: null,
 
-      // scroll lock (iOS-safe)
       _scrollLocked: false,
       _lockedScrollY: 0,
 
-      // swipe/drag state
-      dragPhase: null,     // 'dragging' | 'returning' | null
-      dragSheet: null,     // 'tabs'|'search'|'settings'
+      dragPhase: null,
+      dragSheet: null,
       dragY: 0,
       _dragStartY: 0,
       _dragLastY: 0,
@@ -2295,18 +898,15 @@
           }
         });
 
-        // safety
         this.syncScrollLock();
       },
 
-      // Bottom nav: دسته‌بندی وقتی تب‌ها فعاله
       get isCategoriesNavActive() {
         if (this.tabsSheetOpen) return true;
         if (this.searchSheetOpen || this.settingsOpen) return false;
         return this.activeTab !== "my-list";
       },
 
-      // ---- Haptic (Android) ----
       haptic(level = "light") {
         try {
           if (!navigator.vibrate) return;
@@ -2315,7 +915,6 @@
         } catch (e) {}
       },
 
-      // ---- Scroll lock (iOS-like) ----
       anySheetOpen() {
         return this.tabsSheetOpen || this.searchSheetOpen || this.settingsOpen;
       },
@@ -2345,7 +944,6 @@
         document.body.style.width = "";
 
         window.scrollTo(0, this._lockedScrollY || 0);
-
         this._scrollLocked = false;
       },
 
@@ -2354,7 +952,6 @@
         else this.unlockScroll();
       },
 
-      // ---- Drag helpers ----
       sheetStyle(sheet) {
         if (this.dragSheet !== sheet) return "";
         const t = this.dragPhase === "dragging"
@@ -2395,10 +992,10 @@
       startSheetDrag(e, sheet) {
         if (!this.anySheetOpen()) return;
 
-        // فقط drag رو برای شیت باز فعال کن
-        const isOpen = (sheet === "tabs" && this.tabsSheetOpen)
-                || (sheet === "search" && this.searchSheetOpen)
-                || (sheet === "settings" && this.settingsOpen);
+        const isOpen =
+                (sheet === "tabs" && this.tabsSheetOpen) ||
+                (sheet === "search" && this.searchSheetOpen) ||
+                (sheet === "settings" && this.settingsOpen);
 
         if (!isOpen) return;
 
@@ -2413,7 +1010,7 @@
         this._dragVel = 0;
 
         this._dragMoveHandler = (ev) => this.onSheetDragMove(ev);
-        this._dragEndHandler = (ev) => this.endSheetDrag(ev);
+        this._dragEndHandler = () => this.endSheetDrag();
 
         window.addEventListener("pointermove", this._dragMoveHandler, { passive: false });
         window.addEventListener("pointerup", this._dragEndHandler, { passive: true });
@@ -2429,11 +1026,10 @@
 
         const now = performance.now();
         const dt = Math.max(1, now - this._dragLastT);
-        this._dragVel = (y - this._dragLastY) / dt; // px/ms
+        this._dragVel = (y - this._dragLastY) / dt;
         this._dragLastY = y;
         this._dragLastT = now;
 
-        // جلوگیری از اسکرول صفحه هنگام درگ
         e.preventDefault?.();
       },
 
@@ -2447,7 +1043,6 @@
       endSheetDrag() {
         if (this.dragPhase !== "dragging") return;
 
-        // remove listeners
         try {
           if (this._dragMoveHandler) window.removeEventListener("pointermove", this._dragMoveHandler);
           if (this._dragEndHandler) window.removeEventListener("pointerup", this._dragEndHandler);
@@ -2456,8 +1051,6 @@
 
         const dy = this.dragY || 0;
         const vel = this._dragVel || 0;
-
-        // threshold: distance OR velocity
         const shouldClose = dy > 110 || vel > 0.75;
 
         if (shouldClose) {
@@ -2467,13 +1060,11 @@
           return;
         }
 
-        // snap back (animated)
         this.dragPhase = "returning";
         requestAnimationFrame(() => { this.dragY = 0; });
         setTimeout(() => this.resetDrag(), 320);
       },
 
-      // ---- sheets ----
       closeAllSheets() {
         this.tabsSheetOpen = false;
         this.searchSheetOpen = false;
@@ -2524,10 +1115,9 @@
 
       handleEscape() {
         this.closeAllSheets();
-        this.closeSearch(); // desktop dropdown
+        this.closeSearch();
       },
 
-      // ---- toast ----
       showToast(msg) {
         this.toast.message = msg;
         this.toast.show = true;
@@ -2535,17 +1125,14 @@
         this.toastTimer = setTimeout(() => (this.toast.show = false), 1800);
       },
 
-      // ---- tab helpers ----
       movieTabs() { return this.tabs.filter(t => t.id.startsWith("movies")); },
       seriesTabs() { return this.tabs.filter(t => t.id.startsWith("series")); },
       get watchlistCount() { return Array.isArray(this.watchlist) ? this.watchlist.length : 0; },
 
-      // ---- Desktop search dropdown ----
       openSearch() { if (this.searchQuery.trim()) this.searchOpen = true; },
       closeSearch() { this.searchOpen = false; },
       clearSearch() { this.searchQuery = ""; this.searchResults = []; this.searchOpen = false; },
 
-      // ---- cache/theme ----
       loadCache() {
         try {
           const data = localStorage.getItem(this.cacheKey);
@@ -2588,7 +1175,32 @@
         this.applyThemeClass();
       },
 
-      // ---- data ----
+      loadWatchlist() {
+        try {
+          const list = localStorage.getItem("cinemaWatchlist");
+          this.watchlist = list ? JSON.parse(list) : [];
+        } catch (e) {
+          this.watchlist = [];
+        }
+      },
+
+      saveWatchlist() {
+        localStorage.setItem("cinemaWatchlist", JSON.stringify(this.watchlist));
+      },
+
+      isInWatchlist(id) { return this.watchlist.includes(id); },
+
+      toggleWatchlist(id) {
+        const wasIn = this.isInWatchlist(id);
+        if (wasIn) this.watchlist = this.watchlist.filter((itemId) => itemId !== id);
+        else this.watchlist.push(id);
+
+        this.saveWatchlist();
+        this.showToast(wasIn ? "از لیست شما حذف شد" : "به لیست شما اضافه شد");
+
+        if (this.activeTab === "my-list") this.loadWatchlistItems();
+      },
+
       get currentItems() { return this.tabsData[this.activeTab] || []; },
 
       get allItems() {
@@ -2725,38 +1337,10 @@
         if (q) window.location.href = `${this.searchPagePath}?q=${encodeURIComponent(q)}`;
       },
 
-      // ---- watchlist ----
-      loadWatchlist() {
-        try {
-          const list = localStorage.getItem("cinemaWatchlist");
-          this.watchlist = list ? JSON.parse(list) : [];
-        } catch (e) {
-          this.watchlist = [];
-        }
-      },
-
-      saveWatchlist() {
-        localStorage.setItem("cinemaWatchlist", JSON.stringify(this.watchlist));
-      },
-
-      isInWatchlist(id) { return this.watchlist.includes(id); },
-
-      toggleWatchlist(id) {
-        const wasIn = this.isInWatchlist(id);
-        if (wasIn) this.watchlist = this.watchlist.filter((itemId) => itemId !== id);
-        else this.watchlist.push(id);
-
-        this.saveWatchlist();
-        this.showToast(wasIn ? "از لیست شما حذف شد" : "به لیست شما اضافه شد");
-
-        if (this.activeTab === "my-list") this.loadWatchlistItems();
-      },
-
       loadWatchlistItems() {
         this.tabsData["my-list"] = this.allItems.filter((item) => this.isInWatchlist(item.id));
       },
 
-      // ---- navigation ----
       goToDetails(item) {
         try {
           localStorage.setItem("cinemaplus-last-item", JSON.stringify(item));
@@ -2777,10 +1361,11 @@
         return itemType === "serie" || itemType === "series" ? "سریال" : "فیلم";
       },
       displayCountry(item) { return item?.country?.[0]?.title || ""; },
-      displayGenres(item) { return Array.isArray(item?.genres) ? item.genres.map((g) => g.title).slice(0, 2) : []; },
+      displayGenres(item) {
+        return Array.isArray(item?.genres) ? item.genres.map((g) => g.title).slice(0, 2) : [];
+      },
     };
   }
 </script>
-
 </body>
 </html>
