@@ -105,7 +105,7 @@
 </head>
 
 <body
-        x-data="cinemaApp()"
+        x-data="BebintoApp()"
         x-init="init()"
         @scroll.window="showBackToTop = (window.scrollY > 400)"
         @keydown.escape.window="handleEscape()"
@@ -806,7 +806,7 @@
 </div>
 
 <script>
-  function cinemaApp() {
+  function BebintoApp() {
     return {
       // =========================
       // Config
@@ -824,7 +824,7 @@
       // Cache
       // =========================
       cache: {},
-      cacheKey: "cinemaPlusCache_v8",
+      cacheKey: "bebintoCache_v1",
       cacheTTL: 1000 * 60 * 30, // 30min
 
       // =========================
@@ -1230,14 +1230,14 @@
       },
 
       loadTheme() {
-        const saved = localStorage.getItem("cinemaplus-theme");
+        const saved = localStorage.getItem("bebinto-theme");
         this.theme = saved === "light" || saved === "dark" ? saved : "dark";
         this.applyThemeClass();
       },
 
       toggleTheme() {
         this.theme = this.theme === "dark" ? "light" : "dark";
-        localStorage.setItem("cinemaplus-theme", this.theme);
+        localStorage.setItem("bebinto-theme", this.theme);
         this.applyThemeClass();
       },
 
@@ -1432,7 +1432,7 @@
       // =========================
       loadWatchlist() {
         try {
-          const list = localStorage.getItem("cinemaWatchlist");
+          const list = localStorage.getItem("bebintoWatchlist");
           this.watchlist = list ? JSON.parse(list) : [];
         } catch (e) {
           this.watchlist = [];
@@ -1440,7 +1440,7 @@
       },
 
       saveWatchlist() {
-        localStorage.setItem("cinemaWatchlist", JSON.stringify(this.watchlist));
+        localStorage.setItem("bebintoWatchlist", JSON.stringify(this.watchlist));
       },
 
       isInWatchlist(id) { return this.watchlist.includes(id); },
@@ -1465,7 +1465,7 @@
       // =========================
       goToDetails(item) {
         try {
-          localStorage.setItem("cinemaplus-last-item", JSON.stringify(item));
+          localStorage.setItem("bebinto-last-item", JSON.stringify(item));
 
           // API شما type = "movie" یا "series"
           const t = (item?.type || item?.__type || "").toLowerCase();
