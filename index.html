@@ -447,7 +447,7 @@
   <!-- Floating Bottom Nav (Mobile) -->
   <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40">
     <div class="px-4 pb-4" style="padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);">
-      <div class="mx-auto max-w-sm rounded-[35px] border border-border/60 bg-surface/50 backdrop-blur-sm shadow-2xl">
+      <div class="mx-auto max-w-xs rounded-[35px] border border-border/60 bg-surface/70 backdrop-blur-xs shadow-2xl">
         <div class="flex items-center justify-between px-3 py-2">
 
           <button
@@ -808,29 +808,42 @@
 <script>
   function cinemaApp() {
     return {
-      baseUrl: "https://cinemaplus-app.vercel.app",
+      // =========================
+      // Config
+      // =========================
+      baseUrl: "https://bebinto-core.aryazdh.ir",
+      apiPrefix: "/api/v1",
       detailsPagePath: "details.html",
       searchPagePath: "search.html",
 
       activeTab: "movies-new",
       theme: "dark",
-      itemsPerPage: 15,
       showBackToTop: false,
 
+      // =========================
+      // Cache
+      // =========================
       cache: {},
-      cacheKey: "cinemaPlusCache_v6",
-      cacheTTL: 1000 * 60 * 30,
+      cacheKey: "cinemaPlusCache_v8",
+      cacheTTL: 1000 * 60 * 30, // 30min
 
+      // =========================
+      // Loading states
+      // =========================
       loadingHome: true,
       loadingSearch: false,
       loadingMore: false,
       canLoadMore: true,
       error: "",
 
+      // =========================
+      // Search
+      // =========================
       searchQuery: "",
       searchResults: [],
-      searchOpen: false,
+      searchOpen: false, // desktop dropdown
 
+      // mobile sheets
       searchSheetOpen: false,
       settingsOpen: false,
       tabsSheetOpen: false,
@@ -838,11 +851,13 @@
       toast: { show: false, message: "" },
       toastTimer: null,
 
+      // scroll lock (iOS-safe)
       _scrollLocked: false,
       _lockedScrollY: 0,
 
-      dragPhase: null,
-      dragSheet: null,
+      // swipe/drag state
+      dragPhase: null,     // 'dragging' | 'returning' | null
+      dragSheet: null,     // 'tabs'|'search'|'settings'
       dragY: 0,
       _dragStartY: 0,
       _dragLastY: 0,
@@ -851,6 +866,13 @@
       _dragMoveHandler: null,
       _dragEndHandler: null,
 
+      // For aborting search requests
+      _searchAbort: null,
+      _searchDebounceTimer: null,
+
+      // =========================
+      // Data
+      // =========================
       tabsData: {
         "movies-new": [],
         "movies-top": [],
@@ -862,46 +884,64 @@
         "smart-results": [],
       },
 
+      // API pages start from 1
       tabPagination: {
-        "movies-new": 0,
-        "movies-top": 0,
-        "series-new": 0,
-        "series-top": 0,
-        "series-upd": 0,
-        "series-best": 0,
+        "movies-new": 1,
+        "movies-top": 1,
+        "series-new": 1,
+        "series-top": 1,
+        "series-upd": 1,
+        "series-best": 1,
       },
 
       watchlist: [],
       smartFilterInput: "",
 
+      // Endpoints
       tabs: [
-        { id: "movies-new", label: "فیلم‌های جدید", endpoint: "/api/movies/new" },
-        { id: "movies-top", label: "فیلم‌های برتر", endpoint: "/api/movies/top-rated" },
-        { id: "series-new", label: "سریال‌های جدید", endpoint: "/api/series/new" },
-        { id: "series-top", label: "سریال‌های برتر", endpoint: "/api/series/top-rated" },
-        { id: "series-upd", label: "سریال‌های بروزشده", endpoint: "/api/series/updated" },
-        { id: "series-best", label: "پیشنهاد سردبیر", endpoint: "/api/series/best" },
-        { id: "my-list", label: "♥ لیست من", endpoint: null },
+        { id: "movies-new",  label: "فیلم‌های جدید",      endpoint: "/movies/new" },
+        { id: "movies-top",  label: "فیلم‌های برتر",      endpoint: "/movies/top-rated" },
+        { id: "series-new",  label: "سریال‌های جدید",     endpoint: "/series/new" },
+        { id: "series-top",  label: "سریال‌های برتر",     endpoint: "/series/top-rated" },
+        { id: "series-upd",  label: "سریال‌های بروزشده",  endpoint: "/series/updated" },
+        { id: "series-best", label: "پیشنهاد سردبیر",     endpoint: "/series/best" },
+        { id: "my-list",     label: "♥ لیست من",          endpoint: null },
       ],
 
+      // =========================
+      // Init
+      // =========================
       init() {
         this.loadCache();
         this.loadTheme();
         this.loadWatchlist();
+
         this.fetchTabData(this.activeTab, true);
 
         this.$watch("searchQuery", (value) => {
-          const v = (value || "").trim();
-          if (v) this.doSearch();
-          else {
+          const q = (value || "").trim();
+
+          // بستن نتایج وقتی خالی شد
+          if (!q) {
+            this.cancelSearch();
             this.searchResults = [];
             this.searchOpen = false;
+            return;
           }
+
+          // debounce سرچ
+          clearTimeout(this._searchDebounceTimer);
+          this._searchDebounceTimer = setTimeout(() => {
+            this.doSearchApi(q);
+          }, 250);
         });
 
         this.syncScrollLock();
       },
 
+      // =========================
+      // UI helpers
+      // =========================
       get isCategoriesNavActive() {
         if (this.tabsSheetOpen) return true;
         if (this.searchSheetOpen || this.settingsOpen) return false;
@@ -916,6 +956,9 @@
         } catch (e) {}
       },
 
+      // =========================
+      // Scroll lock
+      // =========================
       anySheetOpen() {
         return this.tabsSheetOpen || this.searchSheetOpen || this.settingsOpen;
       },
@@ -945,6 +988,7 @@
         document.body.style.width = "";
 
         window.scrollTo(0, this._lockedScrollY || 0);
+
         this._scrollLocked = false;
       },
 
@@ -953,6 +997,9 @@
         else this.unlockScroll();
       },
 
+      // =========================
+      // Drag helpers (unchanged)
+      // =========================
       sheetStyle(sheet) {
         if (this.dragSheet !== sheet) return "";
         const t = this.dragPhase === "dragging"
@@ -1066,6 +1113,9 @@
         setTimeout(() => this.resetDrag(), 320);
       },
 
+      // =========================
+      // Sheets
+      // =========================
       closeAllSheets() {
         this.tabsSheetOpen = false;
         this.searchSheetOpen = false;
@@ -1116,9 +1166,12 @@
 
       handleEscape() {
         this.closeAllSheets();
-        this.closeSearch();
+        this.closeSearch(); // desktop dropdown
       },
 
+      // =========================
+      // Toast
+      // =========================
       showToast(msg) {
         this.toast.message = msg;
         this.toast.show = true;
@@ -1126,14 +1179,26 @@
         this.toastTimer = setTimeout(() => (this.toast.show = false), 1800);
       },
 
+      // =========================
+      // Tabs helpers
+      // =========================
       movieTabs() { return this.tabs.filter(t => t.id.startsWith("movies")); },
       seriesTabs() { return this.tabs.filter(t => t.id.startsWith("series")); },
       get watchlistCount() { return Array.isArray(this.watchlist) ? this.watchlist.length : 0; },
 
+      // Desktop search dropdown
       openSearch() { if (this.searchQuery.trim()) this.searchOpen = true; },
       closeSearch() { this.searchOpen = false; },
-      clearSearch() { this.searchQuery = ""; this.searchResults = []; this.searchOpen = false; },
+      clearSearch() {
+        this.cancelSearch();
+        this.searchQuery = "";
+        this.searchResults = [];
+        this.searchOpen = false;
+      },
 
+      // =========================
+      // Cache/theme
+      // =========================
       loadCache() {
         try {
           const data = localStorage.getItem(this.cacheKey);
@@ -1176,6 +1241,195 @@
         this.applyThemeClass();
       },
 
+      // =========================
+      // Data getters
+      // =========================
+      get currentItems() { return this.tabsData[this.activeTab] || []; },
+
+      get allItems() {
+        const all = new Map();
+        Object.entries(this.tabsData).forEach(([key, items]) => {
+          if (key !== "smart-results" && key !== "my-list") {
+            (items || []).forEach((item) => {
+              if (item && item.id) all.set(item.id, item);
+            });
+          }
+        });
+        return Array.from(all.values());
+      },
+
+      // =========================
+      // Fetch tabs with real pagination meta/links
+      // =========================
+      async fetchTabData(tabId, isFirstLoad = false) {
+        if (isFirstLoad) this.loadingHome = true;
+        else this.loadingMore = true;
+
+        this.error = "";
+
+        try {
+          const tabInfo = this.tabs.find((t) => t.id === tabId);
+          if (!tabInfo?.endpoint) {
+            this.canLoadMore = false;
+            throw new Error("No endpoint.");
+          }
+
+          const page = this.tabPagination[tabId] || 1;
+          const url = `${this.baseUrl}${this.apiPrefix}${tabInfo.endpoint}?page=${page}`;
+
+          const json = await this.getCachedOrFetch(url, () =>
+                  fetch(url, { headers: { Accept: "application/json" } }).then((res) => res.json())
+          );
+
+          const newItems = Array.isArray(json?.data) ? json.data : [];
+
+          if (newItems.length > 0) {
+            const enrichedItems = newItems.map((item) => ({ ...item }));
+            const existingIds = new Set((this.tabsData[tabId] || []).map((i) => i.id));
+            this.tabsData[tabId].push(...enrichedItems.filter((i) => !existingIds.has(i.id)));
+          }
+
+          const currentPage = Number(json?.meta?.current_page ?? page);
+          const lastPage = Number(json?.meta?.last_page ?? currentPage);
+
+          const hasNextByLinks = !!json?.links?.next;
+          const hasNextByMeta = currentPage < lastPage;
+
+          this.canLoadMore = hasNextByLinks || hasNextByMeta;
+
+          // sync current page
+          this.tabPagination[tabId] = currentPage;
+
+        } catch (e) {
+          if (e.message !== "No endpoint.") this.error = "خطا در ارتباط با سرور.";
+        } finally {
+          if (isFirstLoad) this.loadingHome = false;
+          this.loadingMore = false;
+        }
+      },
+
+      loadMore() {
+        if (this.loadingMore || !this.canLoadMore) return;
+        this.tabPagination[this.activeTab] = (this.tabPagination[this.activeTab] || 1) + 1;
+        this.fetchTabData(this.activeTab, false);
+      },
+
+      setTab(id) {
+        if (this.activeTab === "smart-results" && id !== "smart-results") {
+          const i = this.tabs.findIndex((t) => t.id === "smart-results");
+          if (i > -1) this.tabs.splice(i, 1);
+        }
+
+        this.activeTab = id;
+
+        this.canLoadMore = true;
+
+        if (this.tabPagination[id] == null && id !== "my-list" && id !== "smart-results") {
+          this.tabPagination[id] = 1;
+        }
+
+        if (id === "my-list") {
+          this.loadWatchlistItems();
+          this.canLoadMore = false;
+          return;
+        }
+
+        if (id === "smart-results") {
+          this.canLoadMore = false;
+          return;
+        }
+
+        if ((this.tabsData[id] || []).length === 0) this.fetchTabData(id, true);
+      },
+
+      smartFilter(keyword) {
+        if (!keyword || !keyword.trim()) return;
+        const lowerKeyword = keyword.trim().toLowerCase();
+
+        const results = this.allItems.filter(
+                (item) =>
+                        (item.title || "").toLowerCase().includes(lowerKeyword) ||
+                        (Array.isArray(item.genres) &&
+                                item.genres.some((g) => (g.title || "").toLowerCase().includes(lowerKeyword)))
+        );
+
+        const smartTab = this.tabs.find((t) => t.id === "smart-results");
+        const label = `نتایج برای: '${keyword}'`;
+
+        if (!smartTab) this.tabs.push({ id: "smart-results", label, endpoint: null });
+        else smartTab.label = label;
+
+        this.tabsData["smart-results"] = results;
+        this.setTab("smart-results");
+        this.smartFilterInput = "";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      },
+
+      // =========================
+      // Search API (NEW)
+      // GET /api/v1/search?q=...
+      // Response: { channels: [], posters: [...] }
+      // =========================
+      cancelSearch() {
+        try { this._searchAbort?.abort?.(); } catch (e) {}
+        this._searchAbort = null;
+      },
+
+      async doSearchApi(q) {
+        const query = (q || "").trim();
+        if (!query) return;
+
+        this.cancelSearch();
+        const controller = new AbortController();
+        this._searchAbort = controller;
+
+        this.loadingSearch = true;
+        this.searchOpen = true;
+
+        try {
+          const url = `${this.baseUrl}${this.apiPrefix}/search?q=${encodeURIComponent(query)}`;
+
+          // سرچ رو کش نکنیم تا همیشه تازه باشه
+          const res = await fetch(url, {
+            method: "GET",
+            signal: controller.signal,
+            headers: { Accept: "application/json" }
+          });
+
+          if (!res.ok) throw new Error("Search failed");
+
+          const json = await res.json();
+
+          // ✅ طبق PosterSearchResource
+          const posters = Array.isArray(json?.data.posters) ? json.data.posters : [];
+
+          // اگر API type رو میده ("movie" / "series") همون رو نگه می‌داریم
+          this.searchResults = posters.slice(0, 6);
+
+          // اگر نتیجه‌ای نبود، dropdown رو باز نگه می‌داریم تا پیام "یافت نشد" دیده بشه
+          this.searchOpen = true;
+
+        } catch (e) {
+          // اگر abort شد، خطا نمایش ندیم
+          if (e?.name !== "AbortError") {
+            this.searchResults = [];
+          }
+        } finally {
+          // فقط اگر همین درخواست آخرین درخواست بود
+          if (this._searchAbort === controller) {
+            this.loadingSearch = false;
+          }
+        }
+      },
+
+      redirectToSearchPage() {
+        const q = this.searchQuery.trim();
+        if (q) window.location.href = `${this.searchPagePath}?q=${encodeURIComponent(q)}`;
+      },
+
+      // =========================
+      // Watchlist
+      // =========================
       loadWatchlist() {
         try {
           const list = localStorage.getItem("cinemaWatchlist");
@@ -1202,171 +1456,51 @@
         if (this.activeTab === "my-list") this.loadWatchlistItems();
       },
 
-      get currentItems() { return this.tabsData[this.activeTab] || []; },
-
-      get allItems() {
-        const all = new Map();
-        Object.entries(this.tabsData).forEach(([key, items]) => {
-          if (key !== "smart-results" && key !== "my-list") {
-            (items || []).forEach((item) => {
-              if (item && item.id) all.set(item.id, item);
-            });
-          }
-        });
-        return Array.from(all.values());
-      },
-
-      async fetchTabData(tabId, isFirstLoad = false) {
-        if (isFirstLoad) this.loadingHome = true;
-        else this.loadingMore = true;
-
-        this.error = "";
-
-        try {
-          const tabInfo = this.tabs.find((t) => t.id === tabId);
-          if (!tabInfo?.endpoint) {
-            this.canLoadMore = false;
-            throw new Error("No endpoint.");
-          }
-
-          const page = this.tabPagination[tabId] || 0;
-          const url = `${this.baseUrl}${tabInfo.endpoint}?page=${page}`;
-
-          const newItems = await this.getCachedOrFetch(url, () =>
-                  fetch(url).then((res) => res.json())
-          );
-
-          if (Array.isArray(newItems) && newItems.length > 0) {
-            const type = tabId.startsWith("series") ? "series" : "movie";
-            const enrichedItems = newItems.map((item) => ({ ...item, __type: type }));
-
-            const existingIds = new Set(this.tabsData[tabId].map((i) => i.id));
-            this.tabsData[tabId].push(...enrichedItems.filter((i) => !existingIds.has(i.id)));
-
-            this.canLoadMore = newItems.length >= this.itemsPerPage;
-          } else {
-            this.canLoadMore = false;
-          }
-        } catch (e) {
-          if (e.message !== "No endpoint.") this.error = "خطا در ارتباط با سرور.";
-        } finally {
-          if (isFirstLoad) this.loadingHome = false;
-          this.loadingMore = false;
-        }
-      },
-
-      loadMore() {
-        if (this.loadingMore || !this.canLoadMore) return;
-        this.tabPagination[this.activeTab] = (this.tabPagination[this.activeTab] || 0) + 1;
-        this.fetchTabData(this.activeTab, false);
-      },
-
-      setTab(id) {
-        if (this.activeTab === "smart-results" && id !== "smart-results") {
-          const i = this.tabs.findIndex((t) => t.id === "smart-results");
-          if (i > -1) this.tabs.splice(i, 1);
-        }
-
-        this.activeTab = id;
-        this.canLoadMore = true;
-
-        if (id === "my-list") {
-          this.loadWatchlistItems();
-          this.canLoadMore = false;
-          return;
-        }
-
-        if (id === "smart-results") {
-          this.canLoadMore = false;
-          return;
-        }
-
-        if ((this.tabsData[id] || []).length === 0) this.fetchTabData(id, true);
-      },
-
-      smartFilter(keyword) {
-        if (!keyword || !keyword.trim()) return;
-        const lowerKeyword = keyword.trim().toLowerCase();
-
-        const results = this.allItems.filter(
-                (item) =>
-                        item.title?.toLowerCase().includes(lowerKeyword) ||
-                        (Array.isArray(item.genres) &&
-                                item.genres.some((g) => g.title?.toLowerCase().includes(lowerKeyword)))
-        );
-
-        const smartTab = this.tabs.find((t) => t.id === "smart-results");
-        const label = `نتایج برای: '${keyword}'`;
-
-        if (!smartTab) this.tabs.push({ id: "smart-results", label, endpoint: null });
-        else smartTab.label = label;
-
-        this.tabsData["smart-results"] = results;
-        this.setTab("smart-results");
-        this.smartFilterInput = "";
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      },
-
-      async doSearch() {
-        const q = this.searchQuery.trim();
-        if (!q) {
-          this.searchResults = [];
-          this.searchOpen = false;
-          return;
-        }
-
-        this.loadingSearch = true;
-        this.searchOpen = true;
-
-        try {
-          const url = `${this.baseUrl}/api/search?q=${encodeURIComponent(q)}`;
-          const data = await this.getCachedOrFetch(url, () =>
-                  fetch(url).then((res) => res.json())
-          );
-
-          this.searchResults =
-                  data && Array.isArray(data.posters) ? data.posters.slice(0, 6) : [];
-        } catch (e) {
-          this.searchResults = [];
-        } finally {
-          this.loadingSearch = false;
-        }
-      },
-
-      redirectToSearchPage() {
-        const q = this.searchQuery.trim();
-        if (q) window.location.href = `${this.searchPagePath}?q=${encodeURIComponent(q)}`;
-      },
-
       loadWatchlistItems() {
         this.tabsData["my-list"] = this.allItems.filter((item) => this.isInWatchlist(item.id));
       },
 
+      // =========================
+      // Navigation
+      // =========================
       goToDetails(item) {
         try {
           localStorage.setItem("cinemaplus-last-item", JSON.stringify(item));
-          const itemType = item.__type || item.type;
-          const finalType = itemType === "serie" || itemType === "series" ? "series" : "movie";
+
+          // API شما type = "movie" یا "series"
+          const t = (item?.type || item?.__type || "").toLowerCase();
+          const finalType = (t === "serie" || t === "series") ? "series" : "movie";
+
           window.location.href = `${this.detailsPagePath}?id=${item.id}&type=${finalType}`;
         } catch (e) {}
       },
 
       currentTabLabel() {
-        return this.tabs.find((t) => t.id === this.activeTab)?.label || (this.activeTab === "smart-results" ? "نتایج" : "");
+        return this.tabs.find((t) => t.id === this.activeTab)?.label ||
+                (this.activeTab === "smart-results" ? "نتایج" : "");
       },
 
+      // =========================
+      // Display helpers (based on your sample output)
+      // =========================
       displayTitle: (item) => item?.title || "بدون عنوان",
       displayYear: (item) => item?.year || "",
       displayTypeLabel(item) {
-        const itemType = item.__type || item.type;
-        return itemType === "serie" || itemType === "series" ? "سریال" : "فیلم";
+        const t = (item?.type || item?.__type || "").toLowerCase();
+        return (t === "serie" || t === "series") ? "سریال" : "فیلم";
       },
-      displayCountry(item) { return item?.country?.[0]?.title || ""; },
+      displayCountry(item) {
+        return item?.country?.[0]?.title || "";
+      },
       displayGenres(item) {
-        return Array.isArray(item?.genres) ? item.genres.map((g) => g.title).slice(0, 2) : [];
+        return Array.isArray(item?.genres)
+                ? item.genres.map((g) => g.title).slice(0, 2)
+                : [];
       },
     };
   }
 </script>
+
+
 </body>
 </html>
