@@ -1,568 +1,2111 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <title>ببینتو · جستجوی پیشرفته</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
-    ></script>
-    <link rel="shortcut icon" href="favicon.webp" type="image/x-icon" />
-    <style>
-      [x-cloak] {
-        display: none !important;
+<head>
+  <meta charset="UTF-8" />
+  <title>ببینتو · جستجو</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="author" content="Arya Azadeh" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+          href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap"
+          rel="stylesheet"
+  />
+
+  <script
+          defer
+          src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+  ></script>
+
+  <script
+          type="module"
+          src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js"
+  ></script>
+
+  <link rel="shortcut icon" href="favicon.webp" type="image/x-icon" />
+
+  <style>
+    [x-cloak] {
+      display: none !important;
+    }
+    button,
+    a {
+      cursor: pointer;
+    }
+
+    /* Prevent horizontal scroll (mobile fix) */
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: clip; /* به sticky آسیب نمی‌زنه (بهتر از hidden) */
+    }
+
+    /* iOS-like sheet animations */
+    @keyframes sheetIn {
+      0% {
+        transform: translateY(28px) scale(0.985);
+        opacity: 0;
+      }
+      72% {
+        transform: translateY(-3px) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+    @keyframes sheetOut {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(24px) scale(0.99);
+        opacity: 0;
+      }
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
+
+    .sheet-in {
+      animation: sheetIn 360ms cubic-bezier(0.18, 0.95, 0.18, 1) both;
+    }
+    .sheet-out {
+      animation: sheetOut 220ms ease-in both;
+    }
+    .fade-in {
+      animation: fadeIn 180ms ease-out both;
+    }
+    .fade-out {
+      animation: fadeOut 140ms ease-in both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sheet-in,
+      .sheet-out,
+      .fade-in,
+      .fade-out {
+        animation: none !important;
+      }
+    }
+
+    /* Scroll lock (iOS-friendly) */
+    body.scroll-locked {
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    /* Drag handle */
+    .sheet-grab {
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    @media (max-width: 1024px) {
+      input,
+      textarea,
+      select {
+        font-size: 16px;
+      }
+    }
+  </style>
+
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: "Vazirmatn", system-ui, sans-serif;
+      --font-heading: "Vazirmatn", sans-serif;
+
+      --color-bg: #09090b;
+      --color-surface: #18181b;
+      --color-surface-highlight: #27272a;
+
+      --color-text-primary: #f4f4f5;
+      --color-text-secondary: #a1a1aa;
+
+      --color-border: #27272a;
+
+      --color-accent: #10b981;
+      --color-accent-text: #020617;
+    }
+
+    html.light {
+      --color-bg: #f4f4f5;
+      --color-surface: #ffffff;
+      --color-surface-highlight: #f4f4f5;
+
+      --color-text-primary: #18181b;
+      --color-text-secondary: #52525b;
+
+      --color-border: #e4e4e7;
+
+      --color-accent: #0f766e;
+      --color-accent-text: #ffffff;
+    }
+
+    @layer utilities {
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #3f3f46;
+        border-radius: 9999px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #52525b;
+      }
+      .light .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #d4d4d8;
+      }
+      .light .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #a1a1aa;
+      }
+      /* Auto-hide scrollbar مخصوص aside */
+      .aside-scrollbar-auto {
+        /* Firefox: باریک ولی شفاف */
+        scrollbar-width: thin;
+        scrollbar-color: transparent transparent;
+
+        /* (اختیاری) برای جلوگیری از تکان خوردن محتوا وقتی اسکرول‌بار ظاهر میشه */
+        scrollbar-gutter: stable;
       }
 
-      button,
-      a {
-        cursor: pointer;
+      /* WebKit (Chrome/Edge/Safari) */
+      .aside-scrollbar-auto::-webkit-scrollbar {
+        width: 3px;
+        height: 3px;
       }
-    </style>
-    <style type="text/tailwindcss">
-      @theme {
-        --font-sans: "Vazirmatn", system-ui, sans-serif;
-        --font-heading: "Vazirmatn", sans-serif;
-        --color-bg: #09090b;
-        --color-surface: #18181b;
-        --color-surface-highlight: #27272a;
-        --color-text-primary: #f4f4f5;
-        --color-text-secondary: #a1a1aa;
-        --color-border: #27272a;
-        --color-accent: #10b981;
-        --color-accent-text: #020617;
+      .aside-scrollbar-auto::-webkit-scrollbar-track {
+        background: transparent;
       }
-      html.light {
-        --color-bg: #f4f4f5;
-        --color-surface: #ffffff;
-        --color-surface-highlight: #f4f4f5;
-        --color-text-primary: #18181b;
-        --color-text-secondary: #52525b;
-        --color-border: #e4e4e7;
-        --color-accent: #0f766e;
-        --color-accent-text: #ffffff;
+      .aside-scrollbar-auto::-webkit-scrollbar-thumb {
+        background-color: transparent; /* مخفی */
+        border-radius: 9999px;
       }
-      @layer utilities {
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background-color: #3f3f46;
-          border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background-color: #52525b;
-        }
-        .light .custom-scrollbar::-webkit-scrollbar-thumb {
-          background-color: #d4d4d8;
-        }
-        .light .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background-color: #a1a1aa;
-        }
+
+      /* فقط وقتی hover/focus/scroll شد نمایش بده */
+      .aside-scrollbar-auto:hover::-webkit-scrollbar-thumb,
+      .aside-scrollbar-auto:focus-within::-webkit-scrollbar-thumb,
+      .aside-scrollbar-auto.is-scrolling::-webkit-scrollbar-thumb {
+        background-color: rgba(161, 161, 170, 0.35);
       }
-    </style>
-  </head>
-  <body
-    x-data="searchPage()"
-    x-init="init()"
-    @scroll.window="showBackToTop = (window.scrollY > 400)"
-    class="bg-bg text-text-primary font-sans antialiased selection:bg-accent selection:text-accent-text"
+
+      .aside-scrollbar-auto:hover,
+      .aside-scrollbar-auto:focus-within,
+      .aside-scrollbar-auto.is-scrolling {
+        scrollbar-color: rgba(161, 161, 170, 0.35) transparent; /* Firefox */
+      }
+
+      /* Light theme */
+      .light .aside-scrollbar-auto:hover::-webkit-scrollbar-thumb,
+      .light .aside-scrollbar-auto:focus-within::-webkit-scrollbar-thumb,
+      .light .aside-scrollbar-auto.is-scrolling::-webkit-scrollbar-thumb {
+        background-color: rgba(82, 82, 91, 0.28);
+      }
+      .light .aside-scrollbar-auto:hover,
+      .light .aside-scrollbar-auto:focus-within,
+      .light .aside-scrollbar-auto.is-scrolling {
+        scrollbar-color: rgba(82, 82, 91, 0.28) transparent;
+      }
+    }
+  </style>
+</head>
+
+<body
+        x-data="BebintoSearchPage()"
+        x-init="init()"
+        @scroll.window="showBackToTop = (window.scrollY > 400)"
+        @keydown.escape.window="handleEscape()"
+        class="bg-bg text-text-primary font-sans antialiased selection:bg-accent selection:text-accent-text"
+>
+<div class="min-h-screen flex flex-col pb-28 lg:pb-0 ">
+  <!-- Mobile header -->
+  <div
+          class="lg:hidden sticky top-0 z-30 bg-bg/70 backdrop-blur-xl border-b border-border"
   >
-    <div class="min-h-screen flex flex-col">
-      <div class="flex-grow p-4 sm:p-6 lg:p-8">
-        <!-- HEADER -->
-        <header
-          class="w-full max-w-screen-2xl mx-auto flex items-center justify-between gap-4 mb-8"
+    <div class="px-4 py-2">
+      <div class="relative h-10 flex items-center">
+        <a
+                href="./index.html"
+                class="flex items-center gap-2 shrink-0"
+                aria-label="خانه"
         >
+          <div
+                  class="h-9 w-9 rounded-2xl bg-zinc-900 flex items-center justify-center shadow overflow-hidden"
+          >
+            <dotlottie-wc
+                    src="https://lottie.host/da80b7f6-c288-48b9-a3dc-376f9d276f06/W739BOuqrX.lottie"
+                    style="width: 40px; height: 40px"
+                    autoplay
+                    loop
+            ></dotlottie-wc>
+          </div>
+          <span class="text-sm font-bold">ببینتو</span>
+        </a>
+
+        <h1
+                class="absolute left-1/2 -translate-x-1/2 text-sm font-bold truncate max-w-[62%]"
+        >
+          جستجو
+        </h1>
+
+        <button
+                type="button"
+                @click="haptic('light'); toggleTheme()"
+                class="mr-auto w-12 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg focus:ring-accent"
+                :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'"
+                :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
+        >
+              <span
+                      class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white"
+                      :class="theme === 'light' ? 'translate-x-6' : 'translate-x-0'"
+              ></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-grow flex justify-center p-4 sm:p-6 lg:p-8">
+    <div
+            class="w-full max-w-screen-2xl grid gap-8 lg:grid-cols-[280px_1fr] lg:items-start min-w-0"
+    >
+      <!-- Sidebar (Desktop) -->
+      <aside class="hidden lg:block lg:sticky lg:top-8 lg:self-start">
+        <!-- ✅ sticky کامل بدون اسکرول داخلی -->
+        <!-- Header: Logo + Theme toggle کنار لوگو -->
+        <header class="flex items-center justify-between gap-3 mb-5">
           <a
-            href="https://aryanpazadeh.github.io/Bebinto/"
-            class="flex items-center gap-3 group"
+                  href="./index.html"
+                  class="flex items-center gap-3 group min-w-0"
+                  aria-label="خانه"
           >
             <div
-              class="h-10 w-10 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold tracking-tighter text-lg shadow-lg group-hover:scale-105 transition-transform"
+                    class="h-10 w-10 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg overflow-hidden shrink-0"
             >
-              <script
-                src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js"
-                type="module"
-              ></script>
               <dotlottie-wc
-                src="https://lottie.host/da80b7f6-c288-48b9-a3dc-376f9d276f06/W739BOuqrX.lottie"
-                style="width: 300px; height: 300px"
-                autoplay
-                loop
+                      src="https://lottie.host/da80b7f6-c288-48b9-a3dc-376f9d276f06/W739BOuqrX.lottie"
+                      style="width: 44px; height: 44px"
+                      autoplay
+                      loop
               ></dotlottie-wc>
             </div>
-            <div>
-              <h1 class="text-lg font-bold tracking-tight text-text-primary">
+
+            <div class="min-w-0">
+              <div
+                      class="text-xl font-bold font-heading tracking-tight text-text-primary truncate"
+              >
                 ببینتو
-              </h1>
+              </div>
+              <div class="text-xs text-text-secondary">جستجو</div>
             </div>
           </a>
-          <div class="flex items-center gap-2">
-            <span
-              class="text-xs text-text-secondary"
-              x-text="theme === 'dark' ? 'تاریک' : 'روشن'"
-            ></span>
-            <button
-              @click="toggleTheme()"
-              class="w-12 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg focus:ring-accent"
-              :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'"
-            >
-              <span
+
+          <!-- Theme toggle کنار لوگو -->
+          <button
+                  type="button"
+                  @click="haptic('light'); toggleTheme()"
+                  class="shrink-0 w-12 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg focus:ring-accent"
+                  :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'"
+                  :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
+                  title="تغییر تم"
+          >
+        <span
                 class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white"
                 :class="theme === 'light' ? 'translate-x-6' : 'translate-x-0'"
-              ></span>
-            </button>
-          </div>
+        ></span>
+          </button>
         </header>
+        <div class="max-h-[calc(100vh-10rem)] overflow-y-auto aside-scrollbar-auto space-y-6 pr-1">
 
-        <main
-          class="w-full max-w-screen-2xl mx-auto flex-1 grid lg:grid-cols-[280px_1fr] gap-8"
-        >
-          <!-- FILTER SIDEBAR -->
-          <aside class="space-y-6 lg:sticky lg:top-8 h-fit">
-            <div class="flex justify-between items-center">
-              <h3 class="text-lg font-semibold">فیلترها</h3>
+
+          <!-- (✅ بخش جداگانه تغییر تم حذف شد) -->
+
+          <section
+                  class="p-3 rounded-2xl bg-surface border border-border space-y-2"
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm font-semibold font-heading">مرتب‌سازی</div>
+                <div class="text-xs text-text-secondary">نمایش نتایج به دلخواه</div>
+              </div>
+
               <button
-                @click="resetFilters()"
-                class="text-xs text-accent hover:underline"
+                      type="button"
+                      @click="haptic('light'); resetSort()"
+                      class="text-xs text-accent hover:opacity-90"
               >
-                پاک کردن همه
+                پیش‌فرض
+              </button>
+            </div>
+
+            <div class="grid gap-2">
+              <template x-for="opt in sortOptions" :key="opt.id">
+                <button
+                        type="button"
+                        @click="haptic('light'); sortBy = opt.id"
+                        class="w-full text-right px-3 py-2 rounded-2xl text-sm font-semibold border border-border transition-colors"
+                        :class="sortBy === opt.id ? 'bg-accent text-accent-text' : 'bg-surface-highlight/40 text-text-secondary hover:bg-surface-highlight hover:text-text-primary'"
+                >
+                  <span x-text="opt.label"></span>
+                </button>
+              </template>
+            </div>
+          </section>
+
+          <section
+                  class="flex flex-col gap-4 p-3 rounded-2xl bg-surface border border-border"
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-semibold font-heading">فیلترها</h3>
+                <p class="text-xs text-text-secondary">نتایج را دقیق‌تر کنید</p>
+              </div>
+
+              <button
+                      type="button"
+                      @click="haptic('light'); resetFilters()"
+                      class="text-xs text-accent hover:opacity-90"
+              >
+                پاک کردن
               </button>
             </div>
 
             <div class="space-y-2">
-              <label class="text-sm font-medium">نوع</label>
+              <label class="text-xs font-bold text-text-secondary">نوع</label>
               <div
-                class="flex gap-2 rounded-lg bg-surface p-1 border border-border"
+                      class="flex gap-1 rounded-2xl bg-surface-highlight/40 p-1 border border-border"
               >
                 <button
-                  @click="filters.type = 'all'"
-                  :class="{'bg-accent text-accent-text': filters.type === 'all'}"
-                  class="flex-1 text-center text-xs py-1.5 rounded-md transition-colors"
+                        type="button"
+                        @click="haptic('light'); filters.type = 'all'"
+                        class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
+                        :class="filters.type === 'all' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
                 >
                   همه
                 </button>
                 <button
-                  @click="filters.type = 'movie'"
-                  :class="{'bg-accent text-accent-text': filters.type === 'movie'}"
-                  class="flex-1 text-center text-xs py-1.5 rounded-md transition-colors"
+                        type="button"
+                        @click="haptic('light'); filters.type = 'movie'"
+                        class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
+                        :class="filters.type === 'movie' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
                 >
                   فیلم
                 </button>
                 <button
-                  @click="filters.type = 'series'"
-                  :class="{'bg-accent text-accent-text': filters.type === 'series'}"
-                  class="flex-1 text-center text-xs py-1.5 rounded-md transition-colors"
+                        type="button"
+                        @click="haptic('light'); filters.type = 'series'"
+                        class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
+                        :class="filters.type === 'series' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
                 >
                   سریال
                 </button>
               </div>
             </div>
 
-            <div class="space-y-3">
-              <label class="text-sm font-medium">ژانر</label>
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-text-secondary">ژانر</label>
               <div
-                class="max-h-48 overflow-y-auto space-y-2 custom-scrollbar pr-2"
+                      class="max-h-56 overflow-y-auto custom-scrollbar space-y-2 pr-1"
               >
                 <template x-for="genre in availableGenres" :key="genre">
-                  <label class="flex items-center gap-2 text-sm cursor-pointer">
+                  <label
+                          class="flex items-center gap-2 text-sm cursor-pointer rounded-2xl px-2 py-2 hover:bg-surface-highlight/40 transition-colors"
+                  >
                     <input
-                      type="checkbox"
-                      :value="genre"
-                      x-model="filters.genres"
-                      class="w-4 h-4 rounded bg-surface border-border text-accent focus:ring-accent"
+                            type="checkbox"
+                            :value="genre"
+                            x-model="filters.genres"
+                            class="w-4 h-4 rounded bg-surface border-border text-accent focus:ring-accent"
                     />
                     <span x-text="genre"></span>
                   </label>
                 </template>
-              </div>
-            </div>
 
-            <div class="space-y-2">
-              <label class="text-sm font-medium">سال انتشار</label>
-              <div class="flex items-center gap-2">
-                <input
-                  type="number"
-                  x-model.debounce.500ms="filters.minYear"
-                  placeholder="از"
-                  class="w-full text-center bg-surface border border-border rounded-lg p-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
-                />
-                <span class="text-text-secondary">-</span>
-                <input
-                  type="number"
-                  x-model.debounce.500ms="filters.maxYear"
-                  placeholder="تا"
-                  class="w-full text-center bg-surface border border-border rounded-lg p-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
-                />
-              </div>
-            </div>
-
-            <div class="space-y-2">
-              <label for="imdb-filter" class="text-sm font-medium"
-                >حداقل امتیاز IMDb</label
-              >
-              <input
-                id="imdb-filter"
-                type="number"
-                step="0.1"
-                min="0"
-                max="10"
-                x-model.debounce.500ms="filters.minImdb"
-                placeholder="مثلا: 7.5"
-                class="w-full bg-surface border border-border rounded-lg p-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
-              />
-            </div>
-          </aside>
-
-          <!-- RESULTS CONTENT -->
-          <main>
-            <form @submit.prevent="performSearch()" class="mb-6 w-full">
-              <div class="relative">
-                <input
-                  type="text"
-                  x-model="query"
-                  placeholder="جستجوی جدید..."
-                  class="w-full bg-surface border border-border rounded-lg py-3 pr-12 pl-4 text-base text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent/80 transition-all"
-                />
-                <div class="absolute inset-y-0 right-4 flex items-center">
-                  <button
-                    type="submit"
-                    :disabled="!query.trim() || loading"
-                    class="text-text-secondary hover:text-text-primary"
-                  >
-                    <svg
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      ></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            <div x-show="searchedTerm" x-cloak>
-              <div
-                class="mb-6 flex justify-between items-baseline border-b border-border pb-3"
-              >
-                <h3 class="text-xl font-semibold">
-                  نتایج برای:
-                  <span class="text-accent" x-text="searchedTerm"></span>
-                </h3>
-                <p class="text-sm text-text-secondary" x-show="!loading">
-                  نمایش <span x-text="filteredResults.length"></span> از
-                  <span x-text="originalResults.length"></span> نتیجه
-                </p>
-              </div>
-
-              <div
-                x-show="loading"
-                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6"
-              >
-                <template x-for="i in 8" :key="i"
-                  ><div
-                    class="aspect-[2/3] bg-surface rounded-xl animate-pulse"
-                  ></div
-                ></template>
-              </div>
-
-              <template x-if="error"
-                ><div class="text-center p-8">
-                  <p class="text-red-400" x-text="error"></p></div
-              ></template>
-              <template
-                x-if="!loading && filteredResults.length === 0 && searchedTerm && !error"
-                ><p class="text-center p-8 text-text-secondary">
-                  با فیلترهای اعمال شده، نتیجه‌ای یافت نشد. فیلترها را تغییر
-                  دهید یا
-                  <button @click="resetFilters()" class="text-accent underline">
-                    پاک کنید</button
-                  >.
-                </p></template
-              >
-
-              <div
-                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6"
-              >
-                <template x-for="item in filteredResults" :key="item.id">
-                  <article
-                    @click.self="goToDetails(item)"
-                    class="group relative flex flex-col rounded-xl bg-surface border border-border light:shadow-sm overflow-hidden hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 cursor-pointer transform hover:-translate-y-1"
-                  >
-                    <div
-                      @click="goToDetails(item)"
-                      class="relative aspect-[2/3] overflow-hidden"
-                    >
-                      <img
-                        :src="item.image"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        loading="lazy"
-                        @error="$event.target.style.opacity = '0.2'"
-                      />
-                      <div
-                        class="absolute top-2 right-2 bg-black/60 backdrop-blur text-white text-xs px-2 py-1 rounded-full border border-white/10 shadow-sm"
-                        x-text="displayTypeLabel(item)"
-                      ></div>
-                      <div
-                        x-show="item.imdb"
-                        class="absolute bottom-2 left-2 flex items-center gap-1 bg-yellow-400 text-black font-bold text-xs px-1.5 py-0.5 rounded shadow-lg"
-                      >
-                        <span>IMDb</span><span x-text="item.imdb"></span>
-                      </div>
-                    </div>
-                    <button
-                      @click.stop="toggleWatchlist(item.id)"
-                      class="absolute top-2 left-2 z-10 p-1.5 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-accent hover:text-accent-text transition-colors"
-                    >
-                      <svg
-                        class="w-5 h-5"
-                        :class="{'fill-current text-red-500': isInWatchlist(item.id)}"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.5l1.318-1.182a4.5 4.5 0 116.364 6.364L12 21l-7.682-7.318a4.5 4.5 0 010-6.364z"
-                        ></path>
-                      </svg>
-                    </button>
-                    <div
-                      @click="goToDetails(item)"
-                      class="flex flex-col gap-1 p-3"
-                    >
-                      <h3
-                        class="font-semibold text-base truncate text-text-primary"
-                        x-text="item.title"
-                      ></h3>
-                      <div
-                        class="flex items-center text-xs text-text-secondary gap-2"
-                      >
-                        <span x-text="item.year || 'Unknown'"></span>
-                      </div>
-                    </div>
-                  </article>
+                <template x-if="availableGenres.length === 0">
+                  <div class="text-xs text-text-secondary py-2">
+                    ژانری برای نمایش نیست.
+                  </div>
                 </template>
               </div>
             </div>
-          </main>
-        </main>
+
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-text-secondary">سال انتشار</label>
+              <div class="flex items-center gap-2">
+                <input
+                        type="number"
+                        inputmode="numeric"
+                        x-model.debounce.350ms="filters.minYear"
+                        placeholder="از"
+                        class="w-full text-center bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+                />
+                <span class="text-text-secondary">-</span>
+                <input
+                        type="number"
+                        inputmode="numeric"
+                        x-model.debounce.350ms="filters.maxYear"
+                        placeholder="تا"
+                        class="w-full text-center bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+                />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-text-secondary"
+              >حداقل امتیاز IMDb</label
+              >
+              <input
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      max="10"
+                      inputmode="decimal"
+                      x-model.debounce.350ms="filters.minImdb"
+                      placeholder="مثلا 7.5"
+                      class="w-full bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+              />
+            </div>
+          </section>
+
+          <section
+                  class="p-3 rounded-2xl bg-surface border border-border space-y-2"
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm font-semibold font-heading">جستجوهای اخیر</div>
+                <div class="text-xs text-text-secondary">با یک کلیک</div>
+              </div>
+              <button
+                      type="button"
+                      @click="haptic('light'); clearRecentSearches()"
+                      class="text-xs text-accent hover:opacity-90"
+                      :disabled="recentSearches.length===0"
+                      :class="recentSearches.length===0 ? 'opacity-50' : ''"
+              >
+                پاک کردن
+              </button>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <template x-for="t in recentSearches" :key="'rs-'+t">
+                <button
+                        type="button"
+                        @click="haptic('light'); runRecentSearch(t)"
+                        class="text-xs bg-surface-highlight px-3 py-2 rounded-full hover:bg-accent hover:text-accent-text transition-colors border border-border"
+                >
+                  <span x-text="t"></span>
+                </button>
+              </template>
+
+              <template x-if="recentSearches.length===0">
+                <div class="text-xs text-text-secondary py-1">
+                  هنوز چیزی ذخیره نشده.
+                </div>
+              </template>
+            </div>
+          </section>
+        </div>
+      </aside>
+
+
+      <!-- Main -->
+      <section class="min-w-0">
+        <div class="hidden lg:flex items-center justify-between mb-6">
+          <h2
+                  class="text-2xl font-bold tracking-tight font-heading text-text-primary"
+          >
+            جستجو
+          </h2>
+
+          <a
+                  href="./index.html"
+                  class="text-sm text-text-secondary hover:text-text-primary transition-colors"
+          >
+            بازگشت به خانه
+          </a>
+        </div>
+
+        <form @submit.prevent="performSearch()" class="w-full">
+          <div class="relative">
+            <input
+                    type="search"
+                    x-ref="mainSearchInput"
+                    x-model="query"
+                    placeholder="نام فیلم یا سریال..."
+                    class="w-full bg-surface border border-border rounded-2xl py-3 pr-12 pl-28 text-base text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent/80 transition-all"
+                    aria-label="جستجو"
+            />
+
+            <div class="absolute inset-y-0 right-3 flex items-center">
+              <button
+                      type="submit"
+                      :disabled="!query.trim() || loading"
+                      class="p-2 rounded-xl hover:bg-surface-highlight text-text-secondary hover:text-text-primary transition-colors disabled:opacity-50"
+                      aria-label="جستجو"
+              >
+                <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                >
+                  <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+
+            <div class="absolute inset-y-0 left-2 flex items-center gap-2">
+              <button
+                      type="button"
+                      x-show="query"
+                      x-transition
+                      @click="haptic('light'); clearQuery()"
+                      class="px-3 py-2 rounded-2xl hover:bg-surface-highlight text-text-secondary"
+                      aria-label="پاک کردن"
+              >
+                ✕
+              </button>
+
+              <button
+                      type="button"
+                      @click="haptic('light'); resetAll()"
+                      class="hidden sm:inline-flex px-3 py-2 rounded-2xl border border-border bg-surface-highlight/40 hover:bg-surface-highlight text-xs font-bold"
+              >
+                ریست همه
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Recent searches (Mobile) -->
+        <div class="lg:hidden mt-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-xs text-text-secondary">جستجوهای اخیر</div>
+            <button
+                    type="button"
+                    @click="haptic('light'); clearRecentSearches()"
+                    class="text-xs text-accent"
+                    :disabled="recentSearches.length===0"
+                    :class="recentSearches.length===0 ? 'opacity-50' : ''"
+            >
+              پاک کردن
+            </button>
+          </div>
+
+          <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+            <template x-for="t in recentSearches" :key="'mrs-'+t">
+              <button
+                      type="button"
+                      @click="haptic('light'); runRecentSearch(t)"
+                      class="shrink-0 text-xs bg-surface-highlight/40 px-3 py-2 rounded-full border border-border hover:bg-accent hover:text-accent-text transition-colors"
+              >
+                <span x-text="t"></span>
+              </button>
+            </template>
+
+            <template x-if="recentSearches.length===0">
+              <div class="text-xs text-text-secondary py-1">
+                هنوز چیزی ذخیره نشده.
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div x-show="searchedTerm" x-cloak class="mt-6">
+          <div
+                  class="mb-4 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 border-b border-border pb-3"
+          >
+            <h3 class="text-xl font-semibold">
+              نتایج برای:
+              <span class="text-accent" x-text="searchedTerm"></span>
+            </h3>
+
+            <p class="text-sm text-text-secondary" x-show="!loading">
+              نمایش <span x-text="visibleResults.length"></span> از
+              <span x-text="sortedFilteredResults.length"></span> نتیجه
+            </p>
+          </div>
+
+          <div class="mb-4 flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1">
+            <button
+                    type="button"
+                    @click="haptic('light'); filters.genres = []"
+                    class="shrink-0 text-xs px-3 py-2 rounded-full border border-border transition-colors"
+                    :class="filters.genres.length===0 ? 'bg-accent text-accent-text' : 'bg-surface-highlight/40 text-text-secondary hover:bg-surface-highlight'"
+            >
+              همه
+            </button>
+
+            <template x-for="g in topGenres" :key="'chip-'+g">
+              <button
+                      type="button"
+                      @click="haptic('light'); toggleQuickGenre(g)"
+                      class="shrink-0 text-xs px-3 py-2 rounded-full border border-border transition-colors"
+                      :class="filters.genres.includes(g) ? 'bg-accent text-accent-text' : 'bg-surface-highlight/40 text-text-secondary hover:bg-surface-highlight'"
+              >
+                <span x-text="g"></span>
+              </button>
+            </template>
+          </div>
+
+          <div
+                  x-show="loading"
+                  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6"
+          >
+            <template x-for="i in 10" :key="'sk-'+i">
+              <div class="aspect-[2/3] bg-surface rounded-2xl animate-pulse motion-reduce:animate-none"></div>
+            </template>
+          </div>
+
+          <template x-if="error">
+            <div class="mb-6 p-4 rounded-2xl bg-red-950/30 border border-red-800/50 text-red-300 text-sm">
+              <p x-text="error"></p>
+            </div>
+          </template>
+
+          <template x-if="!loading && visibleResults.length === 0 && searchedTerm && !error">
+            <p class="text-center p-8 text-text-secondary">
+              با فیلترهای اعمال‌شده، نتیجه‌ای یافت نشد. فیلترها را تغییر دهید یا
+              <button
+                      type="button"
+                      @click="haptic('light'); resetFilters()"
+                      class="text-accent underline"
+              >
+                پاک کنید
+              </button>.
+            </p>
+          </template>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
+            <template x-for="item in visibleResults" :key="'r-'+item.id">
+              <article
+                      role="link"
+                      tabindex="0"
+                      @click="goToDetails(item)"
+                      @keydown.enter.prevent="goToDetails(item)"
+                      @keydown.space.prevent="goToDetails(item)"
+                      class="group relative flex flex-col rounded-2xl bg-surface border border-border overflow-hidden hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 cursor-pointer transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:transform-none focus:outline-none focus:ring-2 focus:ring-accent/80"
+              >
+                <div class="relative aspect-[2/3] overflow-hidden">
+                  <img
+                          :src="item.image"
+                          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
+                          loading="lazy"
+                          @error="$event.target.style.opacity = '0.2'"
+                          alt=""
+                  />
+
+                  <div
+                          class="absolute top-2 right-2 bg-black/60 backdrop-blur text-white text-xs px-2 py-1 rounded-full border border-white/10 shadow-sm"
+                          x-text="displayTypeLabel(item)"
+                  ></div>
+
+                  <div
+                          x-show="item.imdb"
+                          class="absolute bottom-2 left-2 flex items-center gap-1 bg-yellow-400 text-black font-bold text-xs px-1.5 py-0.5 rounded-full shadow-lg"
+                  >
+                    <span>IMDb</span>
+                    <span x-text="item.imdb"></span>
+                  </div>
+                </div>
+
+                <button
+                        type="button"
+                        @click.stop="haptic('light'); toggleWatchlist(item)"
+                        class="absolute top-2 left-2 z-10 p-1.5 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-accent hover:text-accent-text transition-colors"
+                        :aria-label="isInWatchlist(item.id) ? 'حذف از لیست من' : 'افزودن به لیست من'"
+                >
+                  <svg
+                          class="w-5 h-5"
+                          :class="{'fill-current text-red-500': isInWatchlist(item.id)}"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                  >
+                    <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.5l1.318-1.182a4.5 4.5 0 116.364 6.364L12 21l-7.682-7.318a4.5 4.5 0 010-6.364z"
+                    ></path>
+                  </svg>
+                </button>
+
+                <div class="flex flex-col gap-1 p-3">
+                  <h3
+                          class="font-semibold text-base truncate text-text-primary"
+                          x-text="displayTitle(item)"
+                  ></h3>
+
+                  <div
+                          class="flex items-center text-xs text-text-secondary gap-2 min-w-0"
+                  >
+                    <span x-text="displayYear(item) || '—'"></span>
+                    <span class="w-1 h-1 bg-text-secondary/50 rounded-full"></span>
+                    <span
+                            x-text="displayCountry(item) || '—'"
+                            class="truncate max-w-28"
+                    ></span>
+                  </div>
+
+                  <div class="mt-2 flex flex-wrap gap-1.5">
+                    <template
+                            x-for="g in displayGenres(item)"
+                            :key="'rg-'+item.id+'-'+g"
+                    >
+                          <span
+                                  class="text-xs text-text-secondary bg-surface-highlight px-2 py-0.5 rounded-full border border-border"
+                                  x-text="g"
+                          ></span>
+                    </template>
+                  </div>
+                </div>
+              </article>
+            </template>
+          </div>
+
+          <!-- ✅ Infinite scroll removed; only button -->
+          <div x-show="!loading && canLoadMore" class="mt-8 text-center">
+            <button
+                    type="button"
+                    @click="haptic('light'); loadMore()"
+                    class="bg-accent text-accent-text font-semibold px-6 py-3 rounded-2xl hover:opacity-80 transition-opacity"
+            >
+              بارگذاری بیشتر
+            </button>
+          </div>
+        </div>
+
+        <div x-show="!searchedTerm && !loading" class="mt-10">
+          <div
+                  class="p-6 rounded-2xl bg-surface border border-border text-text-secondary text-sm"
+          >
+            برای شروع، عبارت مورد نظر را جستجو کنید. (می‌توانید از فیلترها و
+            مرتب‌سازی هم استفاده کنید)
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Back to top: Desktop -->
+  <button
+          x-show="showBackToTop"
+          @click="haptic('light'); window.scrollTo({ top: 0, behavior: 'smooth' })"
+          x-transition
+          class="hidden lg:flex fixed bottom-6 right-6 z-30 bg-accent text-accent-text p-3 rounded-full shadow-lg hover:scale-110 transition-transform motion-reduce:transition-none motion-reduce:transform-none"
+          aria-label="بازگشت به بالا"
+  >
+    <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+    >
+      <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 15l7-7 7 7"
+      ></path>
+    </svg>
+  </button>
+
+  <!-- Toast: Desktop -->
+  <div
+          class="hidden lg:block fixed left-1/2 -translate-x-1/2 bottom-6 z-50 pointer-events-none"
+          aria-live="polite"
+          aria-atomic="true"
+  >
+    <div
+            x-show="toast.show"
+            x-transition
+            x-cloak
+            class="pointer-events-auto max-w-sm rounded-2xl border border-border bg-surface/90 backdrop-blur-xl px-4 py-3 shadow-2xl"
+    >
+      <div class="text-sm font-semibold text-center" x-text="toast.message"></div>
+    </div>
+  </div>
+
+  <!-- Toast: Mobile -->
+  <div
+          class="lg:hidden fixed left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+          style="bottom: calc(6.5rem + env(safe-area-inset-bottom))"
+          aria-live="polite"
+          aria-atomic="true"
+  >
+    <div
+            x-show="toast.show"
+            x-transition
+            x-cloak
+            class="pointer-events-auto max-w-sm rounded-2xl border border-border bg-surface/90 backdrop-blur-xl px-4 py-3 shadow-2xl"
+    >
+      <div class="text-sm font-semibold text-center" x-text="toast.message"></div>
+    </div>
+  </div>
+
+  <!-- Floating Bottom Nav (Mobile) -->
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40">
+    <div
+            class="px-4 pb-4"
+            style="padding-bottom: calc(env(safe-area-inset-bottom) + 1rem)"
+    >
+      <div
+              class="mx-auto max-w-xs rounded-[35px] border border-border/60 bg-surface/70 backdrop-blur-xs shadow-2xl"
+      >
+        <div class="flex items-center justify-between px-3 py-2">
+          <button
+                  type="button"
+                  @click="haptic('light'); toggleFiltersSheet()"
+                  class="relative flex-1 py-2 flex flex-col items-center justify-center gap-1"
+                  :class="filtersSheetOpen ? 'text-accent' : 'text-text-secondary'"
+                  aria-label="فیلترها"
+          >
+            <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+            >
+              <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 5h18M6 12h12M10 19h4"
+              />
+            </svg>
+            <span class="text-[11px] leading-none font-semibold">فیلترها</span>
+            <span
+                    x-show="filtersSheetOpen"
+                    class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-accent"
+            ></span>
+          </button>
+
+          <button
+                  type="button"
+                  @click="haptic('light'); toggleSortSheet()"
+                  class="relative flex-1 py-2 flex flex-col items-center justify-center gap-1"
+                  :class="sortSheetOpen ? 'text-accent' : 'text-text-secondary'"
+                  aria-label="مرتب‌سازی"
+          >
+            <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+            >
+              <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 7h12M6 12h8M6 17h4"
+              />
+            </svg>
+            <span class="text-[11px] leading-none font-semibold">مرتب‌سازی</span>
+            <span
+                    x-show="sortSheetOpen"
+                    class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-accent"
+            ></span>
+          </button>
+
+          <button
+                  type="button"
+                  @click="haptic('light'); toggleWatchlistSheet()"
+                  class="relative flex-1 py-2 flex flex-col items-center justify-center gap-1"
+                  :class="watchlistSheetOpen ? 'text-accent' : 'text-text-secondary'"
+                  aria-label="لیست من"
+          >
+            <div class="relative">
+              <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6"
+              >
+                <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                />
+              </svg>
+              <span
+                      x-show="watchlistCount > 0"
+                      x-cloak
+                      class="absolute -top-2 -left-3 min-w-5 h-5 px-1 rounded-full bg-accent text-accent-text text-[10px] font-bold flex items-center justify-center shadow"
+                      x-text="watchlistCount > 99 ? '99+' : watchlistCount"
+              ></span>
+            </div>
+            <span class="text-[11px] leading-none font-semibold">لیست من</span>
+            <span
+                    x-show="watchlistSheetOpen"
+                    class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-accent"
+            ></span>
+          </button>
+
+          <button
+                  type="button"
+                  @click="haptic('light'); window.scrollTo({top:0, behavior:'smooth'})"
+                  class="relative flex-1 py-2 flex flex-col items-center justify-center gap-1"
+                  :class="showBackToTop ? 'text-accent' : 'text-text-secondary'"
+                  aria-label="بالا"
+          >
+            <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+            </svg>
+            <span class="text-[11px] leading-none font-semibold">بالا</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Filters Sheet (Mobile) -->
+  <div x-show="filtersSheetOpen" x-cloak class="lg:hidden fixed inset-0 z-50">
+    <div
+            class="absolute inset-0 bg-black/60"
+            :style="backdropStyle('filters')"
+            @click="haptic('light'); closeFiltersSheet()"
+            x-transition:enter="fade-in"
+            x-transition:leave="fade-out"
+    ></div>
+
+    <div
+            class="absolute left-0 right-0 bottom-0 bg-surface border-t border-border rounded-t-[28px] shadow-2xl"
+            style="padding-bottom: env(safe-area-inset-bottom)"
+            :style="sheetStyle('filters')"
+            @click.stop
+            x-transition:enter="sheet-in"
+            x-transition:leave="sheet-out"
+    >
+      <div
+              class="sheet-grab pt-2 pb-1 flex items-center justify-center"
+              @pointerdown.prevent="startSheetDrag($event,'filters')"
+      >
+        <div class="h-1.5 w-12 rounded-full bg-text-secondary/40"></div>
       </div>
 
-      <!-- Back to Top Button -->
-      <button
-        x-show="showBackToTop"
-        @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
-        x-transition
-        class="fixed bottom-6 right-6 bg-accent text-accent-text p-3 rounded-full shadow-lg hover:scale-110 transition-transform z-20"
-      >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 15l7-7 7 7"
-          ></path>
-        </svg>
-      </button>
-
-      <footer class="w-full py-8 mt-auto border-t border-border bg-bg">
-        <div
-          class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4"
-        >
-          <p class="text-sm text-text-secondary">
-            &copy; <span x-text="new Date().getFullYear()"></span> ببینتو. تمامی
-            حقوق محفوظ است.
-          </p>
+      <div class="px-4 pt-2 pb-4">
+        <div class="flex items-center justify-between">
+          <div class="font-bold text-base">فیلترها</div>
+          <button
+                  type="button"
+                  class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
+                  @click="haptic('light'); closeFiltersSheet()"
+                  aria-label="بستن"
+          >
+            ✕
+          </button>
         </div>
-      </footer>
-    </div>
 
-    <script>
-      function searchPage() {
-        return {
-          baseUrl: "https://cinemaplus-app.vercel.app",
-          detailsPagePath: "details.html",
-          theme: "dark",
-          query: "",
-          searchedTerm: "",
-          originalResults: [],
-          availableGenres: [],
-          loading: false,
-          error: "",
-          showBackToTop: false,
-          watchlist: [],
-          filters: {
-            type: "all",
-            genres: [],
-            minYear: "",
-            maxYear: "",
-            minImdb: "",
-          },
-          init() {
-            this.loadTheme();
-            this.loadWatchlist();
-            const q = new URLSearchParams(window.location.search).get("q");
-            if (q) {
-              this.query = q;
-              this.performSearch();
-            }
-          },
-          get filteredResults() {
-            if (!this.originalResults) return [];
-            return this.originalResults.filter((item) => {
-              const type =
-                item.type === "serie" || item.type === "series"
-                  ? "series"
-                  : "movie";
-              const typeMatch =
-                this.filters.type === "all" || type === this.filters.type;
-              const genreMatch =
-                this.filters.genres.length === 0 ||
-                (item.genres &&
-                  this.filters.genres.every((g) =>
-                    item.genres.some((ig) => ig.title === g)
-                  ));
-              const minYearMatch =
-                !this.filters.minYear ||
-                (item.year && item.year >= this.filters.minYear);
-              const maxYearMatch =
-                !this.filters.maxYear ||
-                (item.year && item.year <= this.filters.maxYear);
-              const imdbMatch =
-                !this.filters.minImdb ||
-                (item.imdb &&
-                  parseFloat(item.imdb) >= parseFloat(this.filters.minImdb));
-              return (
-                typeMatch &&
-                genreMatch &&
-                minYearMatch &&
-                maxYearMatch &&
-                imdbMatch
-              );
-            });
-          },
-          loadTheme() {
-            const saved = localStorage.getItem("cinemaplus-theme");
-            this.theme = saved === "light" || saved === "dark" ? saved : "dark";
-            document.documentElement.className = this.theme;
-          },
-          toggleTheme() {
-            this.theme = this.theme === "dark" ? "light" : "dark";
-            localStorage.setItem("cinemaplus-theme", this.theme);
-            document.documentElement.className = this.theme;
-          },
-          performSearch() {
-            if (!this.query.trim()) return;
-            window.history.pushState(
-              {},
-              "",
-              `?q=${encodeURIComponent(this.query.trim())}`
-            );
-            this.searchedTerm = this.query;
-            this.loading = true;
-            this.originalResults = [];
-            this.error = "";
-            this.resetFilters();
-            fetch(`${this.baseUrl}/api/search?q=${this.query.trim()}`)
-              .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-              .then((data) => {
-                this.originalResults = data.posters || [];
-                this.extractAvailableGenres();
-              })
-              .catch((err) => {
-                this.error = "خطا در هنگام جستجو.";
-              })
-              .finally(() => {
-                this.loading = false;
-              });
-          },
-          extractAvailableGenres() {
-            const genres = new Set();
-            this.originalResults.forEach((item) => {
-              if (item.genres) item.genres.forEach((g) => genres.add(g.title));
-            });
-            this.availableGenres = Array.from(genres).sort();
-          },
-          resetFilters() {
-            this.filters = {
-              type: "all",
-              genres: [],
-              minYear: "",
-              maxYear: "",
-              minImdb: "",
-            };
-          },
-          loadWatchlist() {
-            try {
-              const list = localStorage.getItem("cinemaWatchlist");
-              this.watchlist = list ? JSON.parse(list) : [];
-            } catch (e) {
-              this.watchlist = [];
-            }
-          },
-          saveWatchlist() {
-            localStorage.setItem(
-              "cinemaWatchlist",
-              JSON.stringify(this.watchlist)
-            );
-          },
-          isInWatchlist(id) {
-            return this.watchlist.includes(id);
-          },
-          toggleWatchlist(id) {
-            if (this.isInWatchlist(id)) {
-              this.watchlist = this.watchlist.filter((i) => i !== id);
-            } else {
-              this.watchlist.push(id);
-            }
-            this.saveWatchlist();
-          },
-          goToDetails(item) {
-            try {
-              localStorage.setItem(
-                "cinemaplus-last-item",
-                JSON.stringify(item)
-              );
-              const type =
-                item.type === "serie" || item.type === "series"
-                  ? "series"
-                  : "movie";
-              window.location.href = `${this.detailsPagePath}?id=${item.id}&type=${type}`;
-            } catch (e) {}
-          },
-          displayTypeLabel(item) {
-            return item.type === "serie" || item.type === "series"
-              ? "سریال"
-              : "فیلم";
-          },
+        <div class="mt-4 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="text-xs text-text-secondary">تنظیم نتایج</div>
+            <button
+                    type="button"
+                    @click="haptic('light'); resetFilters()"
+                    class="text-xs text-accent"
+            >
+              پاک کردن
+            </button>
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-text-secondary">نوع</label>
+            <div
+                    class="flex gap-1 rounded-2xl bg-surface-highlight/40 p-1 border border-border"
+            >
+              <button
+                      type="button"
+                      @click="haptic('light'); filters.type = 'all'"
+                      class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
+                      :class="filters.type === 'all' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
+              >
+                همه
+              </button>
+              <button
+                      type="button"
+                      @click="haptic('light'); filters.type = 'movie'"
+                      class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
+                      :class="filters.type === 'movie' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
+              >
+                فیلم
+              </button>
+              <button
+                      type="button"
+                      @click="haptic('light'); filters.type = 'series'"
+                      class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
+                      :class="filters.type === 'series' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
+              >
+                سریال
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-text-secondary">سال</label>
+            <div class="flex items-center gap-2">
+              <input
+                      type="number"
+                      inputmode="numeric"
+                      x-model.debounce.350ms="filters.minYear"
+                      placeholder="از"
+                      class="w-full text-center bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+              />
+              <span class="text-text-secondary">-</span>
+              <input
+                      type="number"
+                      inputmode="numeric"
+                      x-model.debounce.350ms="filters.maxYear"
+                      placeholder="تا"
+                      class="w-full text-center bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+              />
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-text-secondary"
+            >حداقل IMDb</label
+            >
+            <input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="10"
+                    inputmode="decimal"
+                    x-model.debounce.350ms="filters.minImdb"
+                    placeholder="مثلا 7.5"
+                    class="w-full bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-text-secondary">ژانر</label>
+            <div
+                    class="max-h-[38vh] overflow-y-auto custom-scrollbar pr-1 space-y-2"
+            >
+              <template x-for="genre in availableGenres" :key="'mg-'+genre">
+                <label
+                        class="flex items-center gap-2 text-sm cursor-pointer rounded-2xl px-2 py-2 hover:bg-surface-highlight/40 transition-colors"
+                >
+                  <input
+                          type="checkbox"
+                          :value="genre"
+                          x-model="filters.genres"
+                          class="w-4 h-4 rounded bg-surface border-border text-accent focus:ring-accent"
+                  />
+                  <span x-text="genre"></span>
+                </label>
+              </template>
+
+              <template x-if="availableGenres.length===0">
+                <div class="text-xs text-text-secondary py-2">
+                  ژانری وجود ندارد.
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <button
+                  type="button"
+                  @click="haptic('light'); closeFiltersSheet()"
+                  class="w-full py-3 rounded-2xl bg-accent text-accent-text font-bold hover:opacity-90 transition-opacity"
+          >
+            اعمال و بستن
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sort Sheet (Mobile) -->
+  <div x-show="sortSheetOpen" x-cloak class="lg:hidden fixed inset-0 z-50">
+    <div
+            class="absolute inset-0 bg-black/60"
+            :style="backdropStyle('sort')"
+            @click="haptic('light'); closeSortSheet()"
+            x-transition:enter="fade-in"
+            x-transition:leave="fade-out"
+    ></div>
+
+    <div
+            class="absolute left-0 right-0 bottom-0 bg-surface border-t border-border rounded-t-[28px] shadow-2xl"
+            style="padding-bottom: env(safe-area-inset-bottom)"
+            :style="sheetStyle('sort')"
+            @click.stop
+            x-transition:enter="sheet-in"
+            x-transition:leave="sheet-out"
+    >
+      <div
+              class="sheet-grab pt-2 pb-1 flex items-center justify-center"
+              @pointerdown.prevent="startSheetDrag($event,'sort')"
+      >
+        <div class="h-1.5 w-12 rounded-full bg-text-secondary/40"></div>
+      </div>
+
+      <div class="px-4 pt-2 pb-4">
+        <div class="flex items-center justify-between">
+          <div class="font-bold text-base">مرتب‌سازی</div>
+          <button
+                  type="button"
+                  class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
+                  @click="haptic('light'); closeSortSheet()"
+                  aria-label="بستن"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="mt-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="text-xs text-text-secondary">انتخاب ترتیب نمایش</div>
+            <button
+                    type="button"
+                    @click="haptic('light'); resetSort()"
+                    class="text-xs text-accent"
+            >
+              پیش‌فرض
+            </button>
+          </div>
+
+          <div class="grid gap-2">
+            <template x-for="opt in sortOptions" :key="'ms-'+opt.id">
+              <button
+                      type="button"
+                      @click="haptic('light'); sortBy = opt.id; closeSortSheet()"
+                      class="w-full text-right px-4 py-3 rounded-2xl border border-border text-sm font-semibold transition-colors"
+                      :class="sortBy === opt.id ? 'bg-accent text-accent-text' : 'bg-surface-highlight/40 text-text-secondary hover:bg-surface-highlight hover:text-text-primary'"
+              >
+                <span x-text="opt.label"></span>
+              </button>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Watchlist Sheet (Mobile) -->
+  <div
+          x-show="watchlistSheetOpen"
+          x-cloak
+          class="lg:hidden fixed inset-0 z-50"
+  >
+    <div
+            class="absolute inset-0 bg-black/60"
+            :style="backdropStyle('watchlist')"
+            @click="haptic('light'); closeWatchlistSheet()"
+            x-transition:enter="fade-in"
+            x-transition:leave="fade-out"
+    ></div>
+
+    <div
+            class="absolute left-0 right-0 bottom-0 bg-surface border-t border-border rounded-t-[28px] shadow-2xl"
+            style="padding-bottom: env(safe-area-inset-bottom)"
+            :style="sheetStyle('watchlist')"
+            @click.stop
+            x-transition:enter="sheet-in"
+            x-transition:leave="sheet-out"
+    >
+      <div
+              class="sheet-grab pt-2 pb-1 flex items-center justify-center"
+              @pointerdown.prevent="startSheetDrag($event,'watchlist')"
+      >
+        <div class="h-1.5 w-12 rounded-full bg-text-secondary/40"></div>
+      </div>
+
+      <div class="px-4 pt-2 pb-4">
+        <div class="flex items-center justify-between">
+          <div class="font-bold text-base">لیست من</div>
+          <button
+                  type="button"
+                  class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
+                  @click="haptic('light'); closeWatchlistSheet()"
+                  aria-label="بستن"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="mt-3 text-xs text-text-secondary">
+          <span x-text="watchlistCount"></span> آیتم
+        </div>
+
+        <template x-if="watchlistCount === 0">
+          <div
+                  class="mt-4 p-4 rounded-2xl bg-surface-highlight/40 border border-border text-sm text-text-secondary"
+          >
+            لیست شما خالی است. با زدن دکمه ♡ روی پوسترها، آیتم‌ها را به لیست
+            اضافه کنید.
+          </div>
+        </template>
+
+        <template x-if="watchlistCount > 0">
+          <div
+                  class="mt-4 max-h-[52vh] overflow-y-auto custom-scrollbar pr-1 space-y-2"
+          >
+            <template x-for="id in watchlist" :key="'wl-'+id">
+              <div
+                      class="flex items-center gap-3 p-2 rounded-2xl border border-border bg-surface-highlight/30"
+              >
+                <img
+                        :src="watchlistItemById(id)?.image || './placeholder.png'"
+                        class="w-12 h-16 object-cover rounded-xl bg-surface"
+                        @error="$event.target.src='./placeholder.png'"
+                        alt=""
+                />
+                <button
+                        type="button"
+                        class="min-w-0 flex-1 text-right"
+                        @click="haptic('light'); goToDetails(watchlistItemById(id) || {id, type:'movie'}); closeWatchlistSheet()"
+                >
+                  <div
+                          class="text-sm font-bold truncate"
+                          x-text="displayTitle(watchlistItemById(id))"
+                  ></div>
+                  <div class="text-xs text-text-secondary mt-1">
+                    <span x-text="displayTypeLabel(watchlistItemById(id))"></span>
+                    <span class="mx-1">•</span>
+                    <span x-text="displayYear(watchlistItemById(id)) || '—'"></span>
+                  </div>
+                </button>
+
+                <button
+                        type="button"
+                        class="shrink-0 px-3 py-2 rounded-2xl bg-surface border border-border hover:bg-red-500 hover:text-white transition-colors text-xs font-bold"
+                        @click="haptic('light'); removeFromWatchlistById(id)"
+                        aria-label="حذف"
+                >
+                  حذف
+                </button>
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <footer class="w-full py-8 mt-auto border-t border-border bg-bg">
+    <div
+            class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4"
+    >
+      <p class="text-sm text-text-secondary">
+        &copy; <span x-text="new Date().getFullYear()"></span> ببینتو. تمامی
+        حقوق محفوظ است.
+      </p>
+    </div>
+  </footer>
+</div>
+
+<script>
+  function BebintoSearchPage() {
+    return {
+      // =========================
+      // Config
+      // =========================
+      baseUrl: "https://bebinto-core.aryazdh.ir",
+      apiPrefix: "/api/v1",
+      detailsPagePath: "details.html",
+
+      // =========================
+      // UI
+      // =========================
+      theme: "dark",
+      showBackToTop: false,
+
+      // =========================
+      // Search state
+      // =========================
+      query: "",
+      searchedTerm: "",
+      originalResults: [],
+      availableGenres: [],
+      topGenres: [],
+      loading: false,
+      error: "",
+
+      // =========================
+      // Pagination (button only)
+      // =========================
+      pageSize: 24,
+      visibleCount: 0,
+      canLoadMore: false,
+
+      // =========================
+      // Watchlist
+      // =========================
+      watchlist: [],
+      watchlistItemsCache: {},
+      watchlistItemsKey: "bebintoWatchlistItems",
+      get watchlistCount() {
+        return Array.isArray(this.watchlist) ? this.watchlist.length : 0;
+      },
+
+      // =========================
+      // Toast
+      // =========================
+      toast: { show: false, message: "" },
+      toastTimer: null,
+
+      // =========================
+      // Recent searches
+      // =========================
+      recentKey: "bebinto-recent-searches",
+      recentSearches: [],
+
+      // =========================
+      // Filters + sort
+      // =========================
+      filters: {
+        type: "all",
+        genres: [],
+        minYear: "",
+        maxYear: "",
+        minImdb: "",
+      },
+
+      sortBy: "relevance",
+      sortOptions: [
+        { id: "relevance", label: "مرتبط‌ترین" },
+        { id: "imdb_desc", label: "IMDb (بیشترین)" },
+        { id: "year_desc", label: "جدیدترین" },
+        { id: "year_asc", label: "قدیمی‌ترین" },
+        { id: "title_asc", label: "عنوان (A→Z)" },
+      ],
+
+      // =========================
+      // Mobile sheets
+      // =========================
+      filtersSheetOpen: false,
+      sortSheetOpen: false,
+      watchlistSheetOpen: false,
+
+      // scroll lock
+      _scrollLocked: false,
+      _lockedScrollY: 0,
+
+      // drag state
+      dragPhase: null, // 'dragging' | 'returning' | null
+      dragSheet: null, // 'filters'|'sort'|'watchlist'
+      dragY: 0,
+      _dragStartY: 0,
+      _dragLastY: 0,
+      _dragLastT: 0,
+      _dragVel: 0,
+      _dragMoveHandler: null,
+      _dragEndHandler: null,
+
+      // =========================
+      // Init
+      // =========================
+      init() {
+        this.loadTheme();
+        this.loadWatchlist();
+        this.loadWatchlistItemsCache();
+        this.loadRecentSearches();
+
+        // when filters/sort change -> reset "window"
+        this.$watch(
+                "filters",
+                () => this.resetPaginationWindow(),
+                { deep: true }
+        );
+        this.$watch("sortBy", () => this.resetPaginationWindow());
+
+        const q = new URLSearchParams(window.location.search).get("q");
+        if (q) {
+          this.query = q;
+          this.performSearch();
+        } else {
+          this.$nextTick(() => this.$refs?.mainSearchInput?.focus?.());
+        }
+
+        this.syncScrollLock();
+      },
+
+      // =========================
+      // Haptic + Toast
+      // =========================
+      haptic(level = "light") {
+        try {
+          if (!navigator.vibrate) return;
+          const ms = level === "heavy" ? 30 : level === "medium" ? 20 : 10;
+          navigator.vibrate(ms);
+        } catch (e) {}
+      },
+
+      showToast(msg) {
+        this.toast.message = msg;
+        this.toast.show = true;
+        clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => (this.toast.show = false), 1800);
+      },
+
+      // =========================
+      // Theme
+      // =========================
+      applyThemeClass() {
+        const el = document.documentElement;
+        el.classList.remove("light", "dark");
+        el.classList.add(this.theme);
+      },
+
+      loadTheme() {
+        const saved = localStorage.getItem("bebinto-theme");
+        this.theme = saved === "light" || saved === "dark" ? saved : "dark";
+        this.applyThemeClass();
+      },
+
+      toggleTheme() {
+        this.theme = this.theme === "dark" ? "light" : "dark";
+        localStorage.setItem("bebinto-theme", this.theme);
+        this.applyThemeClass();
+      },
+
+      // =========================
+      // Recent searches
+      // =========================
+      loadRecentSearches() {
+        try {
+          const raw = localStorage.getItem(this.recentKey);
+          this.recentSearches = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(this.recentSearches)) this.recentSearches = [];
+        } catch (e) {
+          this.recentSearches = [];
+        }
+      },
+
+      saveRecentSearches() {
+        try {
+          localStorage.setItem(
+                  this.recentKey,
+                  JSON.stringify(this.recentSearches)
+          );
+        } catch (e) {}
+      },
+
+      addRecentSearch(term) {
+        const t = (term || "").trim();
+        if (!t) return;
+        const next = [t, ...this.recentSearches.filter((x) => x !== t)];
+        this.recentSearches = next.slice(0, 8);
+        this.saveRecentSearches();
+      },
+
+      clearRecentSearches() {
+        this.recentSearches = [];
+        this.saveRecentSearches();
+        this.showToast("جستجوهای اخیر پاک شد");
+      },
+
+      runRecentSearch(term) {
+        this.query = term;
+        this.performSearch();
+      },
+
+      // =========================
+      // Reset helpers
+      // =========================
+      clearQuery() {
+        this.query = "";
+        this.$nextTick(() => this.$refs?.mainSearchInput?.focus?.());
+      },
+
+      resetFilters() {
+        this.filters = {
+          type: "all",
+          genres: [],
+          minYear: "",
+          maxYear: "",
+          minImdb: "",
         };
-      }
-    </script>
-  </body>
+      },
+
+      resetSort() {
+        this.sortBy = "relevance";
+      },
+
+      resetAll() {
+        this.resetFilters();
+        this.resetSort();
+        this.showToast("همه تنظیمات ریست شد");
+      },
+
+      // =========================
+      // Search
+      // =========================
+      async performSearch() {
+        const q = (this.query || "").trim();
+        if (!q) return;
+
+        window.history.pushState({}, "", `?q=${encodeURIComponent(q)}`);
+
+        this.searchedTerm = q;
+        this.loading = true;
+        this.originalResults = [];
+        this.availableGenres = [];
+        this.topGenres = [];
+        this.error = "";
+
+        this.resetFilters();
+        this.resetSort();
+        this.addRecentSearch(q);
+
+        const url = `${this.baseUrl}${this.apiPrefix}/search?q=${encodeURIComponent(
+                q
+        )}`;
+
+        try {
+          const res = await fetch(url, {
+            headers: { Accept: "application/json" },
+          });
+          if (!res.ok) throw new Error("Search failed");
+          const json = await res.json();
+
+          const posters = Array.isArray(json?.data?.posters)
+                  ? json.data.posters
+                  : [];
+
+          this.originalResults = posters;
+
+          this.extractAvailableGenres();
+          this.computeTopGenres();
+
+          this.resetPaginationWindow(true);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } catch (e) {
+          this.error = "خطا در هنگام جستجو.";
+        } finally {
+          this.loading = false;
+        }
+      },
+
+      extractAvailableGenres() {
+        const genres = new Set();
+        (this.originalResults || []).forEach((item) => {
+          if (Array.isArray(item?.genres)) {
+            item.genres.forEach((g) => {
+              const t = g?.title;
+              if (t) genres.add(t);
+            });
+          }
+        });
+        this.availableGenres = Array.from(genres).sort();
+      },
+
+      computeTopGenres() {
+        const counts = new Map();
+        (this.originalResults || []).forEach((item) => {
+          if (!Array.isArray(item?.genres)) return;
+          item.genres.forEach((g) => {
+            const t = g?.title;
+            if (!t) return;
+            counts.set(t, (counts.get(t) || 0) + 1);
+          });
+        });
+
+        this.topGenres = Array.from(counts.entries())
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10)
+                .map((x) => x[0]);
+      },
+
+      toggleQuickGenre(g) {
+        if (!g) return;
+        const has = this.filters.genres.includes(g);
+        if (has) this.filters.genres = this.filters.genres.filter((x) => x !== g);
+        else this.filters.genres = [...this.filters.genres, g];
+        this.resetPaginationWindow();
+      },
+
+      // =========================
+      // Pagination (button)
+      // =========================
+      resetPaginationWindow(force = false) {
+        if (!this.searchedTerm && !force) return;
+        const total = this.sortedFilteredResults.length;
+        this.visibleCount = Math.min(this.pageSize, total);
+        this.canLoadMore = this.visibleCount < total;
+      },
+
+      loadMore() {
+        const total = this.sortedFilteredResults.length;
+        const next = Math.min(
+                total,
+                (this.visibleCount || 0) + this.pageSize
+        );
+        this.visibleCount = next;
+        this.canLoadMore = this.visibleCount < total;
+      },
+
+      // =========================
+      // Watchlist
+      // =========================
+      loadWatchlist() {
+        try {
+          const list = localStorage.getItem("bebintoWatchlist");
+          this.watchlist = list ? JSON.parse(list) : [];
+          if (!Array.isArray(this.watchlist)) this.watchlist = [];
+        } catch (e) {
+          this.watchlist = [];
+        }
+      },
+
+      saveWatchlist() {
+        localStorage.setItem(
+                "bebintoWatchlist",
+                JSON.stringify(this.watchlist)
+        );
+      },
+
+      loadWatchlistItemsCache() {
+        try {
+          const raw = localStorage.getItem(this.watchlistItemsKey);
+          const obj = raw ? JSON.parse(raw) : {};
+          this.watchlistItemsCache =
+                  obj && typeof obj === "object" ? obj : {};
+        } catch (e) {
+          this.watchlistItemsCache = {};
+        }
+      },
+
+      saveWatchlistItemsCache() {
+        try {
+          localStorage.setItem(
+                  this.watchlistItemsKey,
+                  JSON.stringify(this.watchlistItemsCache || {})
+          );
+        } catch (e) {}
+      },
+
+      isInWatchlist(id) {
+        return this.watchlist.includes(id);
+      },
+
+      toggleWatchlist(item) {
+        const id = item?.id;
+        if (!id) return;
+
+        const wasIn = this.isInWatchlist(id);
+
+        if (wasIn) {
+          this.watchlist = this.watchlist.filter((x) => x !== id);
+        } else {
+          this.watchlist.push(id);
+          this.watchlistItemsCache[id] = item;
+          this.saveWatchlistItemsCache();
+        }
+
+        this.saveWatchlist();
+        this.showToast(wasIn ? "از لیست شما حذف شد" : "به لیست شما اضافه شد");
+      },
+
+      removeFromWatchlistById(id) {
+        if (!id) return;
+        if (!this.isInWatchlist(id)) return;
+
+        this.watchlist = this.watchlist.filter((x) => x !== id);
+        this.saveWatchlist();
+        this.showToast("از لیست شما حذف شد");
+      },
+
+      watchlistItemById(id) {
+        if (!id) return null;
+
+        const cached = this.watchlistItemsCache?.[id];
+        if (cached) return cached;
+
+        const fromResults = (this.originalResults || []).find((x) => x?.id === id);
+        if (fromResults) {
+          this.watchlistItemsCache[id] = fromResults;
+          this.saveWatchlistItemsCache();
+          return fromResults;
+        }
+
+        // fallback minimal
+        return { id, title: "آیتم", type: "movie" };
+      },
+
+      // =========================
+      // Navigation
+      // =========================
+      goToDetails(item) {
+        if (!item?.id) return;
+
+        try {
+          localStorage.setItem("bebinto-last-item", JSON.stringify(item));
+
+          const t = String(item?.type || item?.__type || "").toLowerCase();
+          const finalType =
+                  t === "serie" || t === "series" ? "series" : "movie";
+
+          window.location.href = `${this.detailsPagePath}?id=${item.id}&type=${finalType}`;
+        } catch (e) {}
+      },
+
+      // =========================
+      // Filter + Sort computed
+      // =========================
+      get filteredResults() {
+        const items = Array.isArray(this.originalResults)
+                ? this.originalResults
+                : [];
+
+        return items.filter((item) => {
+          const t = String(item?.type || "").toLowerCase();
+          const type = t === "serie" || t === "series" ? "series" : "movie";
+
+          const typeMatch =
+                  this.filters.type === "all" || type === this.filters.type;
+
+          const genreMatch =
+                  this.filters.genres.length === 0 ||
+                  (Array.isArray(item?.genres) &&
+                          this.filters.genres.every((g) =>
+                                  item.genres.some((ig) => ig?.title === g)
+                          ));
+
+          const year = Number(item?.year || 0);
+          const minY = Number(this.filters.minYear || 0);
+          const maxY = Number(this.filters.maxYear || 0);
+
+          const minYearMatch =
+                  !this.filters.minYear || (year && year >= minY);
+          const maxYearMatch =
+                  !this.filters.maxYear || (year && year <= maxY);
+
+          const imdb = Number(item?.imdb || 0);
+          const minImdb = Number(this.filters.minImdb || 0);
+          const imdbMatch =
+                  !this.filters.minImdb || (imdb && imdb >= minImdb);
+
+          return (
+                  typeMatch &&
+                  genreMatch &&
+                  minYearMatch &&
+                  maxYearMatch &&
+                  imdbMatch
+          );
+        });
+      },
+
+      get sortedFilteredResults() {
+        const arr = [...this.filteredResults];
+        if (this.sortBy === "relevance") return arr;
+
+        if (this.sortBy === "imdb_desc")
+          return arr.sort(
+                  (a, b) => Number(b?.imdb || 0) - Number(a?.imdb || 0)
+          );
+
+        if (this.sortBy === "year_desc")
+          return arr.sort(
+                  (a, b) => Number(b?.year || 0) - Number(a?.year || 0)
+          );
+
+        if (this.sortBy === "year_asc")
+          return arr.sort(
+                  (a, b) => Number(a?.year || 0) - Number(b?.year || 0)
+          );
+
+        if (this.sortBy === "title_asc")
+          return arr.sort((a, b) =>
+                  String(a?.title || "").localeCompare(String(b?.title || ""), "fa")
+          );
+
+        return arr;
+      },
+
+      get visibleResults() {
+        const total = this.sortedFilteredResults.length;
+        const count = Math.max(
+                0,
+                Math.min(this.visibleCount || 0, total)
+        );
+        this.canLoadMore = count < total;
+        return this.sortedFilteredResults.slice(0, count);
+      },
+
+      // =========================
+      // Display helpers
+      // =========================
+      displayTitle: (item) => item?.title || "بدون عنوان",
+      displayYear: (item) => item?.year || "",
+      displayTypeLabel(item) {
+        const t = String(item?.type || item?.__type || "").toLowerCase();
+        return t === "serie" || t === "series" ? "سریال" : "فیلم";
+      },
+      displayCountry(item) {
+        return item?.country?.[0]?.title || "";
+      },
+      displayGenres(item) {
+        return Array.isArray(item?.genres)
+                ? item.genres.map((g) => g.title).slice(0, 2)
+                : [];
+      },
+
+      // =========================
+      // Sheets + scroll lock
+      // =========================
+      anySheetOpen() {
+        return this.filtersSheetOpen || this.sortSheetOpen || this.watchlistSheetOpen;
+      },
+
+      lockScroll() {
+        if (this._scrollLocked) return;
+        this._lockedScrollY = window.scrollY || 0;
+
+        document.body.classList.add("scroll-locked");
+        document.body.style.position = "fixed";
+        document.body.style.top = `-${this._lockedScrollY}px`;
+        document.body.style.left = "0";
+        document.body.style.right = "0";
+        document.body.style.width = "100%";
+
+        this._scrollLocked = true;
+      },
+
+      unlockScroll() {
+        if (!this._scrollLocked) return;
+
+        document.body.classList.remove("scroll-locked");
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+        document.body.style.width = "";
+
+        window.scrollTo(0, this._lockedScrollY || 0);
+
+        this._scrollLocked = false;
+      },
+
+      syncScrollLock() {
+        if (this.anySheetOpen()) this.lockScroll();
+        else this.unlockScroll();
+      },
+
+      closeAllSheets() {
+        this.filtersSheetOpen = false;
+        this.sortSheetOpen = false;
+        this.watchlistSheetOpen = false;
+        this.resetDrag();
+        this.syncScrollLock();
+      },
+
+      toggleFiltersSheet() {
+        const next = !this.filtersSheetOpen;
+        this.closeAllSheets();
+        this.filtersSheetOpen = next;
+        this.syncScrollLock();
+      },
+      closeFiltersSheet() {
+        this.filtersSheetOpen = false;
+        this.resetDrag();
+        this.syncScrollLock();
+      },
+
+      toggleSortSheet() {
+        const next = !this.sortSheetOpen;
+        this.closeAllSheets();
+        this.sortSheetOpen = next;
+        this.syncScrollLock();
+      },
+      closeSortSheet() {
+        this.sortSheetOpen = false;
+        this.resetDrag();
+        this.syncScrollLock();
+      },
+
+      toggleWatchlistSheet() {
+        const next = !this.watchlistSheetOpen;
+        this.closeAllSheets();
+        this.watchlistSheetOpen = next;
+        this.syncScrollLock();
+      },
+      closeWatchlistSheet() {
+        this.watchlistSheetOpen = false;
+        this.resetDrag();
+        this.syncScrollLock();
+      },
+
+      handleEscape() {
+        this.closeAllSheets();
+      },
+
+      // =========================
+      // Drag helpers
+      // =========================
+      sheetStyle(sheet) {
+        if (this.dragSheet !== sheet) return "";
+        const t =
+                this.dragPhase === "dragging"
+                        ? "transition: none;"
+                        : "transition: transform 280ms cubic-bezier(.2,.9,.2,1);";
+        return `transform: translateY(${this.dragY}px); ${t}`;
+      },
+
+      backdropStyle(sheet) {
+        const active =
+                this.dragSheet === sheet &&
+                (this.dragPhase === "dragging" || this.dragPhase === "returning");
+        if (!active) return "";
+        const op = Math.max(0.2, 1 - this.dragY / 320);
+        const t =
+                this.dragPhase === "dragging"
+                        ? "transition: none;"
+                        : "transition: opacity 240ms ease;";
+        return `opacity: ${op}; ${t}`;
+      },
+
+      resetDrag() {
+        try {
+          if (this._dragMoveHandler)
+            window.removeEventListener("pointermove", this._dragMoveHandler);
+          if (this._dragEndHandler)
+            window.removeEventListener("pointerup", this._dragEndHandler);
+          if (this._dragEndHandler)
+            window.removeEventListener("pointercancel", this._dragEndHandler);
+        } catch (e) {}
+
+        this.dragPhase = null;
+        this.dragSheet = null;
+        this.dragY = 0;
+
+        this._dragStartY = 0;
+        this._dragLastY = 0;
+        this._dragLastT = 0;
+        this._dragVel = 0;
+        this._dragMoveHandler = null;
+        this._dragEndHandler = null;
+      },
+
+      startSheetDrag(e, sheet) {
+        if (!this.anySheetOpen()) return;
+
+        const isOpen =
+                (sheet === "filters" && this.filtersSheetOpen) ||
+                (sheet === "sort" && this.sortSheetOpen) ||
+                (sheet === "watchlist" && this.watchlistSheetOpen);
+
+        if (!isOpen) return;
+
+        this.dragSheet = sheet;
+        this.dragPhase = "dragging";
+        this.dragY = 0;
+
+        const y = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
+        this._dragStartY = y;
+        this._dragLastY = y;
+        this._dragLastT = performance.now();
+        this._dragVel = 0;
+
+        this._dragMoveHandler = (ev) => this.onSheetDragMove(ev);
+        this._dragEndHandler = () => this.endSheetDrag();
+
+        window.addEventListener("pointermove", this._dragMoveHandler, {
+          passive: false,
+        });
+        window.addEventListener("pointerup", this._dragEndHandler, {
+          passive: true,
+        });
+        window.addEventListener("pointercancel", this._dragEndHandler, {
+          passive: true,
+        });
+      },
+
+      onSheetDragMove(e) {
+        if (this.dragPhase !== "dragging") return;
+
+        const y = e.clientY ?? 0;
+        const dy = Math.max(0, y - this._dragStartY);
+        this.dragY = dy;
+
+        const now = performance.now();
+        const dt = Math.max(1, now - this._dragLastT);
+        this._dragVel = (y - this._dragLastY) / dt;
+        this._dragLastY = y;
+        this._dragLastT = now;
+
+        e.preventDefault?.();
+      },
+
+      closeSheetByName(sheet) {
+        this.resetDrag();
+        if (sheet === "filters") this.closeFiltersSheet();
+        if (sheet === "sort") this.closeSortSheet();
+        if (sheet === "watchlist") this.closeWatchlistSheet();
+      },
+
+      endSheetDrag() {
+        if (this.dragPhase !== "dragging") return;
+
+        try {
+          if (this._dragMoveHandler)
+            window.removeEventListener("pointermove", this._dragMoveHandler);
+          if (this._dragEndHandler)
+            window.removeEventListener("pointerup", this._dragEndHandler);
+          if (this._dragEndHandler)
+            window.removeEventListener("pointercancel", this._dragEndHandler);
+        } catch (e) {}
+
+        const dy = this.dragY || 0;
+        const vel = this._dragVel || 0;
+        const shouldClose = dy > 110 || vel > 0.75;
+
+        if (shouldClose) {
+          const target = this.dragSheet;
+          this.haptic("light");
+          this.closeSheetByName(target);
+          return;
+        }
+
+        this.dragPhase = "returning";
+        requestAnimationFrame(() => {
+          this.dragY = 0;
+        });
+        setTimeout(() => this.resetDrag(), 320);
+      },
+    };
+  }
+</script>
+</body>
 </html>
