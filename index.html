@@ -529,7 +529,7 @@
 
                   <button
                     type="button"
-                    @click.stop="haptic('light'); toggleWatchlist(item.id)"
+                    @click.stop="haptic('light'); toggleWatchlist(item)"
                     class="absolute top-2 left-2 z-10 p-1.5 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-accent hover:text-accent-text transition-colors"
                     :aria-label="isInWatchlist(item.id) ? 'حذف از لیست من' : 'افزودن به لیست من'"
                   >
@@ -1322,6 +1322,8 @@
           },
 
           watchlist: [],
+          watchlistItemsCache: {},
+          watchlistItemsKey: "bebintoWatchlistItems",
           smartFilterInput: "",
 
           // Endpoints
@@ -1366,6 +1368,7 @@
             this.loadCache();
             this.loadTheme();
             this.loadWatchlist();
+            this.loadWatchlistItemsCache();
 
             this.fetchTabData(this.activeTab, true);
 
@@ -1968,15 +1971,75 @@
             );
           },
 
+          loadWatchlistItemsCache() {
+            try {
+              const raw = localStorage.getItem(this.watchlistItemsKey);
+              const parsed = raw ? JSON.parse(raw) : {};
+              this.watchlistItemsCache =
+                parsed && typeof parsed === "object" ? parsed : {};
+            } catch (e) {
+              this.watchlistItemsCache = {};
+            }
+          },
+
+          saveWatchlistItemsCache() {
+            try {
+              localStorage.setItem(
+                this.watchlistItemsKey,
+                JSON.stringify(this.watchlistItemsCache || {})
+              );
+            } catch (e) {}
+          },
+
+          rememberWatchlistItem(item) {
+            if (!item || !item.id) return;
+            this.watchlistItemsCache[item.id] = item;
+            this.saveWatchlistItemsCache();
+          },
+
+          forgetWatchlistItem(id) {
+            if (!id || !this.watchlistItemsCache) return;
+            if (this.watchlistItemsCache[id]) {
+              delete this.watchlistItemsCache[id];
+              this.saveWatchlistItemsCache();
+            }
+          },
+
+          findItemById(id) {
+            if (!id) return null;
+            const fromTabs = this.allItems.find((item) => item.id === id);
+            if (fromTabs) return fromTabs;
+
+            const fromSearch = (this.searchResults || []).find(
+              (item) => item?.id === id
+            );
+            if (fromSearch) return fromSearch;
+
+            return this.watchlistItemsCache?.[id] || null;
+          },
+
           isInWatchlist(id) {
             return this.watchlist.includes(id);
           },
 
-          toggleWatchlist(id) {
+          toggleWatchlist(itemOrId) {
+            const id =
+              typeof itemOrId === "object" && itemOrId !== null
+                ? itemOrId.id
+                : itemOrId;
+            if (!id) return;
+
             const wasIn = this.isInWatchlist(id);
-            if (wasIn)
+            if (wasIn) {
               this.watchlist = this.watchlist.filter((itemId) => itemId !== id);
-            else this.watchlist.push(id);
+              this.forgetWatchlistItem(id);
+            } else {
+              this.watchlist.push(id);
+              const sourceItem =
+                (typeof itemOrId === "object" && itemOrId) ||
+                this.findItemById(id);
+              if (sourceItem) this.rememberWatchlistItem(sourceItem);
+            }
 
             this.saveWatchlist();
             this.showToast(
@@ -1987,9 +2050,18 @@
           },
 
           loadWatchlistItems() {
-            this.tabsData["my-list"] = this.allItems.filter((item) =>
-              this.isInWatchlist(item.id)
-            );
+            const list = [];
+            const seen = new Set();
+            (this.watchlist || []).forEach((rawId) => {
+              const id = rawId;
+              if (!id || seen.has(id)) return;
+              const item = this.findItemById(id);
+              if (item) {
+                list.push(item);
+                seen.add(id);
+              }
+            });
+            this.tabsData["my-list"] = list;
           },
 
           // =========================

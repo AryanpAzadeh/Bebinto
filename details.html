@@ -334,7 +334,7 @@
 
                 <button
                   type="button"
-                  @click="haptic('light'); item && toggleWatchlist(item.id)"
+                  @click="haptic('light'); item && toggleWatchlist(item)"
                   class="absolute top-3 left-3 z-10 p-2 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-accent hover:text-accent-text transition-colors"
                   :aria-label="item && isInWatchlist(item.id) ? 'حذف از لیست من' : 'افزودن به لیست من'"
                 >
@@ -558,7 +558,7 @@
                       <!-- Desktop watchlist quick -->
                       <button
                         type="button"
-                        @click="haptic('light'); toggleWatchlist(item.id)"
+                        @click="haptic('light'); toggleWatchlist(item)"
                         class="hidden lg:inline-flex p-2 rounded-full hover:bg-surface-highlight transition-colors"
                         :aria-label="isInWatchlist(item.id) ? 'حذف از لیست من' : 'افزودن به لیست من'"
                       >
@@ -956,7 +956,7 @@
               <!-- ✅ Improved My List (no dot, clearer CTA) -->
               <button
                 type="button"
-                @click="haptic('light'); item && toggleWatchlist(item.id)"
+                @click="haptic('light'); item && toggleWatchlist(item)"
                 class="flex-1 py-2 flex flex-col items-center justify-center gap-1 transition-colors"
                 :class="item && isInWatchlist(item.id) ? 'text-accent' : 'text-text-secondary hover:text-text-primary'"
                 :disabled="!item"
@@ -1055,6 +1055,8 @@
           openSeasons: [],
 
           watchlist: [],
+          watchlistItemsCache: {},
+          watchlistItemsKey: "bebintoWatchlistItems",
 
           toast: { show: false, message: "" },
           toastTimer: null,
@@ -1071,6 +1073,7 @@
           init() {
             this.loadTheme();
             this.loadWatchlist();
+            this.loadWatchlistItemsCache();
             this.fetchData();
           },
 
@@ -1100,14 +1103,14 @@
           },
 
           loadTheme() {
-            const saved = localStorage.getItem("cinemaplus-theme");
+            const saved = localStorage.getItem("bebinto-theme");
             this.theme = saved === "light" || saved === "dark" ? saved : "dark";
             this.applyThemeClass();
           },
 
           toggleTheme() {
             this.theme = this.theme === "dark" ? "light" : "dark";
-            localStorage.setItem("cinemaplus-theme", this.theme);
+            localStorage.setItem("bebinto-theme", this.theme);
             this.applyThemeClass();
           },
 
@@ -1164,7 +1167,7 @@
           // =========================
           loadWatchlist() {
             try {
-              const list = localStorage.getItem("cinemaWatchlist");
+              const list = localStorage.getItem("bebintoWatchlist");
               this.watchlist = list ? JSON.parse(list) : [];
             } catch (e) {
               this.watchlist = [];
@@ -1173,9 +1176,43 @@
 
           saveWatchlist() {
             localStorage.setItem(
-              "cinemaWatchlist",
+              "bebintoWatchlist",
               JSON.stringify(this.watchlist)
             );
+          },
+
+          loadWatchlistItemsCache() {
+            try {
+              const raw = localStorage.getItem(this.watchlistItemsKey);
+              const parsed = raw ? JSON.parse(raw) : {};
+              this.watchlistItemsCache =
+                parsed && typeof parsed === "object" ? parsed : {};
+            } catch (e) {
+              this.watchlistItemsCache = {};
+            }
+          },
+
+          saveWatchlistItemsCache() {
+            try {
+              localStorage.setItem(
+                this.watchlistItemsKey,
+                JSON.stringify(this.watchlistItemsCache || {})
+              );
+            } catch (e) {}
+          },
+
+          rememberWatchlistItem(item) {
+            if (!item || !item.id) return;
+            this.watchlistItemsCache[item.id] = item;
+            this.saveWatchlistItemsCache();
+          },
+
+          forgetWatchlistItem(id) {
+            if (!id || !this.watchlistItemsCache) return;
+            if (this.watchlistItemsCache[id]) {
+              delete this.watchlistItemsCache[id];
+              this.saveWatchlistItemsCache();
+            }
           },
 
           isInWatchlist(id) {
@@ -1183,13 +1220,24 @@
             return this.watchlist.includes(id);
           },
 
-          toggleWatchlist(id) {
+          toggleWatchlist(itemOrId) {
+            const id =
+              typeof itemOrId === "object" && itemOrId !== null
+                ? itemOrId.id
+                : itemOrId;
             if (!id) return;
 
             const wasIn = this.isInWatchlist(id);
-            if (wasIn)
+            if (wasIn) {
               this.watchlist = this.watchlist.filter((itemId) => itemId !== id);
-            else this.watchlist.push(id);
+              this.forgetWatchlistItem(id);
+            } else {
+              this.watchlist.push(id);
+              const data =
+                (typeof itemOrId === "object" && itemOrId) ||
+                (this.item?.id === id ? this.item : null);
+              if (data) this.rememberWatchlistItem(data);
+            }
 
             this.saveWatchlist();
             this.showToast(
@@ -1391,6 +1439,8 @@
               // ✅ ست کردن item اول (برای متن/اطلاعات)
               this.item = details;
               this.type = details.type;
+              if (this.isInWatchlist(details.id))
+                this.rememberWatchlistItem(details);
 
               if (this.type === "series") this.seasons = details.seasons || [];
 
@@ -1404,7 +1454,7 @@
 
               try {
                 localStorage.setItem(
-                  "cinemaplus-last-item",
+                  "bebinto-last-item",
                   JSON.stringify(details)
                 );
               } catch (e) {}

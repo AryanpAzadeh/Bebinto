@@ -1781,13 +1781,16 @@
 
             if (wasIn) {
               this.watchlist = this.watchlist.filter((x) => x !== id);
+              if (this.watchlistItemsCache[id]) {
+                delete this.watchlistItemsCache[id];
+              }
             } else {
               this.watchlist.push(id);
               this.watchlistItemsCache[id] = item;
-              this.saveWatchlistItemsCache();
             }
 
             this.saveWatchlist();
+            this.saveWatchlistItemsCache();
             this.showToast(
               wasIn ? "از لیست شما حذف شد" : "به لیست شما اضافه شد"
             );
@@ -1799,6 +1802,10 @@
 
             this.watchlist = this.watchlist.filter((x) => x !== id);
             this.saveWatchlist();
+            if (this.watchlistItemsCache[id]) {
+              delete this.watchlistItemsCache[id];
+              this.saveWatchlistItemsCache();
+            }
             this.showToast("از لیست شما حذف شد");
           },
 
