@@ -194,7 +194,8 @@
           <aside
             class="hidden lg:flex flex-col gap-6 order-2 lg:order-1 h-fit lg:sticky lg:top-8"
           >
-            <header class="flex items-center gap-3">
+            <header class="flex items-center justify-between">
+              <!-- Logo -->
               <a
                 href="https://aryanpazadeh.github.io/Bebinto/"
                 class="flex items-center gap-3 group"
@@ -215,6 +216,20 @@
                   ببینتو
                 </h1>
               </a>
+
+              <!-- Theme Toggle -->
+              <button
+                type="button"
+                @click="haptic('light'); toggleTheme()"
+                class="w-11 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent"
+                :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'"
+                :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
+              >
+                <span
+                  class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white"
+                  :class="theme === 'light' ? 'translate-x-5' : 'translate-x-0'"
+                ></span>
+              </button>
             </header>
 
             <!-- Desktop Search -->
@@ -408,27 +423,6 @@
                 </button>
               </form>
             </section>
-
-            <div
-              class="flex items-center justify-between bg-surface px-3 py-2 rounded-2xl border border-border mt-2"
-            >
-              <span class="text-sm font-medium">
-                حالت <span x-text="theme === 'dark' ? 'تاریک' : 'روشن'"></span>
-              </span>
-
-              <button
-                type="button"
-                @click="haptic('light'); toggleTheme()"
-                class="w-12 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-accent"
-                :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'"
-                :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
-              >
-                <span
-                  class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white"
-                  :class="theme === 'light' ? 'translate-x-6' : 'translate-x-0'"
-                ></span>
-              </button>
-            </div>
           </aside>
 
           <!-- MAIN -->
