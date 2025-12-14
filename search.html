@@ -273,14 +273,44 @@
             <button
               type="button"
               @click="haptic('light'); toggleTheme()"
-              class="mr-auto w-12 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg focus:ring-accent"
-              :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'"
+              class="mr-auto w-10 h-10 flex items-center justify-center rounded-2xl bg-surface border border-border hover:bg-surface-highlight transition-all duration-200"
               :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
             >
-              <span
-                class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white"
-                :class="theme === 'light' ? 'translate-x-6' : 'translate-x-0'"
-              ></span>
+              <!-- Sun -->
+              <svg
+                x-show="theme === 'dark'"
+                x-transition
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5 text-yellow-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364 6.364l-1.414-1.414M6.05 6.05L4.636 4.636m12.728 0l-1.414 1.414M6.05 17.95l-1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"
+                />
+              </svg>
+
+              <!-- Moon -->
+              <svg
+                x-show="theme === 'light'"
+                x-transition
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5 text-indigo-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+                />
+              </svg>
             </button>
           </div>
         </div>
@@ -321,19 +351,48 @@
                 </div>
               </a>
 
-              <!-- Theme toggle کنار لوگو -->
+              <!-- Theme Toggle -->
               <button
                 type="button"
                 @click="haptic('light'); toggleTheme()"
-                class="shrink-0 w-12 h-6 relative rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg focus:ring-accent"
-                :class="theme === 'light' ? 'bg-zinc-300' : 'bg-zinc-700'"
+                class="w-10 h-10 flex items-center justify-center rounded-2xl bg-surface border border-border hover:bg-surface-highlight transition-all duration-200"
                 :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
-                title="تغییر تم"
               >
-                <span
-                  class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out bg-white"
-                  :class="theme === 'light' ? 'translate-x-6' : 'translate-x-0'"
-                ></span>
+                <!-- Sun -->
+                <svg
+                  x-show="theme === 'dark'"
+                  x-transition
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 text-yellow-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364 6.364l-1.414-1.414M6.05 6.05L4.636 4.636m12.728 0l-1.414 1.414M6.05 17.95l-1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"
+                  />
+                </svg>
+
+                <!-- Moon -->
+                <svg
+                  x-show="theme === 'light'"
+                  x-transition
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 text-indigo-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+                  />
+                </svg>
               </button>
             </header>
             <div
