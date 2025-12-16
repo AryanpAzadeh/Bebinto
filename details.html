@@ -640,6 +640,73 @@
                       </button>
                     </div>
 
+                    <!-- ✅ AI Summary (best spot: after title/genres, before plot) -->
+                    <section
+                            x-show="aiSummary"
+                            class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
+                    >
+                      <div class="flex items-center justify-between mb-2">
+                        <h2 class="text-base font-bold flex items-center gap-2">
+                          ✨ خلاصه با هوش مصنوعی
+                        </h2>
+
+                        <button
+                                type="button"
+                                class="text-xs text-text-secondary hover:text-text-primary transition-colors"
+                                @click="aiSummaryOpen = !aiSummaryOpen"
+                                :aria-expanded="aiSummaryOpen"
+                        >
+                          <span x-text="aiSummaryOpen ? 'بستن' : 'نمایش'"></span>
+                        </button>
+                      </div>
+
+                      <!-- حالت کوتاه -->
+                      <p
+                              x-show="!aiSummaryOpen"
+                              class="text-sm leading-7 text-text-secondary"
+                              x-text="aiSummaryShort || aiSummary"
+                      ></p>
+
+                      <!-- حالت کامل -->
+                      <div x-show="aiSummaryOpen" x-collapse>
+                        <p
+                                class="text-sm leading-7 text-text-primary whitespace-pre-line"
+                                x-text="aiSummary"
+                        ></p>
+                        <div class="mt-3 text-xs text-text-secondary">
+                          این متن توسط AI تولید شده و ممکن است دقیق نباشد.
+                        </div>
+                      </div>
+                    </section>
+
+
+                    <!-- Fun facts -->
+                    <section
+                      x-show="funFacts.length"
+                      class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
+                    >
+                      <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-base font-bold flex items-center gap-2">
+                          🎬 حقایق جالب
+                        </h2>
+                        <span
+                          class="text-xs text-text-secondary"
+                          x-text="funFacts.length + ' مورد'"
+                        ></span>
+                      </div>
+
+                      <ul class="space-y-3">
+                        <template x-for="(fact, idx) in funFacts" :key="'fact-' + idx">
+                          <li class="flex items-start gap-2 text-sm leading-7 text-text-secondary">
+                            <span class="text-accent font-bold">•</span>
+                            <span class="flex-1" x-text="fact"></span>
+                          </li>
+                        </template>
+                      </ul>
+                    </section>
+
+
+
                     <!-- Plot -->
                     <section
                       x-show="plotText(item)"
@@ -1103,6 +1170,12 @@
           baseUrl: "https://bebinto-core.aryazdh.ir",
           apiPrefix: "/api/v1",
 
+          aiSummary: "",
+          aiSummaryShort: "",
+          aiSummaryOpen: false,
+          funFacts: [],
+
+
           theme: "dark",
           showBackToTop: false,
 
@@ -1470,6 +1543,7 @@
             this.item = null;
             this.seasons = [];
             this.openSeasons = [];
+            this.resetExtras();
 
             // ✅ ریست‌های ظاهری (بدون flicker)
             this.posterLoaded = false;
@@ -1502,6 +1576,9 @@
               this.type = details.type;
               if (this.isInWatchlist(details.id))
                 this.rememberWatchlistItem(details);
+
+              this.prepareAiSummary(details?.ai_summary);
+              this.funFacts = this.normalizeFunFacts(details?.fun_facts);
 
               if (this.type === "series") this.seasons = details.seasons || [];
 
@@ -1571,6 +1648,40 @@
               return plot || item.description;
             }
             return "خلاصه‌ای برای این عنوان ثبت نشده است.";
+          },
+
+          resetExtras() {
+            this.aiSummary = "";
+            this.aiSummaryShort = "";
+            this.aiSummaryOpen = false;
+            this.funFacts = [];
+          },
+
+          prepareAiSummary(rawSummary) {
+            const summary =
+              typeof rawSummary === "string" ? rawSummary.trim() : "";
+            this.aiSummary = summary;
+            this.aiSummaryShort = this.makeAiSummaryShort(summary);
+            this.aiSummaryOpen = false;
+          },
+
+          makeAiSummaryShort(text) {
+            if (!text) return "";
+            const limit = 220;
+            if (text.length <= limit) return text;
+
+            const match = text.match(/.+?[.!؟](\s|$)/);
+            const first = match ? match[0].trim() : "";
+            if (first && first.length >= 60) return first;
+
+            return text.slice(0, limit).trim() + "…";
+          },
+
+          normalizeFunFacts(facts) {
+            if (!Array.isArray(facts)) return [];
+            return facts
+              .map((fact) => (typeof fact === "string" ? fact.trim() : ""))
+              .filter(Boolean);
           },
 
           // Display helpers
