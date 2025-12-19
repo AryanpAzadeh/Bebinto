@@ -494,8 +494,9 @@
               x-ignore
               x-data="{
 	      chatInput: '',
-	      isTyping: false,
-      messages: [],
+	          isTyping: false,
+	          messages: [],
+	          showGuide: false,
       greetings: {
   morning: [
     'صبح بخیر ☀️ من بینو‌ام، بگو روزتو با چی بسازیم؟ 🎬',
@@ -1251,6 +1252,38 @@
                 </div>
 
                 <div class="flex items-center gap-2">
+                  <div class="relative">
+                    <button
+                      type="button"
+                      @click="showGuide = !showGuide"
+                      class="text-[10px] text-text-secondary bg-surface px-2 py-1 rounded-full border border-border/50 hover:border-accent hover:text-text-primary transition-colors"
+                      :aria-expanded="showGuide.toString()"
+                      aria-controls="bino-guide"
+                    >
+                      آموزش بینو
+                    </button>
+
+                    <div
+                      id="bino-guide"
+                      x-show="showGuide"
+                      x-cloak
+                      x-transition
+                      class="absolute right-0 mt-2 w-64 rounded-2xl border border-border bg-surface-highlight/95 px-3 py-2 text-[10px] leading-relaxed text-text-secondary shadow-xl"
+                    >
+                      <div class="text-xs font-semibold text-text-primary mb-1">
+                        بینو می‌تونه اینطوری بهتر کمک کنه:
+                      </div>
+                      <div class="space-y-1">
+                        <p>بینو بر اساس متن شما فیلم و سریال پیشنهاد می‌دهد.</p>
+                        <p>ترکیب ژانر + سال + حس حال نتیجه بهتر می‌دهد.</p>
+                        <p>
+                          نمونه‌ها: «اکشن ۲۰۲۴»، «سریال کمدی کوتاه»، «درام
+                          امتیاز بالا».
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   <button
                     type="button"
                     @click="resetChat(); $root?.haptic?.('light')"
@@ -2057,6 +2090,7 @@
           chatInput: "",
           isTyping: false,
           messages: [],
+          showGuide: false,
 
           greetings: {
             morning: [
