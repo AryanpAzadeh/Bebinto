@@ -1147,188 +1147,187 @@
           x-transition:leave="fade-out"
         ></div>
 
-	        <div
-	          class="absolute left-0 right-0 bottom-0 bg-surface border-t border-border rounded-t-[28px] shadow-2xl max-h-[85vh] flex flex-col overflow-hidden"
-	          style="padding-bottom: env(safe-area-inset-bottom)"
-	          :style="sheetStyle('filters')"
-	          @click.stop
-	          x-transition:enter="sheet-in"
-	          x-transition:leave="sheet-out"
-	        >
-	          <div
-	            class="sheet-grab pt-2 pb-1 flex items-center justify-center"
-	            @pointerdown.prevent="startSheetDrag($event,'filters')"
-	          >
-	            <div class="h-1.5 w-12 rounded-full bg-text-secondary/40"></div>
-	          </div>
+        <div
+          class="absolute left-0 right-0 bottom-0 bg-surface border-t border-border rounded-t-[28px] shadow-2xl max-h-[85vh] flex flex-col overflow-hidden"
+          style="padding-bottom: env(safe-area-inset-bottom)"
+          :style="sheetStyle('filters')"
+          @click.stop
+          x-transition:enter="sheet-in"
+          x-transition:leave="sheet-out"
+        >
+          <div
+            class="sheet-grab pt-2 pb-1 flex items-center justify-center"
+            @pointerdown.prevent="startSheetDrag($event,'filters')"
+          >
+            <div class="h-1.5 w-12 rounded-full bg-text-secondary/40"></div>
+          </div>
 
-	          <div class="px-4 pt-2 pb-3 flex items-center justify-between">
-	            <div class="font-bold text-base">فیلترها</div>
-	            <button
-	              type="button"
-	              class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
-	              @click="haptic('light'); closeFiltersSheet()"
-	              aria-label="بستن"
-	            >
-	              ✕
-	            </button>
-	          </div>
+          <div class="px-4 pt-2 pb-3 flex items-center justify-between">
+            <div class="font-bold text-base">فیلترها</div>
+            <button
+              type="button"
+              class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
+              @click="haptic('light'); closeFiltersSheet()"
+              aria-label="بستن"
+            >
+              ✕
+            </button>
+          </div>
 
-	          <div class="px-4 pb-4 flex-1 overflow-y-auto custom-scrollbar ios-scroll">
-	            <div class="space-y-4">
-	              <div class="flex items-center justify-between">
-	                <div class="text-xs text-text-secondary">تنظیم نتایج</div>
-	                <button
-	                  type="button"
-	                  @click="haptic('light'); resetFilters()"
-	                  class="text-xs text-accent"
-	                >
-	                  پاک کردن
-	                </button>
-	              </div>
+          <div
+            class="px-4 pb-4 flex-1 overflow-y-auto custom-scrollbar ios-scroll"
+          >
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <div class="text-xs text-text-secondary">تنظیم نتایج</div>
+                <button
+                  type="button"
+                  @click="haptic('light'); resetFilters()"
+                  class="text-xs text-accent"
+                >
+                  پاک کردن
+                </button>
+              </div>
 
-	              <div class="space-y-2">
-	                <label class="text-xs font-bold text-text-secondary">نوع</label>
-	                <div
-	                  class="flex gap-1 rounded-2xl bg-surface-highlight/40 p-1 border border-border"
-	                >
-	                  <button
-	                    type="button"
-	                    @click="haptic('light'); filters.type = 'all'"
-	                    class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
-	                    :class="filters.type === 'all' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
-	                  >
-	                    همه
-	                  </button>
-	                  <button
-	                    type="button"
-	                    @click="haptic('light'); filters.type = 'movie'"
-	                    class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
-	                    :class="filters.type === 'movie' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
-	                  >
-	                    فیلم
-	                  </button>
-	                  <button
-	                    type="button"
-	                    @click="haptic('light'); filters.type = 'series'"
-	                    class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
-	                    :class="filters.type === 'series' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
-	                  >
-	                    سریال
-	                  </button>
-	                </div>
-	              </div>
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-text-secondary">نوع</label>
+                <div
+                  class="flex gap-1 rounded-2xl bg-surface-highlight/40 p-1 border border-border"
+                >
+                  <button
+                    type="button"
+                    @click="haptic('light'); filters.type = 'all'"
+                    class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
+                    :class="filters.type === 'all' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
+                  >
+                    همه
+                  </button>
+                  <button
+                    type="button"
+                    @click="haptic('light'); filters.type = 'movie'"
+                    class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
+                    :class="filters.type === 'movie' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
+                  >
+                    فیلم
+                  </button>
+                  <button
+                    type="button"
+                    @click="haptic('light'); filters.type = 'series'"
+                    class="flex-1 text-center text-xs py-2 rounded-xl transition-colors"
+                    :class="filters.type === 'series' ? 'bg-accent text-accent-text' : 'text-text-secondary hover:bg-surface-highlight'"
+                  >
+                    سریال
+                  </button>
+                </div>
+              </div>
 
-	              <div class="space-y-2">
-	                <label class="text-xs font-bold text-text-secondary">سال</label>
-	                <div class="flex items-center gap-2">
-	                  <input
-	                    type="number"
-	                    inputmode="numeric"
-	                    x-model.debounce.350ms="filters.minYear"
-	                    placeholder="از"
-	                    class="w-full text-center bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
-	                  />
-	                  <span class="text-text-secondary">-</span>
-	                  <input
-	                    type="number"
-	                    inputmode="numeric"
-	                    x-model.debounce.350ms="filters.maxYear"
-	                    placeholder="تا"
-	                    class="w-full text-center bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
-	                  />
-	                </div>
-	              </div>
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-text-secondary">سال</label>
+                <div class="flex items-center gap-2">
+                  <input
+                    type="number"
+                    inputmode="numeric"
+                    x-model.debounce.350ms="filters.minYear"
+                    placeholder="از"
+                    class="w-full text-center bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+                  />
+                  <span class="text-text-secondary">-</span>
+                  <input
+                    type="number"
+                    inputmode="numeric"
+                    x-model.debounce.350ms="filters.maxYear"
+                    placeholder="تا"
+                    class="w-full text-center bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+                  />
+                </div>
+              </div>
 
-	              <div class="space-y-2">
-	                <label class="text-xs font-bold text-text-secondary"
-	                  >حداقل IMDb</label
-	                >
-	                <input
-	                  type="number"
-	                  step="0.1"
-	                  min="0"
-	                  max="10"
-	                  inputmode="decimal"
-	                  x-model.debounce.350ms="filters.minImdb"
-	                  placeholder="مثلا 7.5"
-	                  class="w-full bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
-	                />
-	              </div>
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-text-secondary"
+                  >حداقل IMDb</label
+                >
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="10"
+                  inputmode="decimal"
+                  x-model.debounce.350ms="filters.minImdb"
+                  placeholder="مثلا 7.5"
+                  class="w-full bg-surface-highlight border border-border rounded-2xl px-3 py-2 text-sm placeholder-text-secondary focus:outline-none focus:ring-1 focus:ring-accent"
+                />
+              </div>
 
-	              <div class="space-y-2">
-	                <label class="text-xs font-bold text-text-secondary"
-	                  >ژانر</label
-	                >
-	                <div class="pr-1 space-y-2">
-	                  <template
-	                    x-for="genre in availableGenres"
-	                    :key="'mg-'+genre"
-	                  >
-	                    <label
-	                      class="flex items-center gap-2 text-sm cursor-pointer rounded-2xl px-2 py-2 hover:bg-surface-highlight/40 transition-colors"
-	                    >
-	                      <input
-	                        type="checkbox"
-	                        :value="genre"
-	                        x-model="filters.genres"
-	                        class="w-4 h-4 rounded bg-surface border-border text-accent focus:ring-accent"
-	                      />
-	                      <span x-text="genre"></span>
-	                    </label>
-	                  </template>
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-text-secondary"
+                  >ژانر</label
+                >
+                <div class="pr-1 space-y-2">
+                  <template x-for="genre in availableGenres" :key="'mg-'+genre">
+                    <label
+                      class="flex items-center gap-2 text-sm cursor-pointer rounded-2xl px-2 py-2 hover:bg-surface-highlight/40 transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        :value="genre"
+                        x-model="filters.genres"
+                        class="w-4 h-4 rounded bg-surface border-border text-accent focus:ring-accent"
+                      />
+                      <span x-text="genre"></span>
+                    </label>
+                  </template>
 
-	                  <template x-if="availableGenres.length===0">
-	                    <div class="text-xs text-text-secondary py-2">
-	                      ژانری وجود ندارد.
-	                    </div>
-	                  </template>
-	                </div>
-	              </div>
+                  <template x-if="availableGenres.length===0">
+                    <div class="text-xs text-text-secondary py-2">
+                      ژانری وجود ندارد.
+                    </div>
+                  </template>
+                </div>
+              </div>
 
-	              <div class="space-y-2">
-	                <label class="text-xs font-bold text-text-secondary"
-	                  >کشور</label
-	                >
-	                <div class="pr-1 space-y-2">
-	                  <template
-	                    x-for="country in availableCountries"
-	                    :key="'mc-'+country"
-	                  >
-	                    <label
-	                      class="flex items-center gap-2 text-sm cursor-pointer rounded-2xl px-2 py-2 hover:bg-surface-highlight/40 transition-colors"
-	                    >
-	                      <input
-	                        type="checkbox"
-	                        :value="country"
-	                        x-model="filters.countries"
-	                        class="w-4 h-4 rounded bg-surface border-border text-accent focus:ring-accent"
-	                      />
-	                      <span x-text="country"></span>
-	                    </label>
-	                  </template>
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-text-secondary"
+                  >کشور</label
+                >
+                <div class="pr-1 space-y-2">
+                  <template
+                    x-for="country in availableCountries"
+                    :key="'mc-'+country"
+                  >
+                    <label
+                      class="flex items-center gap-2 text-sm cursor-pointer rounded-2xl px-2 py-2 hover:bg-surface-highlight/40 transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        :value="country"
+                        x-model="filters.countries"
+                        class="w-4 h-4 rounded bg-surface border-border text-accent focus:ring-accent"
+                      />
+                      <span x-text="country"></span>
+                    </label>
+                  </template>
 
-	                  <template x-if="availableCountries.length===0">
-	                    <div class="text-xs text-text-secondary py-2">
-	                      کشوری وجود ندارد.
-	                    </div>
-	                  </template>
-	                </div>
-	              </div>
-	            </div>
-	          </div>
+                  <template x-if="availableCountries.length===0">
+                    <div class="text-xs text-text-secondary py-2">
+                      کشوری وجود ندارد.
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
 
-	          <div class="px-4 pb-4">
-	            <button
-	              type="button"
-	              @click="haptic('light'); closeFiltersSheet()"
-	              class="w-full py-3 rounded-2xl bg-accent text-accent-text font-bold hover:opacity-90 transition-opacity"
-	            >
-	              اعمال و بستن
-	            </button>
-	          </div>
-	        </div>
-	      </div>
+          <div class="px-4 pb-4">
+            <button
+              type="button"
+              @click="haptic('light'); closeFiltersSheet()"
+              class="w-full py-3 rounded-2xl bg-accent text-accent-text font-bold hover:opacity-90 transition-opacity"
+            >
+              اعمال و بستن
+            </button>
+          </div>
+        </div>
+      </div>
 
       <!-- Sort Sheet (Mobile) -->
       <div x-show="sortSheetOpen" x-cloak class="lg:hidden fixed inset-0 z-50">
