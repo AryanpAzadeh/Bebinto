@@ -1212,12 +1212,16 @@
           class="absolute inset-0 flex items-end lg:items-center justify-center p-0 lg:p-6"
           @click.stop
         >
-          <div
-            class="w-full h-full lg:h-[78vh] lg:max-h-[760px] lg:max-w-4xl"
-            :style="sheetStyle('chat')"
-            x-transition:enter="chat-panel-in"
-            x-transition:leave="chat-panel-out"
-          >
+		          <div
+		            class="w-full h-full lg:h-[78vh] lg:max-h-[760px] lg:max-w-4xl"
+		            :style="sheetStyle('chat')"
+		            x-transition:enter="duration-300 ease-in-out"
+		            x-transition:enter-start="opacity-0 translate-y-6 lg:scale-95"
+		            x-transition:enter-end="opacity-100 translate-y-0 lg:scale-100"
+		            x-transition:leave="duration-300 ease-in-out"
+		            x-transition:leave-start="opacity-100 translate-y-0 lg:scale-100"
+		            x-transition:leave-end="opacity-0 translate-y-6 lg:scale-95"
+		          >
             <div
               class="lg:hidden sheet-grab pt-2 pb-1 flex items-center justify-center bg-surface"
               @pointerdown.prevent="startSheetDrag($event,'chat')"
@@ -2135,16 +2139,23 @@
             ],
           },
 
-          suggestions: [
+          suggestions: [],
+          suggestionPool: [
             "فیلم اکشن ۲۰۲۴",
             "سریال کمدی",
             "فیلم ترسناک جدید",
             "عاشقانه با امتیاز بالا",
+            "هیجانی با امتیاز بالا",
+            "درام خانوادگی",
+            "سریال کوتاه",
+            "فیلم جنایی",
           ],
 
           init() {
             if (!Array.isArray(this.messages) || this.messages.length === 0) {
               this.resetChat();
+            } else {
+              this.refreshSuggestions();
             }
           },
 
@@ -2158,6 +2169,7 @@
                 text: this.getGreetingMessage(),
               },
             ];
+            this.refreshSuggestions();
             this.scrollToBottom();
           },
 
@@ -2182,6 +2194,21 @@
               if (!container) return;
               container.scrollTop = container.scrollHeight;
             });
+          },
+
+          refreshSuggestions() {
+            const pool = Array.isArray(this.suggestionPool)
+              ? [...this.suggestionPool]
+              : [];
+            this.shuffleArray(pool);
+            this.suggestions = pool.slice(0, 4);
+          },
+
+          shuffleArray(list) {
+            for (let i = list.length - 1; i > 0; i -= 1) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [list[i], list[j]] = [list[j], list[i]];
+            }
           },
 
           async sendMessage(text = null) {
