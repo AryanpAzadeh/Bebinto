@@ -709,7 +709,7 @@
                       >
                         <template x-for="movie in msg.items" :key="movie.id">
                           <a
-                            :href="'/details.html?id=' + movie.id + '&type=' + movie.type"
+                            :href="'https://aryanpazadeh.github.io/Bebinto/details.html?id=' + movie.id + '&type=' + movie.type"
                             class="flex items-center gap-3 p-2 rounded-xl bg-surface-highlight border border-border hover:border-accent hover:bg-surface transition-all duration-200 group cursor-pointer"
                             @click="if(typeof haptic === 'function') haptic('light')"
                           >
@@ -1349,7 +1349,7 @@
                       >
                         <template x-for="movie in msg.items" :key="movie.id">
                           <a
-                            :href="'/details.html?id=' + movie.id + '&type=' + movie.type"
+                            :href="'https://aryanpazadeh.github.io/Bebinto/details.html?id=' + movie.id + '&type=' + movie.type"
                             class="flex items-center gap-3 p-2 rounded-xl bg-surface-highlight border border-border hover:border-accent hover:bg-surface transition-all duration-200 group cursor-pointer"
                             @click="$root?.haptic?.('light')"
                           >
