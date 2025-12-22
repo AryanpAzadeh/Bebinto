@@ -3136,7 +3136,12 @@
               const finalType =
                 t === "serie" || t === "series" ? "series" : "movie";
 
-              window.location.href = `${this.detailsPagePath}?id=${item.id}&type=${finalType}`;
+              window.open(
+  `${this.detailsPagePath}?id=${item.id}&type=${finalType}`,
+  '_blank',
+  'noopener,noreferrer'
+);
+
             } catch (e) {}
           },
 
