@@ -98,6 +98,42 @@
           background-color: #a1a1aa;
         }
       }
+
+      @layer components {
+        .playlist-description {
+          @apply text-sm text-text-secondary leading-7;
+        }
+        .playlist-description p {
+          @apply mt-3;
+        }
+        .playlist-description a {
+          @apply text-accent font-medium underline decoration-emerald-400/70 underline-offset-4;
+        }
+        .playlist-description a:hover {
+          @apply text-emerald-300 decoration-emerald-300;
+        }
+        .playlist-description a:focus-visible {
+          @apply rounded-sm outline-none ring-2 ring-emerald-400/60 ring-offset-2 ring-offset-bg;
+        }
+        .playlist-description strong {
+          @apply text-text-primary font-semibold;
+        }
+        .playlist-description em {
+          @apply text-text-primary/90;
+        }
+        .playlist-description ul {
+          @apply mt-3 list-disc pr-6;
+        }
+        .playlist-description ol {
+          @apply mt-3 list-decimal pr-6;
+        }
+        .playlist-description li {
+          @apply mt-2;
+        }
+        .playlist-description blockquote {
+          @apply mt-3 border-r-2 border-emerald-400/40 pr-4 text-text-primary/80;
+        }
+      }
     </style>
   </head>
 
@@ -307,11 +343,11 @@
             <div
               class="mt-6 rounded-3xl border border-border bg-surface/70 p-5 sm:p-6"
             >
-              <div class="text-sm font-semibold">توضیحات پلی‌لیست</div>
-              <p
-                class="mt-3 text-sm text-text-secondary leading-7"
+              <div class="text-sm font-semibold">بینو درباره این پلی‌لیست میگه :</div>
+              <div
+                class="playlist-description"
                 x-html="playlistDescription"
-              ></p>
+              ></div>
             </div>
 
             <template x-if="error">
