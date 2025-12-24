@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ببینتو · جزئیات پلی‌لیست</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="author" content="Arya Azadeh" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+
+    <script
+      type="module"
+      src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js"
+    ></script>
+
+    <link rel="shortcut icon" href="favicon.webp" type="image/x-icon" />
+
+    <style>
+      [x-cloak] {
+        display: none !important;
+      }
+      button,
+      a {
+        cursor: pointer;
+      }
+      @media (max-width: 1024px) {
+        input,
+        textarea,
+        select {
+          font-size: 16px;
+        }
+      }
+    </style>
+
+    <style type="text/tailwindcss">
+      @theme {
+        --font-sans: "Vazirmatn", system-ui, sans-serif;
+        --font-heading: "Vazirmatn", sans-serif;
+
+        --color-bg: #09090b;
+        --color-surface: #18181b;
+        --color-surface-highlight: #27272a;
+
+        --color-text-primary: #f4f4f5;
+        --color-text-secondary: #a1a1aa;
+
+        --color-border: #27272a;
+
+        --color-accent: #10b981;
+        --color-accent-text: #020617;
+      }
+
+      html.light {
+        --color-bg: #f4f4f5;
+        --color-surface: #ffffff;
+        --color-surface-highlight: #f4f4f5;
+
+        --color-text-primary: #18181b;
+        --color-text-secondary: #52525b;
+
+        --color-border: #e4e4e7;
+
+        --color-accent: #0f766e;
+        --color-accent-text: #ffffff;
+      }
+
+      @layer utilities {
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: #3f3f46;
+          border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background-color: #52525b;
+        }
+        .light .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: #d4d4d8;
+        }
+        .light .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background-color: #a1a1aa;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    x-data="BebintoPlaylistDetailsPage()"
+    x-init="init()"
+    class="bg-bg text-text-primary font-sans antialiased selection:bg-accent selection:text-accent-text"
+  >
+    <div class="min-h-screen flex flex-col pb-24 lg:pb-0">
+      <!-- Mobile header -->
+      <div
+        class="lg:hidden sticky top-0 z-30 bg-bg/70 backdrop-blur-xl border-b border-border"
+      >
+        <div class="px-4 py-2">
+          <div class="relative h-10 flex items-center">
+            <a
+              href="./playlists.html"
+              class="flex items-center gap-2 shrink-0"
+              aria-label="بازگشت به پلی‌لیست‌ها"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+              <span class="text-sm font-semibold">پلی‌لیست‌ها</span>
+            </a>
+
+            <h1
+              class="absolute left-1/2 -translate-x-1/2 text-sm font-bold truncate max-w-[62%]"
+              x-text="playlist?.name || 'جزئیات پلی‌لیست'"
+            ></h1>
+
+            <button
+              type="button"
+              @click="haptic('light'); toggleTheme()"
+              class="mr-auto w-10 h-10 flex items-center justify-center rounded-2xl bg-surface border border-border hover:bg-surface-highlight transition-all duration-200"
+              :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
+            >
+              <svg
+                x-show="theme === 'dark'"
+                x-transition
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5 text-yellow-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364 6.364l-1.414-1.414M6.05 6.05L4.636 4.636m12.728 0l-1.414 1.414M6.05 17.95l-1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"
+                />
+              </svg>
+
+              <svg
+                x-show="theme === 'light'"
+                x-transition
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5 text-indigo-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <main class="flex-grow flex justify-center p-4 sm:p-6 lg:p-8">
+        <div
+          class="w-full max-w-screen-2xl grid gap-8 lg:grid-cols-[280px_1fr] lg:items-start min-w-0"
+        >
+          <!-- Sidebar (Desktop) -->
+          <aside class="hidden lg:block lg:sticky lg:top-8 lg:self-start">
+            <header class="flex items-center justify-between gap-3 mb-5">
+              <a
+                href="./index.html"
+                class="flex items-center gap-3 group min-w-0"
+                aria-label="خانه"
+              >
+                <div
+                  class="h-10 w-10 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg overflow-hidden shrink-0"
+                >
+                  <dotlottie-wc
+                    src="https://lottie.host/da80b7f6-c288-48b9-a3dc-376f9d276f06/W739BOuqrX.lottie"
+                    style="width: 44px; height: 44px"
+                    autoplay
+                    loop
+                  ></dotlottie-wc>
+                </div>
+
+                <div class="min-w-0">
+                  <div
+                    class="text-xl font-bold font-heading tracking-tight text-text-primary truncate"
+                  >
+                    ببینتو
+                  </div>
+                  <div class="text-xs text-text-secondary">جزئیات پلی‌لیست</div>
+                </div>
+              </a>
+
+              <button
+                type="button"
+                @click="haptic('light'); toggleTheme()"
+                class="w-10 h-10 flex items-center justify-center rounded-2xl bg-surface border border-border hover:bg-surface-highlight transition-all duration-200"
+                :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
+              >
+                <svg
+                  x-show="theme === 'dark'"
+                  x-transition
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 text-yellow-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364 6.364l-1.414-1.414M6.05 6.05L4.636 4.636m12.728 0l-1.414 1.414M6.05 17.95l-1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"
+                  />
+                </svg>
+
+                <svg
+                  x-show="theme === 'light'"
+                  x-transition
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 text-indigo-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+                  />
+                </svg>
+              </button>
+            </header>
+
+            <div
+              class="rounded-3xl border border-border bg-surface/70 p-5 shadow-xl shadow-black/10"
+            >
+              <div class="text-sm font-semibold">خلاصه پلی‌لیست</div>
+              <div class="mt-3 space-y-2 text-xs text-text-secondary">
+                <div class="flex items-center justify-between">
+                  <span>تعداد آیتم</span>
+                  <span class="text-text-primary" x-text="posterCount"></span>
+                </div>
+              </div>
+
+              <div class="mt-5 flex flex-col gap-2">
+                <a
+                  href="./playlists.html"
+                  class="inline-flex items-center justify-between rounded-2xl border border-border px-3 py-2 text-xs text-text-secondary hover:bg-surface-highlight transition"
+                >
+                  بازگشت به پلی‌لیست‌ها
+                  <span>⟵</span>
+                </a>
+              </div>
+            </div>
+          </aside>
+
+          <section class="min-w-0">
+            <div
+              class="relative overflow-hidden rounded-3xl border border-border bg-surface/70 p-6 sm:p-8"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-l from-emerald-500/15 via-transparent to-transparent"
+              ></div>
+              <div class="relative">
+                <div
+                  class="inline-flex items-center gap-2 rounded-full border border-border bg-bg/60 px-3 py-1 text-[11px] text-text-secondary"
+                >
+                  <span>پلی‌لیست</span>
+                  <span class="text-accent">•</span>
+                  <span x-text="playlist?.name || 'در حال بارگذاری'"></span>
+                </div>
+                <h2
+                  class="mt-4 text-2xl sm:text-3xl font-bold tracking-tight font-heading"
+                  x-text="playlist?.name || 'جزئیات پلی‌لیست'"
+                ></h2>
+              </div>
+            </div>
+
+            <div
+              class="mt-6 rounded-3xl border border-border bg-surface/70 p-5 sm:p-6"
+            >
+              <div class="text-sm font-semibold">توضیحات پلی‌لیست</div>
+              <p
+                class="mt-3 text-sm text-text-secondary leading-7"
+                x-html="playlistDescription"
+              ></p>
+            </div>
+
+            <template x-if="error">
+              <div
+                class="mt-6 p-4 rounded-2xl bg-red-950/30 border border-red-800/50 text-red-300 text-sm"
+              >
+                <p x-text="error"></p>
+              </div>
+            </template>
+
+            <template x-if="loading">
+              <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                <template x-for="i in 8" :key="'sk-'+i">
+                  <div
+                    class="aspect-[2/3] rounded-2xl bg-surface animate-pulse motion-reduce:animate-none"
+                  ></div>
+                </template>
+              </div>
+            </template>
+
+            <template x-if="!loading && posters.length === 0 && !error">
+              <div
+                class="mt-6 rounded-3xl border border-border bg-surface/60 p-6 text-sm text-text-secondary"
+              >
+                این پلی‌لیست هنوز آیتم ندارد.
+              </div>
+            </template>
+
+            <div
+              class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+              x-show="!loading && posters.length > 0"
+            >
+              <template x-for="poster in posters" :key="poster.id">
+                <article
+                  class="group relative flex flex-col rounded-2xl bg-surface border border-border overflow-hidden hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30"
+                >
+                  <a
+                    :href="detailsUrl(poster)"
+                    class="flex-1"
+                    @click="haptic('light')"
+                  >
+                    <div class="relative aspect-[2/3] overflow-hidden">
+                      <img
+                        :src="posterImage(poster)"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                        @error="$event.target.src='./placeholder.png'"
+                        alt=""
+                      />
+                      <div
+                        class="absolute top-2 right-2 bg-black/60 backdrop-blur text-white text-xs px-2 py-1 rounded-full border border-white/10 shadow-sm"
+                        x-text="poster.type === 'series' ? 'سریال' : 'فیلم'"
+                      ></div>
+                    </div>
+                    <div class="flex flex-col gap-1 p-3">
+                      <h3
+                        class="font-semibold text-sm truncate"
+                        x-text="poster.title"
+                      ></h3>
+                      <div class="text-xs text-text-secondary">
+                        <span x-text="poster.year || '—'"></span>
+                      </div>
+                    </div>
+                  </a>
+                </article>
+              </template>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <footer class="w-full py-8 mt-auto border-t border-border bg-bg">
+        <div
+          class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4"
+        >
+          <p class="text-sm text-text-secondary">
+            &copy; <span x-text="new Date().getFullYear()"></span> ببینتو. تمامی
+            حقوق محفوظ است.
+          </p>
+        </div>
+      </footer>
+
+      <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40">
+        <div
+          class="px-4 pb-4"
+          style="padding-bottom: calc(env(safe-area-inset-bottom) + 1rem)"
+        >
+          <div
+            class="mx-auto max-w-xs rounded-[35px] border border-border/60 bg-surface/70 backdrop-blur-xs shadow-2xl"
+          >
+            <div class="flex items-center justify-between px-3 py-2">
+              <a
+                href="./index.html"
+                class="relative flex-1 py-2 flex flex-col items-center justify-center gap-1 text-text-secondary"
+                aria-label="خانه"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.25 12 11.204 3.045a1.125 1.125 0 0 1 1.591 0L21.75 12M4.5 10.5v9a.75.75 0 0 0 .75.75h4.5a.75.75 0 0 0 .75-.75v-4.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 0 .75.75h4.5a.75.75 0 0 0 .75-.75v-9"
+                  />
+                </svg>
+                <span class="text-[11px] leading-none font-semibold">خانه</span>
+              </a>
+
+              <a
+                href="./search.html"
+                class="relative flex-1 py-2 flex flex-col items-center justify-center gap-1 text-text-secondary"
+                aria-label="جستجو"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
+                </svg>
+                <span class="text-[11px] leading-none font-semibold"
+                  >جستجو</span
+                >
+              </a>
+
+              <a
+                href="./playlists.html"
+                class="relative flex-1 py-2 flex flex-col items-center justify-center gap-1 text-accent"
+                aria-label="پلی‌لیست‌ها"
+                aria-current="page"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3.75 5.25h16.5M3.75 9.75h16.5M3.75 14.25h10.5M3.75 18.75h10.5"
+                  />
+                </svg>
+                <span class="text-[11px] leading-none font-semibold"
+                  >پلی‌لیست‌ها</span
+                >
+                <span
+                  class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-accent"
+                ></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <script>
+      function BebintoPlaylistDetailsPage() {
+        return {
+          baseUrl: "https://bebinto-core.aryazdh.ir",
+          apiPrefix: "/api/v1",
+          detailsPagePath: "details.html",
+
+          theme: "dark",
+          playlist: null,
+          posters: [],
+          loading: false,
+          error: "",
+          slug: "",
+          posterCount: "—",
+          playlistDescription: "توضیحی برای این پلی‌لیست ثبت نشده است.",
+
+          init() {
+            this.loadTheme();
+            this.slug = new URLSearchParams(window.location.search).get("slug") || "";
+            if (!this.slug) {
+              this.error = "اسلاگ پلی‌لیست مشخص نیست.";
+              return;
+            }
+            this.fetchPlaylist();
+          },
+
+          haptic(level = "light") {
+            try {
+              if (!navigator.vibrate) return;
+              const ms = level === "heavy" ? 30 : level === "medium" ? 20 : 10;
+              navigator.vibrate(ms);
+            } catch (e) {}
+          },
+
+          applyThemeClass() {
+            const el = document.documentElement;
+            el.classList.remove("light", "dark");
+            el.classList.add(this.theme);
+          },
+
+          loadTheme() {
+            const saved = localStorage.getItem("bebinto-theme");
+            this.theme = saved === "light" || saved === "dark" ? saved : "dark";
+            this.applyThemeClass();
+          },
+
+          toggleTheme() {
+            this.theme = this.theme === "dark" ? "light" : "dark";
+            localStorage.setItem("bebinto-theme", this.theme);
+            this.applyThemeClass();
+          },
+
+          async fetchPlaylist() {
+            this.loading = true;
+            this.error = "";
+
+            const url = `${this.baseUrl}${this.apiPrefix}/playlists/${encodeURIComponent(
+              this.slug
+            )}`;
+
+            try {
+              const res = await fetch(url, {
+                headers: { Accept: "application/json" },
+              });
+              if (!res.ok) throw new Error("Playlist failed");
+              const json = await res.json();
+              const data = json?.data || null;
+              this.playlist = data;
+              this.posters = Array.isArray(data?.posters) ? data.posters : [];
+              this.posterCount =
+                typeof data?.posters_count === "number"
+                  ? data.posters_count
+                  : this.posters.length;
+              this.playlistDescription =
+                data?.description?.trim?.() ||
+                "توضیحی برای این پلی‌لیست ثبت نشده است.";
+            } catch (e) {
+              this.error = "خطا در دریافت جزئیات پلی‌لیست.";
+            } finally {
+              this.loading = false;
+            }
+          },
+
+          posterImage(poster) {
+            return poster?.image || poster?.cover || "./placeholder.png";
+          },
+
+          detailsUrl(poster) {
+            const id = poster?.id;
+            if (!id) return "#";
+            const type = poster?.type || "movie";
+            return `${this.detailsPagePath}?id=${id}&type=${type}`;
+          },
+        };
+      }
+    </script>
+  </body>
+</html>
