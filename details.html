@@ -29,6 +29,11 @@
       src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js"
     ></script>
 
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.css"
+    />
+
     <link rel="shortcut icon" href="favicon.webp" type="image/x-icon" />
 
     <style>
@@ -150,7 +155,7 @@
   <body
     x-data="BebintoDetailsApp()"
     x-init="init()"
-    @scroll.window="showBackToTop = (window.scrollY > 400)"
+    @scroll.window="handleScroll()"
     @keydown.escape.window="handleEscape()"
     class="bg-bg text-text-primary font-sans antialiased selection:bg-accent selection:text-accent-text"
   >
@@ -243,6 +248,39 @@
               />
             </svg>
           </button>
+        </div>
+
+        <div
+          x-show="showCompactHeader && item"
+          x-transition
+          class="px-4 pb-2"
+        >
+          <div
+            class="flex items-center justify-between gap-3 rounded-2xl bg-surface/70 border border-border px-3 py-2"
+          >
+            <div class="min-w-0">
+              <div
+                class="text-xs font-bold truncate"
+                x-text="displayTitle(item)"
+              ></div>
+              <div class="mt-1 text-[11px] text-text-secondary">
+                <span x-text="type === 'series' ? 'سریال' : 'فیلم'"></span>
+                <span class="mx-1">•</span>
+                <span x-text="item?.year || '—'"></span>
+                <template x-if="item?.rating">
+                  <span class="mx-1">•</span>
+                  <span>⭐ <span x-text="item.rating"></span></span>
+                </template>
+              </div>
+            </div>
+            <template x-if="item?.imdb">
+              <span
+                class="shrink-0 text-[11px] font-bold bg-yellow-400 text-black px-2 py-1 rounded-full"
+              >
+                IMDb <span x-text="item.imdb"></span>
+              </span>
+            </template>
+          </div>
         </div>
       </div>
 
@@ -741,6 +779,65 @@
                       </ul>
                     </section>
 
+                    <!-- Online player -->
+                    <section
+                      id="onlinePlayerSection"
+                      class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
+                    >
+                      <div class="flex items-center justify-between gap-3">
+                        <h2 class="text-base font-bold">پلیر آنلاین</h2>
+                        <div class="flex items-center gap-2">
+                          <template x-if="playerSrc">
+                            <span
+                              class="text-xs text-text-secondary"
+                              x-text="playerLabel || 'در حال پخش'"
+                            ></span>
+                          </template>
+                          <button
+                            x-show="playerSrc"
+                            type="button"
+                            @click="haptic('light'); clearPlayer()"
+                            class="text-xs px-3 py-1 rounded-full border border-border hover:bg-surface-highlight transition-colors"
+                          >
+                            پاک کردن
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="mt-3">
+                        <template x-if="playerSrc">
+                          <div>
+                            <div
+                              class="rounded-2xl overflow-hidden border border-border bg-black"
+                            >
+                              <video
+                                x-ref="onlinePlayer"
+                                class="w-full aspect-video bg-black plyr"
+                                :src="playerSrc"
+                                :poster="posterSrc"
+                                controls
+                                playsinline
+                              ></video>
+                            </div>
+                            <p
+                              class="mt-2 text-xs text-text-secondary leading-6"
+                            >
+                              اگر ویدئو پخش نشد، ممکن است لینک مستقیم یا قابل پخش
+                              در مرورگر نباشد.
+                            </p>
+                          </div>
+                        </template>
+                        <template x-if="!playerSrc">
+                          <div
+                            class="rounded-2xl border border-border bg-surface-highlight/40 p-4 text-sm text-text-secondary"
+                          >
+                            برای تماشا روی «تماشا در پلیر» کنار لینک‌های دانلود
+                            بزنید.
+                          </div>
+                        </template>
+                      </div>
+                    </section>
+
                     <!-- ✅ Movie downloads ONLY here (no duplicate) -->
                     <template
                       x-if="type==='movie' && Array.isArray(item.sources) && item.sources.length"
@@ -762,38 +859,67 @@
                             x-for="src in item.sources"
                             :key="'dl-'+(src.id || src.url)"
                           >
-                            <a
-                              :href="src.url"
-                              target="_blank"
-                              rel="noopener"
-                              class="group flex items-center justify-between gap-3 text-sm px-3 py-3 rounded-2xl bg-surface-highlight/40 hover:bg-accent hover:text-accent-text transition-colors border border-border"
+                            <div
+                              class="group flex items-center justify-between gap-3 text-sm px-3 py-3 rounded-2xl bg-surface-highlight/40 border border-border"
                             >
                               <div class="min-w-0 flex items-center gap-2">
                                 <span
-                                  class="font-bold text-accent group-hover:text-accent-text transition-colors"
+                                  class="font-bold text-accent"
                                   x-text="src.quality || 'کیفیت'"
                                 ></span>
                                 <span
-                                  class="text-xs text-text-secondary group-hover:text-accent-text/90 transition-colors"
+                                  class="text-xs text-text-secondary"
                                   x-text="(src.type || '').toUpperCase()"
                                 ></span>
                               </div>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="w-5 h-5 text-text-secondary group-hover:text-accent-text transition-colors"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                aria-hidden="true"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                />
-                              </svg>
-                            </a>
+                              <div class="flex items-center gap-2 shrink-0">
+                                <button
+                                  type="button"
+                                  @click="haptic('light'); openPlayer(src, 'فیلم')"
+                                  class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface text-text-primary text-xs font-bold border border-border hover:bg-surface-highlight transition-colors"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    aria-hidden="true"
+                                  >
+                                    <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M14.752 11.168l-4.586-2.643A1 1 0 008.5 9.393v5.214a1 1 0 001.666.768l4.586-2.643a1 1 0 000-1.664z"
+                                    />
+                                  </svg>
+                                  تماشا
+                                </button>
+                                <a
+                                  :href="src.url"
+                                  target="_blank"
+                                  rel="noopener"
+                                  class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-accent text-accent-text text-xs font-bold hover:opacity-90 transition-opacity"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    aria-hidden="true"
+                                  >
+                                    <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                    />
+                                  </svg>
+                                  دانلود
+                                </a>
+                              </div>
+                            </div>
                           </template>
                         </div>
                       </section>
@@ -909,31 +1035,57 @@
                                               x-for="src in ep.sources"
                                               :key="src.id || src.url"
                                             >
-                                              <a
-                                                :href="src.url"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-accent text-accent-text text-xs font-bold hover:opacity-90 transition-opacity"
+                                              <div
+                                                class="inline-flex items-center gap-2"
                                               >
-                                                <svg
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  class="h-4 w-4"
-                                                  fill="none"
-                                                  viewBox="0 0 24 24"
-                                                  stroke="currentColor"
-                                                  aria-hidden="true"
+                                                <button
+                                                  type="button"
+                                                  @click="haptic('light'); openPlayer(src, ep.title || 'قسمت')"
+                                                  class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface text-text-primary text-xs font-bold border border-border hover:bg-surface-highlight transition-colors"
                                                 >
-                                                  <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                                  />
-                                                </svg>
-                                                <span
-                                                  x-text="src.quality || 'دانلود'"
-                                                ></span>
-                                              </a>
+                                                  <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-4 w-4"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                    aria-hidden="true"
+                                                  >
+                                                    <path
+                                                      stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M14.752 11.168l-4.586-2.643A1 1 0 008.5 9.393v5.214a1 1 0 001.666.768l4.586-2.643a1 1 0 000-1.664z"
+                                                    />
+                                                  </svg>
+                                                  تماشا
+                                                </button>
+                                                <a
+                                                  :href="src.url"
+                                                  target="_blank"
+                                                  rel="noopener"
+                                                  class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-accent text-accent-text text-xs font-bold hover:opacity-90 transition-opacity"
+                                                >
+                                                  <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-4 w-4"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                    aria-hidden="true"
+                                                  >
+                                                    <path
+                                                      stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                                    />
+                                                  </svg>
+                                                  <span
+                                                    x-text="src.quality || 'دانلود'"
+                                                  ></span>
+                                                </a>
+                                              </div>
                                             </template>
                                           </div>
                                         </template>
@@ -1161,6 +1313,7 @@
       </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.min.js"></script>
     <script>
       function BebintoDetailsApp() {
         return {
@@ -1172,6 +1325,12 @@
           aiSummaryOpen: false,
           funFacts: [],
 
+          showCompactHeader: false,
+          forceCompactHeader: false,
+
+          playerSrc: "",
+          playerLabel: "",
+          playerInstance: null,
 
           theme: "dark",
           showBackToTop: false,
@@ -1206,6 +1365,8 @@
             this.loadWatchlist();
             this.loadWatchlistItemsCache();
             this.fetchData();
+            this.handleScroll();
+            window.addEventListener("resize", () => this.handleScroll());
           },
 
           // UI
@@ -1225,6 +1386,64 @@
           },
 
           handleEscape() {},
+
+          handleScroll() {
+            const y = window.scrollY || 0;
+            this.showBackToTop = y > 400;
+            const isMobile = window.innerWidth < 1024;
+            if (y < 40) this.forceCompactHeader = false;
+            this.showCompactHeader =
+              isMobile && (y > 220 || this.forceCompactHeader);
+          },
+
+          openPlayer(src, fallbackLabel = "") {
+            const url = typeof src === "string" ? src : src?.url;
+            if (!url) return;
+            this.playerSrc = url;
+            this.playerLabel =
+              src?.quality ? `کیفیت ${src.quality}` : fallbackLabel || "";
+
+            this.$nextTick(() => {
+              const player = this.$refs?.onlinePlayer;
+              if (!player) return;
+              if (!this.playerInstance && window.Plyr) {
+                this.playerInstance = new Plyr(player, {
+                  controls: [
+                    "play",
+                    "progress",
+                    "current-time",
+                    "mute",
+                    "volume",
+                    "settings",
+                    "fullscreen",
+                  ],
+                });
+              } else if (this.playerInstance) {
+                this.playerInstance.source = {
+                  type: "video",
+                  sources: [{ src: url }],
+                };
+              } else {
+                player.load();
+              }
+              if (this.playerInstance) {
+                this.playerInstance.play().catch(() => {});
+              } else {
+                player.play().catch(() => {});
+              }
+            });
+          },
+
+          clearPlayer() {
+            const player = this.$refs?.onlinePlayer;
+            if (player) {
+              try {
+                player.pause();
+              } catch (e) {}
+            }
+            this.playerSrc = "";
+            this.playerLabel = "";
+          },
 
           // Theme (no toast)
           applyThemeClass() {
@@ -1268,6 +1487,7 @@
           },
 
           scrollToPrimarySection() {
+            this.forceCompactHeader = true;
             if (this.type === "series") {
               const el = document.getElementById("seasonsSection");
               if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1541,6 +1761,8 @@
             this.seasons = [];
             this.openSeasons = [];
             this.resetExtras();
+            this.playerSrc = "";
+            this.playerLabel = "";
 
             // ✅ ریست‌های ظاهری (بدون flicker)
             this.posterLoaded = false;
