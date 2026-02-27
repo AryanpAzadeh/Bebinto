@@ -8,12 +8,7 @@
     <meta name="author" content="Arya Azadeh" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="arad-font.css" />
 
     <script
       defer
@@ -90,8 +85,8 @@
 
     <style type="text/tailwindcss">
       @theme {
-        --font-sans: "Vazirmatn", system-ui, sans-serif;
-        --font-heading: "Vazirmatn", sans-serif;
+        --font-sans: "AradVF", system-ui, sans-serif;
+        --font-heading: "AradVF", sans-serif;
 
         --color-bg: #09090b;
         --color-surface: #18181b;
@@ -309,7 +304,7 @@
                     ></dotlottie-wc>
                   </div>
                   <div class="min-w-0">
-                    <div class="text-lg font-bold font-heading tracking-tight">
+                    <div class="text-lg font-bold font-heading">
                       ببینتو
                     </div>
                     <div class="text-xs text-text-secondary">
@@ -634,7 +629,7 @@
                     <div class="flex items-start justify-between gap-4">
                       <div class="min-w-0">
                         <h1
-                          class="text-2xl sm:text-3xl lg:text-4xl font-bold font-heading tracking-tight"
+                          class="text-2xl sm:text-3xl lg:text-4xl font-bold font-heading type-display"
                           x-text="displayTitle(item)"
                         ></h1>
                         <template x-if="item.original_title">
@@ -684,7 +679,7 @@
                             class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                     >
                       <div class="flex items-center justify-between mb-2">
-                        <h2 class="text-base font-bold flex items-center gap-2">
+                        <h2 class="text-base font-bold font-heading type-section-title flex items-center gap-2">
                           ✨ خلاصه با بینو
                         </h2>
 
@@ -721,7 +716,7 @@
                       class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                     >
                       <div class="flex items-center justify-between mb-3">
-                        <h2 class="text-base font-bold flex items-center gap-2">
+                        <h2 class="text-base font-bold font-heading type-section-title flex items-center gap-2">
                          🎬 بینو میگه…
                         </h2>
                         <span
@@ -748,7 +743,7 @@
                       class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                     >
                       <div class="flex items-center justify-between mb-2">
-                        <h2 class="text-base font-bold">خلاصه داستان</h2>
+                        <h2 class="text-base font-bold font-heading type-section-title">خلاصه داستان</h2>
                         <span
                           class="text-xs text-text-secondary"
                           x-text="type==='series' ? 'سریال' : 'فیلم'"
@@ -765,7 +760,7 @@
                       x-show="metaLines(item).length"
                       class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                     >
-                      <h2 class="text-base font-bold mb-3">اطلاعات بیشتر</h2>
+                      <h2 class="text-base font-bold font-heading type-section-title mb-3">اطلاعات بیشتر</h2>
                       <ul class="space-y-2 text-sm">
                         <template
                           x-for="(line, idx) in metaLines(item)"
@@ -785,7 +780,7 @@
                       class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                     >
                       <div class="flex items-center justify-between gap-3">
-                        <h2 class="text-base font-bold">پلیر آنلاین</h2>
+                        <h2 class="text-base font-bold font-heading type-section-title">پلیر آنلاین</h2>
                         <div class="flex items-center gap-2">
                           <template x-if="playerSrc">
                             <span
@@ -847,7 +842,7 @@
                         class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                       >
                         <div class="flex items-center justify-between">
-                          <h2 class="text-base font-bold">لینک‌های دانلود</h2>
+                          <h2 class="text-base font-bold font-heading type-section-title">لینک‌های دانلود</h2>
                           <span
                             class="text-xs text-text-secondary"
                             x-text="item.sources.length + ' مورد'"
@@ -932,7 +927,7 @@
                         class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                       >
                         <div class="flex items-center justify-between">
-                          <h2 class="text-base font-bold">فصل‌ها و قسمت‌ها</h2>
+                          <h2 class="text-base font-bold font-heading type-section-title">فصل‌ها و قسمت‌ها</h2>
                           <span
                             class="text-xs text-text-secondary"
                             x-text="seasons?.length ? (seasons.length + ' فصل') : ''"

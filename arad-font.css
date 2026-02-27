@@ -1,0 +1,131 @@
+@font-face {
+    font-family: 'AradVF';
+    src: url('AradVF.woff2') format('woff2-variations'),
+        /* will be the standard and works in Safari now */
+    url('AradVF.woff2') format('woff2');
+    /* for the other supporting browsers */
+    font-display: fallback;
+}
+
+:root {
+    --type-leading-body: 1.9;
+    --type-leading-compact: 1.65;
+    --type-leading-heading: 1.5;
+    --type-leading-display: 1.4;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea {
+    -webkit-font-smoothing: antialiased;
+    font-synthesis: none !important;
+    font-family: "AradVF", sans-serif;
+    font-feature-settings: "rlig", "kern", "tnum" 0, "swsh" 0, "ss01", "ss02" 0, "ss03" 0, "ss04", "ss05";
+    font-variation-settings: "DSTY" 2;
+}
+
+html,
+body {
+    text-rendering: optimizeLegibility;
+    line-height: var(--type-leading-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+    line-height: var(--type-leading-heading);
+}
+
+p,
+li,
+dd,
+blockquote {
+    line-height: var(--type-leading-body);
+}
+
+button,
+input,
+select,
+textarea,
+label {
+    line-height: var(--type-leading-compact);
+}
+
+.text-\[9px\],
+.text-\[10px\],
+.text-\[11px\],
+.text-xs {
+    line-height: 1.75 !important;
+}
+
+.text-sm {
+    line-height: 1.9 !important;
+}
+
+.text-base {
+    line-height: 1.85 !important;
+}
+
+.text-lg {
+    line-height: 1.75 !important;
+}
+
+.text-xl {
+    line-height: 1.65 !important;
+}
+
+.text-2xl,
+.text-3xl,
+.sm\:text-3xl {
+    line-height: 1.5 !important;
+}
+
+.text-4xl,
+.lg\:text-4xl {
+    line-height: var(--type-leading-display) !important;
+}
+
+.leading-none {
+    line-height: 1.4 !important;
+}
+
+.leading-6,
+.leading-relaxed {
+    line-height: 1.8 !important;
+}
+
+.leading-7 {
+    line-height: var(--type-leading-body) !important;
+}
+
+.type-display {
+    line-height: var(--type-leading-display) !important;
+}
+
+.type-section-title {
+    font-family: "AradVF", sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    line-height: 1.7 !important;
+}
+
+.type-card-title {
+    font-family: "AradVF", sans-serif !important;
+    font-size: 1.0625rem !important;
+    font-weight: 700 !important;
+    line-height: 1.7 !important;
+}
+
+.type-kicker {
+    font-family: "AradVF", sans-serif !important;
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
+    line-height: 1.7 !important;
+}

@@ -9,12 +9,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="arad-font.css" />
 
     <script
       defer
@@ -224,8 +219,8 @@
 
     <style type="text/tailwindcss">
       @theme {
-        --font-sans: "Vazirmatn", system-ui, sans-serif;
-        --font-heading: "Vazirmatn", sans-serif;
+        --font-sans: "AradVF", system-ui, sans-serif;
+        --font-heading: "AradVF", sans-serif;
 
         --color-bg: #09090b;
         --color-surface: #18181b;
@@ -319,7 +314,7 @@
                   ></dotlottie-wc>
                 </div>
                 <h1
-                  class="text-xl font-bold font-heading tracking-tight text-text-primary"
+                  class="text-xl font-bold font-heading text-text-primary"
                 >
                   ببینتو
                 </h1>
@@ -1025,7 +1020,7 @@
             <!-- Desktop title -->
             <div class="hidden lg:flex items-center justify-between mb-6">
               <h2
-                class="text-2xl font-bold tracking-tight font-heading text-text-primary"
+                class="text-2xl font-bold font-heading type-display text-text-primary"
                 x-text="currentTabLabel()"
               ></h2>
             </div>
@@ -1109,10 +1104,10 @@
                   </button>
 
                   <div class="flex flex-col gap-1 p-3">
-                    <h3
-                      class="font-semibold text-base truncate text-text-primary"
-                      x-text="displayTitle(item)"
-                    ></h3>
+                      <h3
+                        class="font-semibold text-base font-heading type-card-title truncate text-text-primary"
+                        x-text="displayTitle(item)"
+                      ></h3>
 
                     <div
                       class="flex items-center text-xs text-text-secondary gap-2"
@@ -1907,7 +1902,7 @@
 
           <div class="px-4 pt-2 pb-4">
             <div class="flex items-center justify-between">
-              <div class="font-bold text-base">دسته‌بندی</div>
+              <div class="font-bold text-base font-heading type-section-title">دسته‌بندی</div>
               <button
                 type="button"
                 class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
@@ -1961,7 +1956,7 @@
                     💡
                   </div>
                   <div class="min-w-0">
-                    <div class="text-sm font-bold">فیلتر هوشمند</div>
+                    <div class="text-sm font-bold font-heading type-section-title">فیلتر هوشمند</div>
                     <div class="text-xs text-text-secondary">
                       ژانر یا کلمه کلیدی
                     </div>
@@ -2056,7 +2051,7 @@
 
           <div class="px-4 pt-2 pb-3">
             <div class="flex items-center justify-between">
-              <div class="font-bold text-base">جستجو</div>
+              <div class="font-bold text-base font-heading type-section-title">جستجو</div>
               <button
                 type="button"
                 class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
@@ -2210,7 +2205,7 @@
 
           <div class="px-4 pt-2 pb-4">
             <div class="flex items-center justify-between">
-              <div class="font-bold text-base">تنظیمات</div>
+              <div class="font-bold text-base font-heading type-section-title">تنظیمات</div>
               <button
                 type="button"
                 class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
@@ -2225,7 +2220,7 @@
               class="mt-4 flex items-center justify-between bg-surface-highlight/60 border border-border rounded-2xl px-3 py-3"
             >
               <div>
-                <div class="text-sm font-semibold">حالت نمایش</div>
+                <div class="text-sm font-semibold font-heading type-kicker">حالت نمایش</div>
                 <div
                   class="text-xs text-text-secondary"
                   x-text="theme === 'dark' ? 'تاریک' : 'روشن'"
