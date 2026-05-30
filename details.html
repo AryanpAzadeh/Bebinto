@@ -581,21 +581,28 @@
                 <!-- Error -->
                 <template x-if="!loading && error">
                   <div
-                    class="mt-6 p-4 sm:p-6 rounded-2xl bg-red-950/30 border border-red-800/50"
+                    class="error-alert mt-6 p-4 sm:p-6 rounded-2xl"
                   >
                     <div class="flex items-start gap-3">
                       <div
-                        class="w-10 h-10 rounded-2xl bg-red-900/40 flex items-center justify-center"
+                        class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center"
                       >
                         ⚠️
                       </div>
                       <div class="min-w-0">
-                        <div class="font-bold">خطا</div>
+                        <div class="error-title font-bold">خطا</div>
                         <p
-                          class="text-sm text-red-200/90 mt-1"
+                          class="text-sm mt-1"
                           x-text="error"
                         ></p>
                         <div class="mt-4 flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            @click="haptic('light'); window.location.reload()"
+                            class="error-refresh-btn inline-flex items-center justify-center px-4 py-2 rounded-2xl font-semibold transition-colors"
+                          >
+                            رفرش صفحه
+                          </button>
                           <a
                             href="./index.html"
                             class="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-accent text-accent-text font-bold hover:opacity-90 transition-opacity"

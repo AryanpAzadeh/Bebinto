@@ -1025,9 +1025,17 @@
 
             <template x-if="error">
               <div
-                class="mb-6 p-4 rounded-2xl bg-red-950/30 border border-red-800/50 text-red-300 text-sm"
+                class="error-alert mb-6 p-4 rounded-2xl text-sm"
               >
-                <p x-text="error"></p>
+                <p class="error-title font-bold">خطا در دریافت اطلاعات</p>
+                <p class="mt-1" x-text="error"></p>
+                <button
+                  type="button"
+                  @click="haptic('light'); window.location.reload()"
+                  class="error-refresh-btn mt-3 inline-flex items-center justify-center px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors"
+                >
+                  رفرش صفحه
+                </button>
               </div>
             </template>
 

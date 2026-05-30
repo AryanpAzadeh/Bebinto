@@ -28,3 +28,43 @@ body.scroll-locked {
   user-select: none;
   -webkit-user-select: none;
 }
+
+.error-alert {
+  border: 1px solid rgba(248, 113, 113, 0.42);
+  background: rgba(127, 29, 29, 0.28);
+  color: #fecaca;
+}
+
+.error-alert .error-title {
+  color: #fee2e2;
+}
+
+.error-refresh-btn {
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  background: rgba(248, 113, 113, 0.1);
+  color: #fecaca;
+}
+
+.error-refresh-btn:hover {
+  background: rgba(248, 113, 113, 0.18);
+}
+
+.light .error-alert {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: rgba(254, 242, 242, 0.95);
+  color: #7f1d1d;
+}
+
+.light .error-alert .error-title {
+  color: #991b1b;
+}
+
+.light .error-refresh-btn {
+  border-color: rgba(220, 38, 38, 0.25);
+  background: rgba(220, 38, 38, 0.08);
+  color: #991b1b;
+}
+
+.light .error-refresh-btn:hover {
+  background: rgba(220, 38, 38, 0.14);
+}
