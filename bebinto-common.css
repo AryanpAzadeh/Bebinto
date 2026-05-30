@@ -1,0 +1,30 @@
+[x-cloak] {
+  display: none !important;
+}
+
+button,
+a {
+  cursor: pointer;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+@media (max-width: 1024px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+body.scroll-locked {
+  overflow: hidden;
+}
+
+.sheet-grab {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}

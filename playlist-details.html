@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <link rel="stylesheet" href="arad-font.css" />
+    <link rel="stylesheet" href="bebinto-common.css" />
 
     <script
       defer
@@ -22,41 +23,16 @@
 
     <link rel="shortcut icon" href="favicon.webp" type="image/x-icon" />
 
-    <style>
-      [x-cloak] {
-        display: none !important;
-      }
-      button,
-      a {
-        cursor: pointer;
-      }
-      @media (max-width: 1024px) {
-        input,
-        textarea,
-        select {
-          font-size: 16px;
-        }
-      }
-
-      @view-transition {
-        navigation: auto;
-      }
-    </style>
-
     <style type="text/tailwindcss">
       @theme {
         --font-sans: "AradVF", system-ui, sans-serif;
         --font-heading: "AradVF", sans-serif;
-
         --color-bg: #09090b;
         --color-surface: #18181b;
         --color-surface-highlight: #27272a;
-
         --color-text-primary: #f4f4f5;
         --color-text-secondary: #a1a1aa;
-
         --color-border: #27272a;
-
         --color-accent: #c4b5fd;
         --color-accent-text: #24124d;
       }
@@ -65,12 +41,9 @@
         --color-bg: #f4f4f5;
         --color-surface: #ffffff;
         --color-surface-highlight: #f4f4f5;
-
         --color-text-primary: #18181b;
         --color-text-secondary: #52525b;
-
         --color-border: #e4e4e7;
-
         --color-accent: #8b5cf6;
         --color-accent-text: #ffffff;
       }
@@ -78,7 +51,6 @@
       @layer utilities {
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
-          height: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
           background: transparent;
@@ -95,6 +67,14 @@
         }
         .light .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background-color: #a1a1aa;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       }
 
@@ -131,6 +111,12 @@
         }
         .playlist-description blockquote {
           @apply mt-3 border-r-2 border-violet-400/40 pr-4 text-text-primary/80;
+        }
+      }
+
+      @layer utilities {
+        .custom-scrollbar::-webkit-scrollbar {
+          height: 6px;
         }
       }
     </style>
