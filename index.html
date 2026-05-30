@@ -206,6 +206,7 @@
       .sheet-grab:active {
         cursor: grabbing;
       }
+
     </style>
 
     <style type="text/tailwindcss">
@@ -418,7 +419,7 @@
                       <img
                         :src="item.image"
                         class="w-10 h-14 object-cover rounded-xl bg-surface"
-                        @error="$event.target.style.display='none'"
+                        @error="if ($event.target.dataset.fallbackLoaded) return; $event.target.dataset.fallbackLoaded='1'; $event.target.src='./placeholder.png'"
                       />
                       <div class="min-w-0 flex-1">
                         <div
@@ -775,7 +776,7 @@
                               <img
                                 :src="movie.image"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                @error="$event.target.style.display='none'"
+                                @error="if ($event.target.dataset.fallbackLoaded) return; $event.target.dataset.fallbackLoaded='1'; $event.target.src='./placeholder.png'"
                                 alt=""
                               />
                             </div>
@@ -1051,7 +1052,7 @@
                       :src="item.image"
                       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
                       loading="lazy"
-                      @error="$event.target.style.opacity = '0.2'"
+                      @error="if ($event.target.dataset.fallbackLoaded) return; $event.target.dataset.fallbackLoaded='1'; $event.target.src='./placeholder.png'"
                       alt=""
                     />
                     <div
@@ -1502,7 +1503,7 @@
                               <img
                                 :src="movie.image"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                @error="$event.target.style.display='none'"
+                                @error="if ($event.target.dataset.fallbackLoaded) return; $event.target.dataset.fallbackLoaded='1'; $event.target.src='./placeholder.png'"
                                 alt=""
                               />
                             </div>
@@ -2126,7 +2127,7 @@
                     <img
                       :src="item.image"
                       class="w-10 h-14 object-cover rounded-xl bg-surface"
-                      @error="$event.target.style.display='none'"
+                      @error="if ($event.target.dataset.fallbackLoaded) return; $event.target.dataset.fallbackLoaded='1'; $event.target.src='./placeholder.png'"
                     />
                     <div class="min-w-0 flex-1">
                       <div

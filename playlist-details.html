@@ -373,6 +373,7 @@
                     :href="detailsUrl(poster)"
                     class="flex-1"
                     @click="haptic('light')"
+                    :aria-label="`مشاهده جزئیات ${displayTitle(poster)}`"
                   >
                     <div class="relative aspect-[2/3] overflow-hidden">
                       <img
@@ -384,16 +385,47 @@
                       />
                       <div
                         class="absolute top-2 right-2 bg-black/60 backdrop-blur text-white text-xs px-2 py-1 rounded-full border border-white/10 shadow-sm"
-                        x-text="poster.type === 'series' ? 'سریال' : 'فیلم'"
+                        x-text="displayTypeLabel(poster)"
                       ></div>
+                      <div
+                        x-show="poster.imdb"
+                        class="absolute bottom-2 left-2 flex items-center gap-1 bg-yellow-400 text-black font-bold text-xs px-1.5 py-0.5 rounded-full shadow-lg"
+                      >
+                        <span>IMDb</span>
+                        <span x-text="poster.imdb"></span>
+                      </div>
                     </div>
                     <div class="flex flex-col gap-1 p-3">
                       <h3
-                        class="font-semibold text-sm font-heading truncate"
-                        x-text="poster.title"
+                        class="font-semibold text-sm font-heading truncate text-text-primary"
+                        x-text="displayTitle(poster)"
                       ></h3>
-                      <div class="text-xs text-text-secondary">
-                        <span x-text="poster.year || '—'"></span>
+
+                      <div
+                        class="flex items-center text-xs text-text-secondary gap-2"
+                      >
+                        <span x-text="displayYear(poster) || '—'"></span>
+                        <span
+                          x-show="displayCountry(poster)"
+                          class="w-1 h-1 bg-text-secondary/50 rounded-full"
+                        ></span>
+                        <span
+                          x-text="displayCountry(poster)"
+                          x-show="displayCountry(poster)"
+                          class="truncate max-w-20"
+                        ></span>
+                      </div>
+
+                      <div class="mt-1 flex flex-wrap gap-1.5">
+                        <template
+                          x-for="g in displayGenres(poster)"
+                          :key="'g-'+poster.id+'-'+g"
+                        >
+                          <span
+                            class="text-xs text-text-secondary bg-surface-highlight px-2 py-0.5 rounded-full border border-border"
+                            x-text="g"
+                          ></span>
+                        </template>
                       </div>
                     </div>
                   </a>
@@ -602,6 +634,32 @@
             if (!id) return "#";
             const type = poster?.type || "movie";
             return `${this.detailsPagePath}?id=${id}&type=${type}`;
+          },
+
+          displayTitle(item) {
+            return item?.title || "بدون عنوان";
+          },
+
+          displayYear(item) {
+            return item?.year || "";
+          },
+
+          displayTypeLabel(item) {
+            const t = String(item?.type || item?.__type || "").toLowerCase();
+            return t === "serie" || t === "series" ? "سریال" : "فیلم";
+          },
+
+          displayCountry(item) {
+            const first = item?.country?.[0]?.title || item?.countries?.[0]?.title;
+            return first || "";
+          },
+
+          displayGenres(item) {
+            if (!Array.isArray(item?.genres)) return [];
+            return item.genres
+              .map((g) => (typeof g === "string" ? g : g?.title))
+              .filter(Boolean)
+              .slice(0, 2);
           },
         };
       }

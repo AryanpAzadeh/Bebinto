@@ -811,7 +811,7 @@
                         :src="item.image"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
                         loading="lazy"
-                        @error="$event.target.style.opacity = '0.2'"
+                        @error="if ($event.target.dataset.fallbackLoaded) return; $event.target.dataset.fallbackLoaded='1'; $event.target.src='./placeholder.png'"
                         alt=""
                       />
 
