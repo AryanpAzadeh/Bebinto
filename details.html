@@ -1020,6 +1020,35 @@
                                   x-collapse
                                   class="p-3 bg-surface"
                                 >
+                                  <div
+                                    class="mb-3 flex flex-wrap items-center gap-2 border-b border-border pb-3"
+                                  >
+                                    <span class="text-xs text-text-secondary"
+                                      >کپی گروهی لینک‌ها:</span
+                                    >
+                                    <template
+                                      x-for="q in seasonQualities(season)"
+                                      :key="'sq-'+(season.id || season.title)+'-'+q"
+                                    >
+                                      <button
+                                        type="button"
+                                        @click="haptic('light'); copySeasonQualityLinks(season, q)"
+                                        class="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] font-semibold text-text-primary hover:bg-surface-highlight transition-colors"
+                                      >
+                                        <span x-text="q"></span>
+                                        <span class="text-text-secondary">کپی همه</span>
+                                      </button>
+                                    </template>
+                                    <button
+                                      type="button"
+                                      @click="haptic('light'); copySeasonAllLinks(season)"
+                                      class="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] font-semibold text-text-primary hover:bg-surface-highlight transition-colors"
+                                    >
+                                      <span>همه لینک‌ها</span>
+                                      <span class="text-text-secondary">کپی</span>
+                                    </button>
+                                  </div>
+
                                   <div class="space-y-2">
                                     <template
                                       x-for="ep in (season.episodes || [])"
@@ -1082,6 +1111,28 @@
                                                     />
                                                   </svg>
                                                   تماشا
+                                                </button>
+                                                <button
+                                                  type="button"
+                                                  @click="haptic('light'); copyDownloadLink(src?.url)"
+                                                  class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface text-text-primary text-xs font-bold border border-border hover:bg-surface-highlight transition-colors"
+                                                >
+                                                  <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-4 w-4"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                    aria-hidden="true"
+                                                  >
+                                                    <path
+                                                      stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M8 16h8M8 12h8m-5-8H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V9m-8-5l4 4m0 0l4 4m-4-4H9"
+                                                    />
+                                                  </svg>
+                                                  کپی لینک
                                                 </button>
                                                 <a
                                                   :href="src.url"
@@ -1488,6 +1539,138 @@
               this.showToast("لینک دانلود کپی شد");
             } catch (e) {
               this.showToast("کپی لینک انجام نشد");
+            }
+          },
+
+          normalizeQuality(quality) {
+            const raw = (quality || "").toString().trim();
+            if (!raw) return "";
+            const m = raw.match(/(\d{3,4})/);
+            if (m?.[1]) return m[1];
+            return raw.toLowerCase();
+          },
+
+          inferQualityFromText(...parts) {
+            const text = parts
+              .map((p) => (p || "").toString())
+              .join(" ")
+              .trim();
+            if (!text) return "";
+
+            const m = text.match(/(?:^|[^0-9])(2160|1440|1080|720|576|480|360)(?:p|[^0-9]|$)/i);
+            return m?.[1] || "";
+          },
+
+          seasonQualities(season) {
+            const uniq = new Set();
+            this.normalizeArr(season?.episodes).forEach((ep) => {
+              this.normalizeArr(ep?.sources).forEach((src) => {
+                const q =
+                  this.normalizeQuality(src?.quality) ||
+                  this.inferQualityFromText(
+                    src?.title,
+                    src?.label,
+                    ep?.title,
+                    season?.title
+                  );
+                if (q) uniq.add(q);
+              });
+            });
+
+            return Array.from(uniq).sort((a, b) => {
+              const na = Number(a);
+              const nb = Number(b);
+              if (Number.isFinite(na) && Number.isFinite(nb)) return nb - na;
+              return String(a).localeCompare(String(b));
+            });
+          },
+
+          async copySeasonQualityLinks(season, quality) {
+            const target = this.normalizeQuality(quality);
+            if (!target) {
+              this.showToast("کیفیت نامعتبر است");
+              return;
+            }
+
+            const links = [];
+            this.normalizeArr(season?.episodes).forEach((ep) => {
+              this.normalizeArr(ep?.sources).forEach((src) => {
+                const url = (src?.url || "").toString().trim();
+                const q =
+                  this.normalizeQuality(src?.quality) ||
+                  this.inferQualityFromText(
+                    src?.title,
+                    src?.label,
+                    ep?.title,
+                    season?.title
+                  );
+                if (!url || !q) return;
+                if (q === target) links.push(url);
+              });
+            });
+
+            const uniqueLinks = Array.from(new Set(links));
+            if (!uniqueLinks.length) {
+              this.showToast(`لینک کیفیت ${target} پیدا نشد`);
+              return;
+            }
+
+            try {
+              const text = uniqueLinks.join("\n");
+              if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(text);
+              } else {
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                ta.setAttribute("readonly", "");
+                ta.style.position = "fixed";
+                ta.style.opacity = "0";
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                document.body.removeChild(ta);
+              }
+              this.showToast(
+                `${uniqueLinks.length} لینک کیفیت ${target} کپی شد`
+              );
+            } catch (e) {
+              this.showToast("کپی گروهی انجام نشد");
+            }
+          },
+
+          async copySeasonAllLinks(season) {
+            const links = [];
+            this.normalizeArr(season?.episodes).forEach((ep) => {
+              this.normalizeArr(ep?.sources).forEach((src) => {
+                const url = (src?.url || "").toString().trim();
+                if (url) links.push(url);
+              });
+            });
+
+            const uniqueLinks = Array.from(new Set(links));
+            if (!uniqueLinks.length) {
+              this.showToast("لینکی برای کپی در این فصل وجود ندارد");
+              return;
+            }
+
+            try {
+              const text = uniqueLinks.join("\n");
+              if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(text);
+              } else {
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                ta.setAttribute("readonly", "");
+                ta.style.position = "fixed";
+                ta.style.opacity = "0";
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                document.body.removeChild(ta);
+              }
+              this.showToast(`${uniqueLinks.length} لینک از فصل کپی شد`);
+            } catch (e) {
+              this.showToast("کپی لینک‌ها انجام نشد");
             }
           },
 
