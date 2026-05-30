@@ -7,6 +7,10 @@
 
     <meta name="author" content="Arya Azadeh" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
 
     <link rel="stylesheet" href="arad-font.css" />
     <link rel="stylesheet" href="bebinto-common.css" />
@@ -23,6 +27,10 @@
     <script
       type="module"
       src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"
     ></script>
 
     <link
@@ -50,6 +58,14 @@
         border-color: rgba(217, 119, 6, 0.35);
         background-color: rgba(254, 243, 199, 0.9);
         color: #92400e;
+      }
+
+      .bino-swiper .swiper-pagination-bullet {
+        background: rgba(255, 255, 255, 0.4);
+      }
+
+      .bino-swiper .swiper-pagination-bullet-active {
+        background: var(--color-accent);
       }
 
       /* Skeleton shimmer */
@@ -734,8 +750,6 @@
                       </ul>
                     </section>
 
-
-
                     <!-- Plot -->
                     <section
                       x-show="plotText(item)"
@@ -1173,6 +1187,159 @@
                         </template>
                       </section>
                     </template>
+
+                    <!-- Bino recommendations -->
+                    <section
+                      class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
+                      x-show="item"
+                    >
+                      <div class="flex items-start justify-between gap-3">
+                        <div>
+                          <h2
+                            class="text-base font-bold font-heading type-section-title"
+                          >
+                            پیشنهادات بینو
+                          </h2>
+                          <p class="mt-1 text-xs text-text-secondary leading-6">
+                            <span
+                              x-text="type==='series'
+                              ? 'برای ادامه این سریال، این پیشنهادها می‌تونن انتخاب بعدی خوبی باشن.'
+                              : 'اگه با این فیلم حال کردی، این پیشنهادها احتمالاً به سلیقه‌ات نزدیکن.'"
+                            ></span>
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          @click="haptic('light'); item && fetchBinoSuggestions(item, true)"
+                          class="text-xs px-3 py-1.5 rounded-xl border border-border bg-surface-highlight hover:bg-surface transition-colors font-semibold"
+                        >
+                          تازه‌سازی
+                        </button>
+                      </div>
+
+                      <template x-if="binoRecsLoading">
+                        <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                          <template x-for="i in 3" :key="'bino-sk-'+i">
+                            <div
+                              class="aspect-[2/3] rounded-2xl bg-surface-highlight animate-pulse motion-reduce:animate-none"
+                            ></div>
+                          </template>
+                        </div>
+                      </template>
+
+                      <template x-if="!binoRecsLoading && binoRecsError">
+                        <div class="error-alert mt-4 rounded-2xl p-3 text-sm">
+                          <p class="error-title font-bold">پیشنهادات بینو در دسترس نیست</p>
+                          <p class="mt-1" x-text="binoRecsError"></p>
+                        </div>
+                      </template>
+
+                      <template x-if="!binoRecsLoading && !binoRecsError && binoPlaylist">
+                        <a
+                          :href="`playlist-details.html?slug=${encodeURIComponent(binoPlaylist.slug || '')}`"
+                          class="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-border bg-surface-highlight/40 p-3 hover:bg-surface-highlight transition-colors"
+                          @click="haptic('light')"
+                        >
+                          <div class="min-w-0">
+                            <div class="text-xs text-text-secondary">یک پلی‌لیست پیشنهادی برای ادامه</div>
+                            <div
+                              class="mt-1 text-sm font-bold truncate"
+                              x-text="binoPlaylist.name"
+                            ></div>
+                            <div
+                              x-show="binoPlaylist.posters_count"
+                              class="mt-1 text-[11px] text-text-secondary"
+                            >
+                              <span x-text="binoPlaylist.posters_count"></span>
+                              آیتم
+                            </div>
+                          </div>
+                          <span
+                            class="inline-flex items-center rounded-full bg-accent px-2.5 py-1 text-[11px] font-bold text-accent-text"
+                          >
+                            مشاهده
+                          </span>
+                        </a>
+                      </template>
+
+                      <template x-if="!binoRecsLoading && !binoRecsError && binoItems.length">
+                        <div class="mt-4">
+                          <div class="swiper bino-swiper" x-ref="binoSwiperEl">
+                            <div class="swiper-wrapper">
+                              <template x-for="rec in binoItems" :key="'bino-item-'+rec.id">
+                                <div class="swiper-slide">
+                                  <article
+                                    class="group relative flex flex-col rounded-2xl bg-surface border border-border overflow-hidden hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30"
+                                  >
+                                    <a
+                                      :href="suggestionDetailsUrl(rec)"
+                                      class="absolute inset-0 z-10"
+                                      @click="haptic('light')"
+                                      :aria-label="`مشاهده جزئیات ${displayTitle(rec)}`"
+                                    ></a>
+                                    <div class="relative aspect-[2/3] overflow-hidden">
+                                      <img
+                                        :src="rec.image || rec.cover || './placeholder.png'"
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        loading="lazy"
+                                        @error="if ($event.target.dataset.fallbackLoaded) return; $event.target.dataset.fallbackLoaded='1'; $event.target.src='./placeholder.png'"
+                                        alt=""
+                                      />
+                                      <div
+                                        class="absolute top-2 right-2 bg-black/60 backdrop-blur text-white text-xs px-2 py-1 rounded-full border border-white/10 shadow-sm"
+                                        x-text="getSuggestionTypeLabel(rec)"
+                                      ></div>
+                                      <div
+                                        x-show="rec.imdb || rec.rating"
+                                        class="absolute bottom-2 left-2 flex items-center gap-1 bg-yellow-400 text-black font-bold text-xs px-1.5 py-0.5 rounded-full shadow-lg"
+                                      >
+                                        <span>IMDb</span>
+                                        <span x-text="rec.imdb || rec.rating"></span>
+                                      </div>
+                                    </div>
+                                    <div class="flex flex-col gap-1 p-3">
+                                      <h3
+                                        class="font-semibold text-sm font-heading truncate text-text-primary"
+                                        x-text="displayTitle(rec)"
+                                      ></h3>
+                                      <div
+                                        class="flex items-center text-xs text-text-secondary gap-2"
+                                      >
+                                        <span x-text="rec.year || '—'"></span>
+                                        <span
+                                          x-show="suggestionCountry(rec)"
+                                          class="w-1 h-1 bg-text-secondary/50 rounded-full"
+                                        ></span>
+                                        <span
+                                          x-show="suggestionCountry(rec)"
+                                          x-text="suggestionCountry(rec)"
+                                          class="truncate max-w-20"
+                                        ></span>
+                                      </div>
+                                      <div class="mt-1 flex flex-wrap gap-1.5">
+                                        <template
+                                          x-for="g in suggestionGenres(rec)"
+                                          :key="'bino-g-'+rec.id+'-'+g"
+                                        >
+                                          <span
+                                            class="text-xs text-text-secondary bg-surface-highlight px-2 py-0.5 rounded-full border border-border"
+                                            x-text="g"
+                                          ></span>
+                                        </template>
+                                      </div>
+                                    </div>
+                                  </article>
+                                </div>
+                              </template>
+                            </div>
+                          </div>
+                          <div
+                            class="swiper-pagination !static mt-3"
+                            x-ref="binoSwiperPagination"
+                          ></div>
+                        </div>
+                      </template>
+                    </section>
                   </div>
                 </template>
               </div>
@@ -1405,6 +1572,12 @@
           aiSummaryShort: "",
           aiSummaryOpen: false,
           funFacts: [],
+          binoItems: [],
+          binoPlaylist: null,
+          binoRecsLoading: false,
+          binoRecsError: "",
+          binoSwiper: null,
+          binoSwiperInitAttempts: 0,
 
           showCompactHeader: false,
           forceCompactHeader: false,
@@ -2001,6 +2174,7 @@
             this.seasons = [];
             this.openSeasons = [];
             this.resetExtras();
+            this.resetBinoSuggestions();
             this.playerSrc = "";
             this.playerLabel = "";
 
@@ -2040,6 +2214,7 @@
               this.funFacts = this.normalizeFunFacts(details?.fun_facts);
 
               if (this.type === "series") this.seasons = details.seasons || [];
+              this.fetchBinoSuggestions(details);
 
               // ✅ Poster + Hero بعد از اینکه refs آماده شد
               const posterCandidate =
@@ -2116,6 +2291,199 @@
             this.funFacts = [];
           },
 
+          resetBinoSuggestions() {
+            this.binoItems = [];
+            this.binoPlaylist = null;
+            this.binoRecsError = "";
+            this.binoRecsLoading = false;
+            if (this.binoSwiper?.destroy) {
+              try {
+                this.binoSwiper.destroy(true, true);
+              } catch (e) {}
+            }
+            this.binoSwiper = null;
+            this.binoSwiperInitAttempts = 0;
+          },
+
+          buildBinoPrompt(seed) {
+            const title = this.displayTitle(seed);
+            const kind = this.type === "series" ? "سریال" : "فیلم";
+            const genres = this.displayGenres(seed).slice(0, 3).join("، ");
+            const year = seed?.year ? ` محصول ${seed.year}` : "";
+            const genreText = genres ? ` با حال‌وهوای ${genres}` : "";
+            return `من ${kind} «${title}»${year}${genreText} را دوست داشتم. چند ${this.type === "series" ? "سریال" : "فیلم"} مشابه پیشنهاد بده و یک پلی‌لیست مرتبط هم معرفی کن.`;
+          },
+
+          normalizeSuggestionItem(raw) {
+            if (!raw || !raw.id) return null;
+            return {
+              ...raw,
+              type: String(raw?.type || "").toLowerCase().includes("series")
+                ? "series"
+                : "movie",
+              image: raw?.image || raw?.cover || "./placeholder.png",
+              _countryText: Array.isArray(raw?.country)
+                ? raw.country.map((c) => c?.title || c).filter(Boolean).join("، ")
+                : Array.isArray(raw?.countries)
+                ? raw.countries.map((c) => c?.title || c).filter(Boolean).join("، ")
+                : "",
+              _genresText: Array.isArray(raw?.genres)
+                ? raw.genres
+                    .map((g) => (typeof g === "string" ? g : g?.title))
+                    .filter(Boolean)
+                : [],
+            };
+          },
+
+          async fetchFallbackSuggestions(seed) {
+            const title = this.displayTitle(seed);
+            const firstGenre = this.displayGenres(seed)?.[0] || "";
+            const searchQuery = firstGenre || title;
+
+            const candidates = [];
+
+            if (searchQuery) {
+              try {
+                const searchRes = await fetch(
+                  `${this.baseUrl}${this.apiPrefix}/search?q=${encodeURIComponent(
+                    searchQuery
+                  )}`,
+                  { headers: { Accept: "application/json" } }
+                );
+                if (searchRes.ok) {
+                  const sjson = await searchRes.json();
+                  this.normalizeArr(sjson?.data?.posters).forEach((r) =>
+                    candidates.push(r)
+                  );
+                }
+              } catch (e) {}
+            }
+
+            const endpoint =
+              this.type === "series"
+                ? `${this.baseUrl}${this.apiPrefix}/series/top-rated?page=1`
+                : `${this.baseUrl}${this.apiPrefix}/movies/top-rated?page=1`;
+            try {
+              const topRes = await fetch(endpoint, {
+                headers: { Accept: "application/json" },
+              });
+              if (topRes.ok) {
+                const tjson = await topRes.json();
+                this.normalizeArr(tjson?.data).forEach((r) => candidates.push(r));
+              }
+            } catch (e) {}
+
+            const normalized = candidates
+              .map((r) => this.normalizeSuggestionItem(r))
+              .filter(Boolean)
+              .filter((r) => Number(r.id) !== Number(seed.id));
+
+            const uniq = new Map();
+            normalized.forEach((r) => {
+              if (!uniq.has(r.id)) uniq.set(r.id, r);
+            });
+            return Array.from(uniq.values()).slice(0, 10);
+          },
+
+          async fetchBinoSuggestions(seed, force = false) {
+            if (!seed?.id || (this.binoRecsLoading && !force)) return;
+            this.binoRecsLoading = true;
+            this.binoRecsError = "";
+
+            try {
+              const response = await fetch(`${this.baseUrl}${this.apiPrefix}/chat`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+                body: JSON.stringify({
+                  message: this.buildBinoPrompt(seed),
+                }),
+              });
+
+              if (!response.ok) throw new Error("bino recommendations failed");
+              const data = await response.json();
+
+              const normalized = this.normalizeArr(data?.results)
+                .map((r) => this.normalizeSuggestionItem(r))
+                .filter(Boolean)
+                .filter((r) => Number(r.id) !== Number(seed.id));
+
+              const uniq = new Map();
+              normalized.forEach((r) => {
+                if (!uniq.has(r.id)) uniq.set(r.id, r);
+              });
+              this.binoItems = Array.from(uniq.values()).slice(0, 10);
+
+              if (!this.binoItems.length) {
+                this.binoItems = await this.fetchFallbackSuggestions(seed);
+              }
+
+              const playlists = this.normalizeArr(data?.playlists);
+              this.binoPlaylist = playlists.length ? playlists[0] : null;
+
+              if (!this.binoPlaylist) {
+                try {
+                  const plistRes = await fetch(
+                    `${this.baseUrl}${this.apiPrefix}/playlists?page=1`,
+                    { headers: { Accept: "application/json" } }
+                  );
+                  if (plistRes.ok) {
+                    const plistJson = await plistRes.json();
+                    const fallbackPlaylists = this.normalizeArr(plistJson?.data);
+                    this.binoPlaylist = fallbackPlaylists.length
+                      ? fallbackPlaylists[0]
+                      : null;
+                  }
+                } catch (e) {}
+              }
+
+              this.initBinoSwiper();
+            } catch (e) {
+              this.binoRecsError = "فعلاً نتونستم پیشنهادات جدید بگیرم.";
+              this.binoItems = [];
+              this.binoPlaylist = null;
+            } finally {
+              this.binoRecsLoading = false;
+            }
+          },
+
+          initBinoSwiper() {
+            this.$nextTick(() => {
+              if (!this.$refs?.binoSwiperEl || !this.binoItems.length) return;
+              if (typeof Swiper === "undefined") {
+                if (this.binoSwiperInitAttempts < 10) {
+                  this.binoSwiperInitAttempts += 1;
+                  setTimeout(() => this.initBinoSwiper(), 120);
+                }
+                return;
+              }
+              this.binoSwiperInitAttempts = 0;
+
+              if (this.binoSwiper?.destroy) {
+                try {
+                  this.binoSwiper.destroy(true, true);
+                } catch (e) {}
+              }
+
+              this.binoSwiper = new Swiper(this.$refs.binoSwiperEl, {
+                slidesPerView: 1.35,
+                spaceBetween: 12,
+                speed: 550,
+                loop: this.binoItems.length > 2,
+                breakpoints: {
+                  640: { slidesPerView: 2.2 },
+                  1024: { slidesPerView: 2.8 },
+                },
+                pagination: {
+                  el: this.$refs.binoSwiperPagination,
+                  clickable: true,
+                },
+              });
+            });
+          },
+
           prepareAiSummary(rawSummary) {
             const summary =
               typeof rawSummary === "string" ? rawSummary.trim() : "";
@@ -2157,6 +2525,27 @@
             if (!item) return [];
             return Array.isArray(item._genresText)
               ? item._genresText.slice(0, 6)
+              : [];
+          },
+
+          getSuggestionTypeLabel(item) {
+            const t = String(item?.type || "").toLowerCase();
+            return t === "series" || t === "serie" ? "سریال" : "فیلم";
+          },
+
+          suggestionDetailsUrl(item) {
+            const t = String(item?.type || "").toLowerCase();
+            const type = t === "series" || t === "serie" ? "series" : "movie";
+            return `details.html?id=${encodeURIComponent(item?.id || "")}&type=${type}`;
+          },
+
+          suggestionCountry(item) {
+            return item?._countryText || "";
+          },
+
+          suggestionGenres(item) {
+            return Array.isArray(item?._genresText)
+              ? item._genresText.slice(0, 2)
               : [];
           },
         };
