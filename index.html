@@ -1037,13 +1037,15 @@
             >
               <template x-for="item in currentItems" :key="'c-'+item.id">
                 <article
-                  role="link"
-                  tabindex="0"
-                  @click="goToDetails(item)"
-                  @keydown.enter.prevent="goToDetails(item)"
-                  @keydown.space.prevent="goToDetails(item)"
-                  class="group relative flex flex-col rounded-2xl bg-surface border border-border overflow-hidden hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 cursor-pointer transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:transform-none focus:outline-none focus:ring-2 focus:ring-accent/80"
+                  class="group relative flex flex-col rounded-2xl bg-surface border border-border overflow-hidden hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 cursor-pointer transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:transform-none"
                 >
+                  <a
+                    :href="detailsUrl(item)"
+                    class="absolute inset-0 z-10"
+                    @click="haptic('light')"
+                    :aria-label="`مشاهده جزئیات ${displayTitle(item)}`"
+                  ></a>
+
                   <div class="relative aspect-[2/3] overflow-hidden">
                     <img
                       :src="item.image"
@@ -1069,7 +1071,7 @@
                   <button
                     type="button"
                     @click.stop="haptic('light'); toggleWatchlist(item)"
-                    class="absolute top-2 left-2 z-10 p-1.5 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-accent hover:text-accent-text transition-colors"
+                    class="absolute top-2 left-2 z-20 p-1.5 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-accent hover:text-accent-text transition-colors"
                     :aria-label="isInWatchlist(item.id) ? 'حذف از لیست من' : 'افزودن به لیست من'"
                   >
                     <svg
@@ -3297,18 +3299,15 @@
           goToDetails(item) {
             try {
               localStorage.setItem("bebinto-last-item", JSON.stringify(item));
-
-              // API شما type = "movie" یا "series"
-              const t = (item?.type || item?.__type || "").toLowerCase();
-              const finalType =
-                t === "serie" || t === "series" ? "series" : "movie";
-
-              window.open(
-                `${this.detailsPagePath}?id=${item.id}&type=${finalType}`,
-                "_blank",
-                "noopener,noreferrer"
-              );
+              window.location.href = this.detailsUrl(item);
             } catch (e) {}
+          },
+
+          detailsUrl(item) {
+            const t = (item?.type || item?.__type || "").toLowerCase();
+            const finalType =
+              t === "serie" || t === "series" ? "series" : "movie";
+            return `${this.detailsPagePath}?id=${item?.id}&type=${finalType}`;
           },
 
           currentTabLabel() {
