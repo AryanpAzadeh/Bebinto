@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="UTF-8" />
@@ -202,7 +202,6 @@
       .sheet-grab:active {
         cursor: grabbing;
       }
-
     </style>
 
     <style type="text/tailwindcss">
@@ -288,11 +287,15 @@
                 <div
                   class="h-10 w-10 rounded-2xl flex items-center justify-center overflow-hidden"
                 >
-                  <img src="favicon.webp" alt="Bebinto" class="h-full w-full object-contain" loading="lazy" decoding="async" />
+                  <img
+                    src="favicon.webp"
+                    alt="Bebinto"
+                    class="h-full w-full object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
-                <h1
-                  class="text-xl font-bold font-heading text-text-primary"
-                >
+                <h1 class="text-xl font-bold font-heading text-text-primary">
                   ببینتو
                 </h1>
               </a>
@@ -617,7 +620,13 @@
                   <div
                     class="w-8 h-8 rounded-full flex items-center justify-center text-white shadow-lg shadow-indigo-500/20"
                   >
-                    <img src="favicon.webp" alt="Bebinto" class="h-full w-full object-contain" loading="lazy" decoding="async" />
+                    <img
+                      src="favicon.webp"
+                      alt="Bebinto"
+                      class="h-full w-full object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                   <div>
                     <h3
@@ -677,9 +686,7 @@
                       <span x-text="msg.text"></span>
                     </div>
 
-                    <template
-                      x-if="msg.playlists && msg.playlists.length > 0"
-                    >
+                    <template x-if="msg.playlists && msg.playlists.length > 0">
                       <div class="w-full pl-2 pr-4 mt-2 space-y-2">
                         <div class="flex items-center justify-between">
                           <div
@@ -743,7 +750,9 @@
                     <template
                       x-if="msg.playlists && msg.playlists.length > 0 && msg.items && msg.items.length > 0"
                     >
-                      <hr class="my-4 w-full border-t border-dashed border-border/60" />
+                      <hr
+                        class="my-4 w-full border-t border-dashed border-border/60"
+                      />
                     </template>
 
                     <template x-if="msg.items && msg.items.length > 0">
@@ -928,7 +937,13 @@
                   <div
                     class="h-9 w-9 rounded-2xl flex items-center justify-center overflow-hidden"
                   >
-                    <img src="favicon.webp" alt="Bebinto" class="h-full w-full object-contain" loading="lazy" decoding="async" />
+                    <img
+                      src="favicon.webp"
+                      alt="Bebinto"
+                      class="h-full w-full object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                   <span class="text-sm font-bold">ببینتو</span>
                 </a>
@@ -1005,9 +1020,7 @@
             </div>
 
             <template x-if="error">
-              <div
-                class="error-alert mb-6 p-4 rounded-2xl text-sm"
-              >
+              <div class="error-alert mb-6 p-4 rounded-2xl text-sm">
                 <p class="error-title font-bold">خطا در دریافت اطلاعات</p>
                 <p class="mt-1" x-text="error"></p>
                 <button
@@ -1081,10 +1094,10 @@
                   </button>
 
                   <div class="flex flex-col gap-1 p-3">
-                      <h3
-                        class="font-semibold text-base font-heading type-card-title truncate text-text-primary"
-                        x-text="displayTitle(item)"
-                      ></h3>
+                    <h3
+                      class="font-semibold text-base font-heading type-card-title truncate text-text-primary"
+                      x-text="displayTitle(item)"
+                    ></h3>
 
                     <div
                       class="flex items-center text-xs text-text-secondary gap-2"
@@ -1255,7 +1268,13 @@
             aria-haspopup="dialog"
             title="دستیار هوش مصنوعی بینو"
           >
-            <img src="favicon.webp" alt="Bebinto" class="w-9 h-9 object-contain" loading="lazy" decoding="async" />
+            <img
+              src="favicon.webp"
+              alt="Bebinto"
+              class="w-9 h-9 object-contain"
+              loading="lazy"
+              decoding="async"
+            />
           </button>
         </div>
       </div>
@@ -1405,9 +1424,7 @@
                       <span x-text="msg.text"></span>
                     </div>
 
-                    <template
-                      x-if="msg.playlists && msg.playlists.length > 0"
-                    >
+                    <template x-if="msg.playlists && msg.playlists.length > 0">
                       <div class="w-full pl-2 pr-4 mt-2 space-y-2">
                         <div class="flex items-center justify-between">
                           <div
@@ -1415,7 +1432,6 @@
                           >
                             پلی‌لیست‌های پیشنهادی
                           </div>
-                         
                         </div>
                         <div class="grid gap-2">
                           <template
@@ -1468,7 +1484,9 @@
                     <template
                       x-if="msg.playlists && msg.playlists.length > 0 && msg.items && msg.items.length > 0"
                     >
-                      <hr class="my-4 w-full border-t border-dashed border-border/60" />
+                      <hr
+                        class="my-4 w-full border-t border-dashed border-border/60"
+                      />
                     </template>
 
                     <template x-if="msg.items && msg.items.length > 0">
@@ -1533,7 +1551,6 @@
                                     <span x-text="movie.rating"></span>
                                   </span>
                                 </div>
-
                               </div>
                               <template
                                 x-if="movie.playlists && movie.playlists.length"
@@ -1603,7 +1620,6 @@
                         </div>
                       </div>
                     </template>
-
                   </div>
                 </template>
 
@@ -1761,7 +1777,13 @@
                 :class="chatOpen ? 'text-accent' : 'text-text-secondary'"
                 aria-label="بینو"
               >
-                <img src="favicon.webp" alt="Bebinto" class="size-6 object-contain" loading="lazy" decoding="async" />
+                <img
+                  src="favicon.webp"
+                  alt="Bebinto"
+                  class="size-6 object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
 
                 <span class="text-[11px] leading-none font-semibold"
                   >از بینو بپرس</span
@@ -1869,7 +1891,9 @@
 
           <div class="px-4 pt-2 pb-4">
             <div class="flex items-center justify-between">
-              <div class="font-bold text-base font-heading type-section-title">دسته‌بندی</div>
+              <div class="font-bold text-base font-heading type-section-title">
+                دسته‌بندی
+              </div>
               <button
                 type="button"
                 class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
@@ -1923,7 +1947,11 @@
                     💡
                   </div>
                   <div class="min-w-0">
-                    <div class="text-sm font-bold font-heading type-section-title">فیلتر هوشمند</div>
+                    <div
+                      class="text-sm font-bold font-heading type-section-title"
+                    >
+                      فیلتر هوشمند
+                    </div>
                     <div class="text-xs text-text-secondary">
                       ژانر یا کلمه کلیدی
                     </div>
@@ -2018,7 +2046,9 @@
 
           <div class="px-4 pt-2 pb-3">
             <div class="flex items-center justify-between">
-              <div class="font-bold text-base font-heading type-section-title">جستجو</div>
+              <div class="font-bold text-base font-heading type-section-title">
+                جستجو
+              </div>
               <button
                 type="button"
                 class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
@@ -2172,7 +2202,9 @@
 
           <div class="px-4 pt-2 pb-4">
             <div class="flex items-center justify-between">
-              <div class="font-bold text-base font-heading type-section-title">تنظیمات</div>
+              <div class="font-bold text-base font-heading type-section-title">
+                تنظیمات
+              </div>
               <button
                 type="button"
                 class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
@@ -2187,7 +2219,9 @@
               class="mt-4 flex items-center justify-between bg-surface-highlight/60 border border-border rounded-2xl px-3 py-3"
             >
               <div>
-                <div class="text-sm font-semibold font-heading type-kicker">حالت نمایش</div>
+                <div class="text-sm font-semibold font-heading type-kicker">
+                  حالت نمایش
+                </div>
                 <div
                   class="text-xs text-text-secondary"
                   x-text="theme === 'dark' ? 'تاریک' : 'روشن'"
@@ -2226,7 +2260,9 @@
             >
             استفاده شده است.
           </p>
-          <p class="text-sm text-text-secondary text-center sm:text-right">استفاده رایگان به یاد تمام جاویدنامان ایران</p>
+          <p class="text-sm text-text-secondary text-center sm:text-right">
+            استفاده رایگان به یاد تمام جاویدنامان ایران
+          </p>
         </div>
       </footer>
     </div>
@@ -2383,7 +2419,7 @@
                         ?.getAttribute("content") || "",
                   },
                   body: JSON.stringify({ message: msg }),
-                }
+                },
               );
 
               if (!response.ok) throw new Error("Network response was not ok");
@@ -2670,14 +2706,14 @@
               if (this._dragMoveHandler)
                 window.removeEventListener(
                   "pointermove",
-                  this._dragMoveHandler
+                  this._dragMoveHandler,
                 );
               if (this._dragEndHandler)
                 window.removeEventListener("pointerup", this._dragEndHandler);
               if (this._dragEndHandler)
                 window.removeEventListener(
                   "pointercancel",
-                  this._dragEndHandler
+                  this._dragEndHandler,
                 );
             } catch (e) {}
 
@@ -2759,14 +2795,14 @@
               if (this._dragMoveHandler)
                 window.removeEventListener(
                   "pointermove",
-                  this._dragMoveHandler
+                  this._dragMoveHandler,
                 );
               if (this._dragEndHandler)
                 window.removeEventListener("pointerup", this._dragEndHandler);
               if (this._dragEndHandler)
                 window.removeEventListener(
                   "pointercancel",
-                  this._dragEndHandler
+                  this._dragEndHandler,
                 );
             } catch (e) {}
 
@@ -2991,8 +3027,8 @@
 
               const json = await this.getCachedOrFetch(url, () =>
                 fetch(url, { headers: { Accept: "application/json" } }).then(
-                  (res) => res.json()
-                )
+                  (res) => res.json(),
+                ),
               );
 
               const newItems = Array.isArray(json?.data) ? json.data : [];
@@ -3000,10 +3036,10 @@
               if (newItems.length > 0) {
                 const enrichedItems = newItems.map((item) => ({ ...item }));
                 const existingIds = new Set(
-                  (this.tabsData[tabId] || []).map((i) => i.id)
+                  (this.tabsData[tabId] || []).map((i) => i.id),
                 );
                 this.tabsData[tabId].push(
-                  ...enrichedItems.filter((i) => !existingIds.has(i.id))
+                  ...enrichedItems.filter((i) => !existingIds.has(i.id)),
                 );
               }
 
@@ -3075,8 +3111,8 @@
                 (item.title || "").toLowerCase().includes(lowerKeyword) ||
                 (Array.isArray(item.genres) &&
                   item.genres.some((g) =>
-                    (g.title || "").toLowerCase().includes(lowerKeyword)
-                  ))
+                    (g.title || "").toLowerCase().includes(lowerKeyword),
+                  )),
             );
 
             const smartTab = this.tabs.find((t) => t.id === "smart-results");
@@ -3177,7 +3213,7 @@
           saveWatchlist() {
             localStorage.setItem(
               "bebintoWatchlist",
-              JSON.stringify(this.watchlist)
+              JSON.stringify(this.watchlist),
             );
           },
 
@@ -3196,7 +3232,7 @@
             try {
               localStorage.setItem(
                 this.watchlistItemsKey,
-                JSON.stringify(this.watchlistItemsCache || {})
+                JSON.stringify(this.watchlistItemsCache || {}),
               );
             } catch (e) {}
           },
@@ -3221,7 +3257,7 @@
             if (fromTabs) return fromTabs;
 
             const fromSearch = (this.searchResults || []).find(
-              (item) => item?.id === id
+              (item) => item?.id === id,
             );
             if (fromSearch) return fromSearch;
 
@@ -3253,7 +3289,7 @@
 
             this.saveWatchlist();
             this.showToast(
-              wasIn ? "از لیست شما حذف شد" : "به لیست شما اضافه شد"
+              wasIn ? "از لیست شما حذف شد" : "به لیست شما اضافه شد",
             );
 
             if (this.activeTab === "my-list") this.loadWatchlistItems();

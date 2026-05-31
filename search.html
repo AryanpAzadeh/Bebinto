@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="UTF-8" />
@@ -89,7 +89,6 @@
           animation: none !important;
         }
       }
-
     </style>
 
     <style type="text/tailwindcss">
@@ -225,7 +224,13 @@
               <div
                 class="h-9 w-9 rounded-2xl flex items-center justify-center overflow-hidden"
               >
-                <img src="favicon.webp" alt="Bebinto" class="h-full w-full object-contain" loading="lazy" decoding="async" />
+                <img
+                  src="favicon.webp"
+                  alt="Bebinto"
+                  class="h-full w-full object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
               <span class="text-sm font-bold">ببینتو</span>
             </a>
@@ -299,7 +304,13 @@
                 <div
                   class="h-10 w-10 rounded-2xl flex items-center justify-center overflow-hidden shrink-0"
                 >
-                  <img src="favicon.webp" alt="Bebinto" class="h-full w-full object-contain" loading="lazy" decoding="async" />
+                  <img
+                    src="favicon.webp"
+                    alt="Bebinto"
+                    class="h-full w-full object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
 
                 <div class="min-w-0">
@@ -402,7 +413,9 @@
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <h3 class="text-sm font-semibold font-heading type-kicker">فیلترها</h3>
+                    <h3 class="text-sm font-semibold font-heading type-kicker">
+                      فیلترها
+                    </h3>
                     <p class="text-xs text-text-secondary">
                       نتایج را دقیق‌تر کنید
                     </p>
@@ -754,9 +767,7 @@
               </div>
 
               <template x-if="error">
-                <div
-                  class="error-alert mb-6 p-4 rounded-2xl text-sm"
-                >
+                <div class="error-alert mb-6 p-4 rounded-2xl text-sm">
                   <p class="error-title font-bold">خطا در دریافت اطلاعات</p>
                   <p class="mt-1" x-text="error"></p>
                   <button
@@ -1131,7 +1142,9 @@
           </div>
 
           <div class="px-4 pt-2 pb-3 flex items-center justify-between">
-            <div class="font-bold text-base font-heading type-section-title">فیلترها</div>
+            <div class="font-bold text-base font-heading type-section-title">
+              فیلترها
+            </div>
             <button
               type="button"
               class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
@@ -1324,7 +1337,9 @@
 
           <div class="px-4 pt-2 pb-4">
             <div class="flex items-center justify-between">
-              <div class="font-bold text-base font-heading type-section-title">مرتب‌سازی</div>
+              <div class="font-bold text-base font-heading type-section-title">
+                مرتب‌سازی
+              </div>
               <button
                 type="button"
                 class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
@@ -1397,7 +1412,9 @@
 
           <div class="px-4 pt-2 pb-4">
             <div class="flex items-center justify-between">
-              <div class="font-bold text-base font-heading type-section-title">لیست من</div>
+              <div class="font-bold text-base font-heading type-section-title">
+                لیست من
+              </div>
               <button
                 type="button"
                 class="w-10 h-10 rounded-2xl hover:bg-surface-highlight"
@@ -1486,7 +1503,9 @@
             >
             استفاده شده است.
           </p>
-          <p class="text-sm text-text-secondary text-center sm:text-right">استفاده رایگان به یاد تمام جاویدنامان ایران</p>
+          <p class="text-sm text-text-secondary text-center sm:text-right">
+            استفاده رایگان به یاد تمام جاویدنامان ایران
+          </p>
         </div>
       </footer>
     </div>
@@ -1673,7 +1692,7 @@
             try {
               localStorage.setItem(
                 this.recentKey,
-                JSON.stringify(this.recentSearches)
+                JSON.stringify(this.recentSearches),
               );
             } catch (e) {}
           },
@@ -1788,7 +1807,7 @@
               }
             });
             this.availableGenres = Array.from(genres).sort((a, b) =>
-              String(a).localeCompare(String(b), "fa")
+              String(a).localeCompare(String(b), "fa"),
             );
           },
 
@@ -1803,7 +1822,7 @@
               }
             });
             this.availableCountries = Array.from(countries).sort((a, b) =>
-              String(a).localeCompare(String(b), "fa")
+              String(a).localeCompare(String(b), "fa"),
             );
           },
 
@@ -1847,7 +1866,7 @@
             const total = this.sortedFilteredResults.length;
             const next = Math.min(
               total,
-              (this.visibleCount || 0) + this.pageSize
+              (this.visibleCount || 0) + this.pageSize,
             );
             this.visibleCount = next;
             this.canLoadMore = this.visibleCount < total;
@@ -1869,7 +1888,7 @@
           saveWatchlist() {
             localStorage.setItem(
               "bebintoWatchlist",
-              JSON.stringify(this.watchlist)
+              JSON.stringify(this.watchlist),
             );
           },
 
@@ -1888,7 +1907,7 @@
             try {
               localStorage.setItem(
                 this.watchlistItemsKey,
-                JSON.stringify(this.watchlistItemsCache || {})
+                JSON.stringify(this.watchlistItemsCache || {}),
               );
             } catch (e) {}
           },
@@ -1916,7 +1935,7 @@
             this.saveWatchlist();
             this.saveWatchlistItemsCache();
             this.showToast(
-              wasIn ? "از لیست شما حذف شد" : "به لیست شما اضافه شد"
+              wasIn ? "از لیست شما حذف شد" : "به لیست شما اضافه شد",
             );
           },
 
@@ -1940,7 +1959,7 @@
             if (cached) return cached;
 
             const fromResults = (this.originalResults || []).find(
-              (x) => x?.id === id
+              (x) => x?.id === id,
             );
             if (fromResults) {
               this.watchlistItemsCache[id] = fromResults;
@@ -1991,14 +2010,14 @@
                 this.filters.genres.length === 0 ||
                 (Array.isArray(item?.genres) &&
                   this.filters.genres.every((g) =>
-                    item.genres.some((ig) => ig?.title === g)
+                    item.genres.some((ig) => ig?.title === g),
                   ));
 
               const countryMatch =
                 this.filters.countries.length === 0 ||
                 (Array.isArray(item?.country) &&
                   item.country.some((c) =>
-                    this.filters.countries.includes(c?.title)
+                    this.filters.countries.includes(c?.title),
                   ));
 
               const year = Number(item?.year || 0);
@@ -2032,25 +2051,25 @@
 
             if (this.sortBy === "imdb_desc")
               return arr.sort(
-                (a, b) => Number(b?.imdb || 0) - Number(a?.imdb || 0)
+                (a, b) => Number(b?.imdb || 0) - Number(a?.imdb || 0),
               );
 
             if (this.sortBy === "year_desc")
               return arr.sort(
-                (a, b) => Number(b?.year || 0) - Number(a?.year || 0)
+                (a, b) => Number(b?.year || 0) - Number(a?.year || 0),
               );
 
             if (this.sortBy === "year_asc")
               return arr.sort(
-                (a, b) => Number(a?.year || 0) - Number(b?.year || 0)
+                (a, b) => Number(a?.year || 0) - Number(b?.year || 0),
               );
 
             if (this.sortBy === "title_asc")
               return arr.sort((a, b) =>
                 String(a?.title || "").localeCompare(
                   String(b?.title || ""),
-                  "fa"
-                )
+                  "fa",
+                ),
               );
 
             return arr;
@@ -2204,14 +2223,14 @@
               if (this._dragMoveHandler)
                 window.removeEventListener(
                   "pointermove",
-                  this._dragMoveHandler
+                  this._dragMoveHandler,
                 );
               if (this._dragEndHandler)
                 window.removeEventListener("pointerup", this._dragEndHandler);
               if (this._dragEndHandler)
                 window.removeEventListener(
                   "pointercancel",
-                  this._dragEndHandler
+                  this._dragEndHandler,
                 );
             } catch (e) {}
 
@@ -2291,14 +2310,14 @@
               if (this._dragMoveHandler)
                 window.removeEventListener(
                   "pointermove",
-                  this._dragMoveHandler
+                  this._dragMoveHandler,
                 );
               if (this._dragEndHandler)
                 window.removeEventListener("pointerup", this._dragEndHandler);
               if (this._dragEndHandler)
                 window.removeEventListener(
                   "pointercancel",
-                  this._dragEndHandler
+                  this._dragEndHandler,
                 );
             } catch (e) {}
 

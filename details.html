@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="UTF-8" />
@@ -205,7 +205,13 @@
             <div
               class="h-9 w-9 rounded-2xl flex items-center justify-center overflow-hidden"
             >
-              <img src="favicon.webp" alt="Bebinto" class="h-full w-full object-contain" loading="lazy" decoding="async" />
+              <img
+                src="favicon.webp"
+                alt="Bebinto"
+                class="h-full w-full object-contain"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
             <span class="text-sm font-bold">ببینتو</span>
           </a>
@@ -254,11 +260,7 @@
           </button>
         </div>
 
-        <div
-          x-show="showCompactHeader && item"
-          x-transition
-          class="px-4 pb-2"
-        >
+        <div x-show="showCompactHeader && item" x-transition class="px-4 pb-2">
           <div
             class="flex items-center justify-between gap-3 rounded-2xl bg-surface/70 border border-border px-3 py-2"
           >
@@ -305,12 +307,16 @@
                   <div
                     class="h-10 w-10 rounded-2xl flex items-center justify-center overflow-hidden"
                   >
-                    <img src="favicon.webp" alt="Bebinto" class="h-full w-full object-contain" loading="lazy" decoding="async" />
+                    <img
+                      src="favicon.webp"
+                      alt="Bebinto"
+                      class="h-full w-full object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                   <div class="min-w-0">
-                    <div class="text-lg font-bold font-heading">
-                      ببینتو
-                    </div>
+                    <div class="text-lg font-bold font-heading">ببینتو</div>
                     <div class="text-xs text-text-secondary">
                       جزئیات فیلم / سریال
                     </div>
@@ -592,9 +598,7 @@
 
                 <!-- Error -->
                 <template x-if="!loading && error">
-                  <div
-                    class="error-alert mt-6 p-4 sm:p-6 rounded-2xl"
-                  >
+                  <div class="error-alert mt-6 p-4 sm:p-6 rounded-2xl">
                     <div class="flex items-start gap-3">
                       <div
                         class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center"
@@ -603,10 +607,7 @@
                       </div>
                       <div class="min-w-0">
                         <div class="error-title font-bold">خطا</div>
-                        <p
-                          class="text-sm mt-1"
-                          x-text="error"
-                        ></p>
+                        <p class="text-sm mt-1" x-text="error"></p>
                         <div class="mt-4 flex flex-wrap gap-2">
                           <button
                             type="button"
@@ -686,40 +687,43 @@
 
                     <!-- ✅ AI Summary (best spot: after title/genres, before plot) -->
                     <section
-                            x-show="aiSummary"
-                            class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
+                      x-show="aiSummary"
+                      class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                     >
                       <div class="flex items-center justify-between mb-2">
-                        <h2 class="text-base font-bold font-heading type-section-title flex items-center gap-2">
+                        <h2
+                          class="text-base font-bold font-heading type-section-title flex items-center gap-2"
+                        >
                           ✨ خلاصه با بینو
                         </h2>
 
                         <button
-                                type="button"
-                                class="text-xs text-text-secondary hover:text-text-primary transition-colors"
-                                @click="aiSummaryOpen = !aiSummaryOpen"
-                                :aria-expanded="aiSummaryOpen"
+                          type="button"
+                          class="text-xs text-text-secondary hover:text-text-primary transition-colors"
+                          @click="aiSummaryOpen = !aiSummaryOpen"
+                          :aria-expanded="aiSummaryOpen"
                         >
-                          <span x-text="aiSummaryOpen ? 'بستن' : 'نمایش'"></span>
+                          <span
+                            x-text="aiSummaryOpen ? 'بستن' : 'نمایش'"
+                          ></span>
                         </button>
                       </div>
 
                       <!-- حالت کوتاه -->
                       <p
-                              x-show="!aiSummaryOpen"
-                              class="text-sm leading-7 text-text-secondary"
-                              x-text="aiSummaryShort || aiSummary"
+                        x-show="!aiSummaryOpen"
+                        class="text-sm leading-7 text-text-secondary"
+                        x-text="aiSummaryShort || aiSummary"
                       ></p>
 
                       <!-- حالت کامل -->
                       <div x-show="aiSummaryOpen" x-collapse>
                         <p
-                                class="text-sm leading-7 text-text-primary whitespace-pre-line"
-                                x-text="aiSummary"
+                          class="text-sm leading-7 text-text-primary whitespace-pre-line"
+                          x-text="aiSummary"
                         ></p>
                       </div>
                     </section>
-
 
                     <!-- Fun facts -->
                     <section
@@ -727,8 +731,10 @@
                       class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                     >
                       <div class="flex items-center justify-between mb-3">
-                        <h2 class="text-base font-bold font-heading type-section-title flex items-center gap-2">
-                         🎬 بینو میگه…
+                        <h2
+                          class="text-base font-bold font-heading type-section-title flex items-center gap-2"
+                        >
+                          🎬 بینو میگه…
                         </h2>
                         <span
                           class="text-xs text-text-secondary"
@@ -737,8 +743,13 @@
                       </div>
 
                       <ul class="space-y-3">
-                        <template x-for="(fact, idx) in funFacts" :key="'fact-' + idx">
-                          <li class="flex items-start gap-2 text-sm leading-7 text-text-secondary">
+                        <template
+                          x-for="(fact, idx) in funFacts"
+                          :key="'fact-' + idx"
+                        >
+                          <li
+                            class="flex items-start gap-2 text-sm leading-7 text-text-secondary"
+                          >
                             <span class="text-accent font-bold">•</span>
                             <span class="flex-1" x-text="fact"></span>
                           </li>
@@ -752,7 +763,11 @@
                       class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                     >
                       <div class="flex items-center justify-between mb-2">
-                        <h2 class="text-base font-bold font-heading type-section-title">خلاصه داستان</h2>
+                        <h2
+                          class="text-base font-bold font-heading type-section-title"
+                        >
+                          خلاصه داستان
+                        </h2>
                         <span
                           class="text-xs text-text-secondary"
                           x-text="type==='series' ? 'سریال' : 'فیلم'"
@@ -769,7 +784,11 @@
                       x-show="metaLines(item).length"
                       class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                     >
-                      <h2 class="text-base font-bold font-heading type-section-title mb-3">اطلاعات بیشتر</h2>
+                      <h2
+                        class="text-base font-bold font-heading type-section-title mb-3"
+                      >
+                        اطلاعات بیشتر
+                      </h2>
                       <ul class="space-y-2 text-sm">
                         <template
                           x-for="(line, idx) in metaLines(item)"
@@ -789,7 +808,11 @@
                       class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                     >
                       <div class="flex items-center justify-between gap-3">
-                        <h2 class="text-base font-bold font-heading type-section-title">پلیر آنلاین</h2>
+                        <h2
+                          class="text-base font-bold font-heading type-section-title"
+                        >
+                          پلیر آنلاین
+                        </h2>
                         <div class="flex items-center gap-2">
                           <template x-if="playerSrc">
                             <span
@@ -881,7 +904,11 @@
                         class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                       >
                         <div class="flex items-center justify-between">
-                          <h2 class="text-base font-bold font-heading type-section-title">لینک‌های دانلود</h2>
+                          <h2
+                            class="text-base font-bold font-heading type-section-title"
+                          >
+                            لینک‌های دانلود
+                          </h2>
                           <span
                             class="text-xs text-text-secondary"
                             x-text="item.sources.length + ' مورد'"
@@ -891,8 +918,8 @@
                         <div
                           class="download-tip mt-3 rounded-2xl border px-3 py-2 text-xs"
                         >
-                          برای دانلود پایدارتر، بهتره از برنامه‌های مدیریت دانلود
-                          مثل IDM استفاده کنید.
+                          برای دانلود پایدارتر، بهتره از برنامه‌های مدیریت
+                          دانلود مثل IDM استفاده کنید.
                         </div>
 
                         <div class="mt-3 grid gap-2 sm:grid-cols-2">
@@ -995,7 +1022,11 @@
                         class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
                       >
                         <div class="flex items-center justify-between">
-                          <h2 class="text-base font-bold font-heading type-section-title">فصل‌ها و قسمت‌ها</h2>
+                          <h2
+                            class="text-base font-bold font-heading type-section-title"
+                          >
+                            فصل‌ها و قسمت‌ها
+                          </h2>
                           <span
                             class="text-xs text-text-secondary"
                             x-text="seasons?.length ? (seasons.length + ' فصل') : ''"
@@ -1076,7 +1107,9 @@
                                         class="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] font-semibold text-text-primary hover:bg-surface-highlight transition-colors"
                                       >
                                         <span x-text="q"></span>
-                                        <span class="text-text-secondary">کپی همه</span>
+                                        <span class="text-text-secondary"
+                                          >کپی همه</span
+                                        >
                                       </button>
                                     </template>
                                     <button
@@ -1085,7 +1118,9 @@
                                       class="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] font-semibold text-text-primary hover:bg-surface-highlight transition-colors"
                                     >
                                       <span>همه لینک‌ها</span>
-                                      <span class="text-text-secondary">کپی</span>
+                                      <span class="text-text-secondary"
+                                        >کپی</span
+                                      >
                                     </button>
                                   </div>
 
@@ -1255,19 +1290,25 @@
 
                       <template x-if="!binoRecsLoading && binoRecsError">
                         <div class="error-alert mt-4 rounded-2xl p-3 text-sm">
-                          <p class="error-title font-bold">پیشنهادات بینو در دسترس نیست</p>
+                          <p class="error-title font-bold">
+                            پیشنهادات بینو در دسترس نیست
+                          </p>
                           <p class="mt-1" x-text="binoRecsError"></p>
                         </div>
                       </template>
 
-                      <template x-if="!binoRecsLoading && !binoRecsError && binoPlaylist">
+                      <template
+                        x-if="!binoRecsLoading && !binoRecsError && binoPlaylist"
+                      >
                         <a
                           :href="`playlist-details.html?slug=${encodeURIComponent(binoPlaylist.slug || '')}`"
                           class="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-border bg-surface-highlight/40 p-3 hover:bg-surface-highlight transition-colors"
                           @click="haptic('light')"
                         >
                           <div class="min-w-0">
-                            <div class="text-xs text-text-secondary">یک پلی‌لیست پیشنهادی برای ادامه</div>
+                            <div class="text-xs text-text-secondary">
+                              یک پلی‌لیست پیشنهادی برای ادامه
+                            </div>
                             <div
                               class="mt-1 text-sm font-bold truncate"
                               x-text="binoPlaylist.name"
@@ -1288,11 +1329,16 @@
                         </a>
                       </template>
 
-                      <template x-if="!binoRecsLoading && !binoRecsError && binoItems.length">
+                      <template
+                        x-if="!binoRecsLoading && !binoRecsError && binoItems.length"
+                      >
                         <div class="mt-4">
                           <div class="swiper bino-swiper" x-ref="binoSwiperEl">
                             <div class="swiper-wrapper">
-                              <template x-for="rec in binoItems" :key="'bino-item-'+rec.id">
+                              <template
+                                x-for="rec in binoItems"
+                                :key="'bino-item-'+rec.id"
+                              >
                                 <div class="swiper-slide">
                                   <article
                                     class="group relative flex flex-col rounded-2xl bg-surface border border-border overflow-hidden hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:shadow-black/30"
@@ -1303,7 +1349,9 @@
                                       @click="haptic('light')"
                                       :aria-label="`مشاهده جزئیات ${displayTitle(rec)}`"
                                     ></a>
-                                    <div class="relative aspect-[2/3] overflow-hidden">
+                                    <div
+                                      class="relative aspect-[2/3] overflow-hidden"
+                                    >
                                       <img
                                         :src="rec.image || rec.cover || './placeholder.png'"
                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -1320,7 +1368,9 @@
                                         class="absolute bottom-2 left-2 flex items-center gap-1 bg-yellow-400 text-black font-bold text-xs px-1.5 py-0.5 rounded-full shadow-lg"
                                       >
                                         <span>IMDb</span>
-                                        <span x-text="rec.imdb || rec.rating"></span>
+                                        <span
+                                          x-text="rec.imdb || rec.rating"
+                                        ></span>
                                       </div>
                                     </div>
                                     <div class="flex flex-col gap-1 p-3">
@@ -1583,7 +1633,9 @@
             >
             استفاده شده است.
           </p>
-          <p class="text-sm text-text-secondary text-center sm:text-right">استفاده رایگان به یاد تمام جاویدنامان ایران</p>
+          <p class="text-sm text-text-secondary text-center sm:text-right">
+            استفاده رایگان به یاد تمام جاویدنامان ایران
+          </p>
         </div>
       </footer>
     </div>
@@ -1683,7 +1735,10 @@
 
           getMediaExtension(url) {
             try {
-              const raw = String(url || "").split("?")[0].split("#")[0].trim();
+              const raw = String(url || "")
+                .split("?")[0]
+                .split("#")[0]
+                .trim();
               const idx = raw.lastIndexOf(".");
               if (idx === -1) return "";
               return raw.slice(idx + 1).toLowerCase();
@@ -1693,7 +1748,9 @@
           },
 
           getMediaMime(url, explicitType = "") {
-            const type = String(explicitType || "").toLowerCase().trim();
+            const type = String(explicitType || "")
+              .toLowerCase()
+              .trim();
             if (type.includes("/")) return type;
 
             const ext = this.getMediaExtension(url);
@@ -1715,8 +1772,9 @@
 
           isHlsSource(url, mime) {
             return (
-              String(url || "").toLowerCase().includes(".m3u8") ||
-              mime === "application/vnd.apple.mpegurl"
+              String(url || "")
+                .toLowerCase()
+                .includes(".m3u8") || mime === "application/vnd.apple.mpegurl"
             );
           },
 
@@ -1841,8 +1899,9 @@
             if (!url) return;
 
             this.playerSrc = url;
-            this.playerLabel =
-              src?.quality ? `کیفیت ${src.quality}` : fallbackLabel || "";
+            this.playerLabel = src?.quality
+              ? `کیفیت ${src.quality}`
+              : fallbackLabel || "";
             this.playerError = "";
             this.playerLoading = true;
 
@@ -1901,7 +1960,10 @@
                 return;
               }
 
-              if (!this.canBrowserPlayMime(mime) && this.isMatroskaSource(url, mime)) {
+              if (
+                !this.canBrowserPlayMime(mime) &&
+                this.isMatroskaSource(url, mime)
+              ) {
                 this.playerError =
                   "فرمت MKV در این مرورگر پشتیبانی محدودی دارد. اگر پخش نشد، لینک را مستقیم باز کنید.";
               }
@@ -1953,7 +2015,9 @@
               .trim();
             if (!text) return "";
 
-            const m = text.match(/(?:^|[^0-9])(2160|1440|1080|720|576|480|360)(?:p|[^0-9]|$)/i);
+            const m = text.match(
+              /(?:^|[^0-9])(2160|1440|1080|720|576|480|360)(?:p|[^0-9]|$)/i,
+            );
             return m?.[1] || "";
           },
 
@@ -1967,7 +2031,7 @@
                     src?.title,
                     src?.label,
                     ep?.title,
-                    season?.title
+                    season?.title,
                   );
                 if (q) uniq.add(q);
               });
@@ -1998,7 +2062,7 @@
                     src?.title,
                     src?.label,
                     ep?.title,
-                    season?.title
+                    season?.title,
                   );
                 if (!url || !q) return;
                 if (q === target) links.push(url);
@@ -2027,7 +2091,7 @@
                 document.body.removeChild(ta);
               }
               this.showToast(
-                `${uniqueLinks.length} لینک کیفیت ${target} کپی شد`
+                `${uniqueLinks.length} لینک کیفیت ${target} کپی شد`,
               );
             } catch (e) {
               this.showToast("کپی گروهی انجام نشد");
@@ -2182,7 +2246,7 @@
           saveWatchlist() {
             localStorage.setItem(
               "bebintoWatchlist",
-              JSON.stringify(this.watchlist)
+              JSON.stringify(this.watchlist),
             );
           },
 
@@ -2201,7 +2265,7 @@
             try {
               localStorage.setItem(
                 this.watchlistItemsKey,
-                JSON.stringify(this.watchlistItemsCache || {})
+                JSON.stringify(this.watchlistItemsCache || {}),
               );
             } catch (e) {}
           },
@@ -2246,7 +2310,7 @@
 
             this.saveWatchlist();
             this.showToast(
-              wasIn ? "از لیست شما حذف شد" : "به لیست شما اضافه شد"
+              wasIn ? "از لیست شما حذف شد" : "به لیست شما اضافه شد",
             );
           },
 
@@ -2441,7 +2505,7 @@
               const url = `${this.baseUrl}${
                 this.apiPrefix
               }/details?id=${encodeURIComponent(id)}&type=${encodeURIComponent(
-                this.type
+                this.type,
               )}`;
               const json = await this.fetchJson(url);
 
@@ -2471,7 +2535,7 @@
               try {
                 localStorage.setItem(
                   "bebinto-last-item",
-                  JSON.stringify(details)
+                  JSON.stringify(details),
                 );
               } catch (e) {}
             } catch (e) {
@@ -2501,7 +2565,8 @@
               .filter(Boolean);
 
             const plotIndex = parts.findIndex(
-              (p) => p.startsWith("خلاصه داستان") || p.startsWith("خلاصه سریال")
+              (p) =>
+                p.startsWith("خلاصه داستان") || p.startsWith("خلاصه سریال"),
             );
             if (plotIndex !== -1) {
               return {
@@ -2562,15 +2627,23 @@
             if (!raw || !raw.id) return null;
             return {
               ...raw,
-              type: String(raw?.type || "").toLowerCase().includes("series")
+              type: String(raw?.type || "")
+                .toLowerCase()
+                .includes("series")
                 ? "series"
                 : "movie",
               image: raw?.image || raw?.cover || "./placeholder.png",
               _countryText: Array.isArray(raw?.country)
-                ? raw.country.map((c) => c?.title || c).filter(Boolean).join("، ")
+                ? raw.country
+                    .map((c) => c?.title || c)
+                    .filter(Boolean)
+                    .join("، ")
                 : Array.isArray(raw?.countries)
-                ? raw.countries.map((c) => c?.title || c).filter(Boolean).join("، ")
-                : "",
+                  ? raw.countries
+                      .map((c) => c?.title || c)
+                      .filter(Boolean)
+                      .join("، ")
+                  : "",
               _genresText: Array.isArray(raw?.genres)
                 ? raw.genres
                     .map((g) => (typeof g === "string" ? g : g?.title))
@@ -2590,14 +2663,14 @@
               try {
                 const searchRes = await fetch(
                   `${this.baseUrl}${this.apiPrefix}/search?q=${encodeURIComponent(
-                    searchQuery
+                    searchQuery,
                   )}`,
-                  { headers: { Accept: "application/json" } }
+                  { headers: { Accept: "application/json" } },
                 );
                 if (searchRes.ok) {
                   const sjson = await searchRes.json();
                   this.normalizeArr(sjson?.data?.posters).forEach((r) =>
-                    candidates.push(r)
+                    candidates.push(r),
                   );
                 }
               } catch (e) {}
@@ -2613,7 +2686,9 @@
               });
               if (topRes.ok) {
                 const tjson = await topRes.json();
-                this.normalizeArr(tjson?.data).forEach((r) => candidates.push(r));
+                this.normalizeArr(tjson?.data).forEach((r) =>
+                  candidates.push(r),
+                );
               }
             } catch (e) {}
 
@@ -2635,16 +2710,19 @@
             this.binoRecsError = "";
 
             try {
-              const response = await fetch(`${this.baseUrl}${this.apiPrefix}/chat`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
+              const response = await fetch(
+                `${this.baseUrl}${this.apiPrefix}/chat`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                  },
+                  body: JSON.stringify({
+                    message: this.buildBinoPrompt(seed),
+                  }),
                 },
-                body: JSON.stringify({
-                  message: this.buildBinoPrompt(seed),
-                }),
-              });
+              );
 
               if (!response.ok) throw new Error("bino recommendations failed");
               const data = await response.json();
@@ -2671,11 +2749,13 @@
                 try {
                   const plistRes = await fetch(
                     `${this.baseUrl}${this.apiPrefix}/playlists?page=1`,
-                    { headers: { Accept: "application/json" } }
+                    { headers: { Accept: "application/json" } },
                   );
                   if (plistRes.ok) {
                     const plistJson = await plistRes.json();
-                    const fallbackPlaylists = this.normalizeArr(plistJson?.data);
+                    const fallbackPlaylists = this.normalizeArr(
+                      plistJson?.data,
+                    );
                     this.binoPlaylist = fallbackPlaylists.length
                       ? fallbackPlaylists[0]
                       : null;
