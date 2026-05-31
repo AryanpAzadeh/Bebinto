@@ -132,11 +132,11 @@
       <div
         class="lg:hidden sticky top-0 z-30 bg-bg/70 backdrop-blur-xl border-b border-border"
       >
-        <div class="px-4 py-2">
-          <div class="relative h-10 flex items-center">
+        <div class="px-4 py-2 space-y-2">
+          <div class="h-10 flex items-center justify-between gap-3">
             <a
               href="./playlists.html"
-              class="flex items-center gap-2 shrink-0"
+              class="inline-flex items-center gap-2 shrink-0 text-sm font-semibold text-text-secondary hover:text-text-primary transition-colors"
               aria-label="بازگشت به پلی‌لیست‌ها"
             >
               <svg
@@ -153,18 +153,13 @@
                   d="M17 8l4 4m0 0l-4 4m4-4H3"
                 />
               </svg>
-              <span class="text-sm font-semibold">پلی‌لیست‌ها</span>
+              <span>پلی‌لیست‌ها</span>
             </a>
-
-            <h1
-              class="absolute left-1/2 -translate-x-1/2 text-sm font-bold truncate max-w-[62%]"
-              x-text="playlist?.name || 'جزئیات پلی‌لیست'"
-            ></h1>
 
             <button
               type="button"
               @click="haptic('light'); toggleTheme()"
-              class="mr-auto w-10 h-10 flex items-center justify-center rounded-2xl bg-surface border border-border hover:bg-surface-highlight transition-all duration-200"
+              class="w-10 h-10 flex items-center justify-center rounded-2xl bg-surface border border-border hover:bg-surface-highlight transition-all duration-200 shrink-0"
               :aria-label="theme === 'dark' ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
             >
               <svg
@@ -202,6 +197,11 @@
               </svg>
             </button>
           </div>
+
+          <h1
+            class="text-sm font-bold leading-6 text-text-primary line-clamp-2 break-words"
+            x-text="playlist?.name || 'جزئیات پلی‌لیست'"
+          ></h1>
         </div>
       </div>
 
