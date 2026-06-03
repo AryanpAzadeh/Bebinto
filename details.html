@@ -895,9 +895,9 @@
                       </div>
                     </section>
 
-                    <!-- ✅ Movie downloads ONLY here (no duplicate) -->
+                    <!-- ✅ Downloads block for any item with sources -->
                     <template
-                      x-if="type==='movie' && Array.isArray(item.sources) && item.sources.length"
+                      x-if="Array.isArray(item.sources) && item.sources.length"
                     >
                       <section
                         id="downloadsSection"
@@ -1047,6 +1047,12 @@
                           <div
                             class="mt-4 space-y-3 max-h-[540px] overflow-y-auto custom-scrollbar pr-1"
                           >
+                          <div
+                          class="download-tip rounded-2xl border px-3 py-2 text-xs"
+                        >
+                          برای دانلود پایدارتر، بهتره از برنامه‌های مدیریت
+                          دانلود مثل IDM استفاده کنید.
+                        </div>
                             <template
                               x-for="season in seasons"
                               :key="season.id || season.title"
