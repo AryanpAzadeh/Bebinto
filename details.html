@@ -15,13 +15,12 @@
     <link rel="stylesheet" href="arad-font.css" />
     <link rel="stylesheet" href="bebinto-common.css" />
 
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+
+
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
-    ></script>
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"
     ></script>
     <script
       defer
@@ -802,99 +801,6 @@
                       </ul>
                     </section>
 
-                    <!-- Online player -->
-                    <section
-                      id="onlinePlayerSection"
-                      class="mt-6 p-4 sm:p-5 rounded-2xl bg-surface border border-border"
-                    >
-                      <div class="flex items-center justify-between gap-3">
-                        <h2
-                          class="text-base font-bold font-heading type-section-title"
-                        >
-                          پلیر آنلاین
-                        </h2>
-                        <div class="flex items-center gap-2">
-                          <template x-if="playerSrc">
-                            <span
-                              class="text-xs text-text-secondary"
-                              x-text="playerLabel || 'در حال پخش'"
-                            ></span>
-                          </template>
-                          <button
-                            x-show="playerSrc"
-                            type="button"
-                            @click="haptic('light'); clearPlayer()"
-                            class="text-xs px-3 py-1 rounded-full border border-border hover:bg-surface-highlight transition-colors"
-                          >
-                            پاک کردن
-                          </button>
-                        </div>
-                      </div>
-
-                      <div class="mt-3">
-                        <template x-if="playerSrc">
-                          <div>
-                            <div
-                              class="rounded-2xl overflow-hidden border border-border bg-black"
-                            >
-                              <video
-                                x-ref="onlinePlayer"
-                                class="w-full aspect-video bg-black plyr"
-                                :poster="posterSrc"
-                                controls
-                                playsinline
-                                preload="metadata"
-                              ></video>
-                            </div>
-                            <p
-                              class="mt-2 text-xs text-text-secondary leading-6"
-                            >
-                              اگر پخش انجام نشد، احتمالاً فرمت لینک یا کدک ویدئو
-                              در مرورگر پشتیبانی نمی‌شود.
-                            </p>
-                            <p
-                              x-show="playerLoading"
-                              class="mt-2 text-xs text-amber-500 leading-6"
-                            >
-                              در حال آماده‌سازی پخش...
-                            </p>
-                            <p
-                              x-show="playerError"
-                              x-text="playerError"
-                              class="mt-2 text-xs text-red-500 leading-6"
-                            ></p>
-                            <div
-                              x-show="playerError"
-                              class="mt-2 flex items-center gap-2"
-                            >
-                              <button
-                                type="button"
-                                @click="haptic('light'); openPlayerInNewTab()"
-                                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface text-text-primary text-xs font-bold border border-border hover:bg-surface-highlight transition-colors"
-                              >
-                                باز کردن مستقیم لینک
-                              </button>
-                              <button
-                                type="button"
-                                @click="haptic('light'); copyDownloadLink(playerSrc)"
-                                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface text-text-primary text-xs font-bold border border-border hover:bg-surface-highlight transition-colors"
-                              >
-                                کپی لینک
-                              </button>
-                            </div>
-                          </div>
-                        </template>
-                        <template x-if="!playerSrc">
-                          <div
-                            class="rounded-2xl border border-border bg-surface-highlight/40 p-4 text-sm text-text-secondary"
-                          >
-                            برای تماشا روی «تماشا در پلیر» کنار لینک‌های دانلود
-                            بزنید.
-                          </div>
-                        </template>
-                      </div>
-                    </section>
-
                     <!-- ✅ Downloads block for any item with sources -->
                     <template
                       x-if="Array.isArray(item.sources) && item.sources.length"
@@ -943,28 +849,6 @@
                               <div
                                 class="grid grid-cols-2 gap-2 shrink-0 sm:flex sm:items-center"
                               >
-                                <button
-                                  type="button"
-                                  @click="haptic('light'); openPlayer(src, 'فیلم')"
-                                  class="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-2xl bg-surface text-text-primary text-xs font-bold border border-border hover:bg-surface-highlight transition-colors"
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-4 w-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    aria-hidden="true"
-                                  >
-                                    <path
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="M14.752 11.168l-4.586-2.643A1 1 0 008.5 9.393v5.214a1 1 0 001.666.768l4.586-2.643a1 1 0 000-1.664z"
-                                    />
-                                  </svg>
-                                  تماشا
-                                </button>
                                 <button
                                   type="button"
                                   @click="haptic('light'); copyDownloadLink(src?.url)"
@@ -1171,30 +1055,8 @@
                                               :key="src.id || src.url"
                                             >
                                               <div
-                                                class="grid w-full grid-cols-2 gap-2 sm:inline-flex sm:w-auto sm:items-center"
+                                                class="grid w-full grid-cols-1 gap-2 sm:inline-flex sm:w-auto sm:items-center"
                                               >
-                                                <button
-                                                  type="button"
-                                                  @click="haptic('light'); openPlayer(src, ep.title || 'قسمت')"
-                                                  class="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-2xl bg-surface text-text-primary text-xs font-bold border border-border hover:bg-surface-highlight transition-colors"
-                                                >
-                                                  <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    class="h-4 w-4"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                    aria-hidden="true"
-                                                  >
-                                                    <path
-                                                      stroke-linecap="round"
-                                                      stroke-linejoin="round"
-                                                      stroke-width="2"
-                                                      d="M14.752 11.168l-4.586-2.643A1 1 0 008.5 9.393v5.214a1 1 0 001.666.768l4.586-2.643a1 1 0 000-1.664z"
-                                                    />
-                                                  </svg>
-                                                  تماشا
-                                                </button>
                                                 <button
                                                   type="button"
                                                   @click="haptic('light'); copyDownloadLink(src?.url)"
@@ -1648,8 +1510,6 @@
       </footer>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
     <script>
       function BebintoDetailsApp() {
         return {
@@ -1669,13 +1529,6 @@
 
           showCompactHeader: false,
           forceCompactHeader: false,
-
-          playerSrc: "",
-          playerLabel: "",
-          playerInstance: null,
-          playerLoading: false,
-          playerError: "",
-          hlsInstance: null,
 
           theme: "dark",
           showBackToTop: false,
@@ -1769,216 +1622,6 @@
             if (ext === "mov") return "video/quicktime";
             if (ext === "mkv") return "video/x-matroska";
             return "";
-          },
-
-          canBrowserPlayMime(mime) {
-            if (!mime) return true;
-            const probe = document.createElement("video");
-            const level = probe.canPlayType(mime);
-            return level === "probably" || level === "maybe";
-          },
-
-          isHlsSource(url, mime) {
-            return (
-              String(url || "")
-                .toLowerCase()
-                .includes(".m3u8") || mime === "application/vnd.apple.mpegurl"
-            );
-          },
-
-          isMatroskaSource(url, mime) {
-            return (
-              this.getMediaExtension(url) === "mkv" ||
-              String(mime || "").includes("matroska")
-            );
-          },
-
-          disposeHls() {
-            if (!this.hlsInstance) return;
-            try {
-              this.hlsInstance.destroy();
-            } catch (e) {}
-            this.hlsInstance = null;
-          },
-
-          resolvePlayerError(url, video) {
-            const mime = this.getMediaMime(url);
-            if (this.isMatroskaSource(url, mime)) {
-              return "این لینک با فرمت MKV است و ممکن است در مرورگر پخش نشود. لینک را مستقیم باز کنید یا دانلود کنید.";
-            }
-
-            const mediaErr = video?.error;
-            if (mediaErr?.code === 4) {
-              return "مرورگر از فرمت/کدک این ویدئو پشتیبانی نمی‌کند.";
-            }
-            if (mediaErr?.code === 2) {
-              return "شبکه هنگام دریافت ویدئو قطع شد. دوباره تلاش کنید.";
-            }
-            if (mediaErr?.code === 3) {
-              return "فایل ویدئو ناقص یا خراب است و قابل پخش نیست.";
-            }
-
-            return "پخش در مرورگر انجام نشد. احتمالاً محدودیت فرمت، کدک یا سرور لینک وجود دارد.";
-          },
-
-          bindPlayerEvents(video) {
-            if (!video || video.dataset.playerBound === "1") return;
-
-            video.addEventListener("waiting", () => {
-              this.playerLoading = true;
-            });
-            video.addEventListener("stalled", () => {
-              this.playerLoading = true;
-            });
-            video.addEventListener("canplay", () => {
-              this.playerLoading = false;
-            });
-            video.addEventListener("playing", () => {
-              this.playerLoading = false;
-              this.playerError = "";
-            });
-            video.addEventListener("error", () => {
-              this.playerLoading = false;
-              this.playerError = this.resolvePlayerError(this.playerSrc, video);
-            });
-
-            video.dataset.playerBound = "1";
-          },
-
-          initPlayerIfNeeded(video) {
-            if (!video) return;
-            if (
-              this.playerInstance &&
-              this.playerInstance.media &&
-              this.playerInstance.media !== video
-            ) {
-              try {
-                this.playerInstance.destroy();
-              } catch (e) {}
-              this.playerInstance = null;
-            }
-            if (this.playerInstance || !window.Plyr) return;
-            this.playerInstance = new Plyr(video, {
-              controls: [
-                "play",
-                "progress",
-                "current-time",
-                "mute",
-                "volume",
-                "settings",
-                "pip",
-                "fullscreen",
-              ],
-              settings: ["speed"],
-              speed: { selected: 1, options: [0.75, 1, 1.25, 1.5, 2] },
-            });
-          },
-
-          setPlayerSource(url, mime) {
-            const source = { src: url };
-            if (mime) source.type = mime;
-
-            if (this.playerInstance) {
-              this.playerInstance.source = {
-                type: "video",
-                sources: [source],
-              };
-            } else if (this.$refs?.onlinePlayer) {
-              const video = this.$refs.onlinePlayer;
-              video.src = url;
-              video.load();
-            }
-          },
-
-          tryStartPlayback(video) {
-            const media = this.playerInstance?.media || video;
-            if (!media?.play) return;
-            const maybePromise = media.play();
-            if (maybePromise?.catch) maybePromise.catch(() => {});
-          },
-
-          openPlayerInNewTab() {
-            if (!this.playerSrc) return;
-            window.open(this.playerSrc, "_blank", "noopener");
-          },
-
-          openPlayer(src, fallbackLabel = "") {
-            const url = typeof src === "string" ? src : src?.url;
-            if (!url) return;
-
-            this.playerSrc = url;
-            this.playerLabel = src?.quality
-              ? `کیفیت ${src.quality}`
-              : fallbackLabel || "";
-            this.playerError = "";
-            this.playerLoading = true;
-
-            this.$nextTick(() => {
-              const video = this.$refs?.onlinePlayer;
-              if (!video) return;
-
-              this.bindPlayerEvents(video);
-              this.initPlayerIfNeeded(video);
-              this.disposeHls();
-
-              const mime = this.getMediaMime(url, src?.type || src?.mime);
-              const isHls = this.isHlsSource(url, mime);
-
-              if (isHls) {
-                if (window.Hls?.isSupported()) {
-                  const hls = new Hls({
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    backBufferLength: 90,
-                    maxBufferLength: 20,
-                    maxMaxBufferLength: 40,
-                  });
-
-                  hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    this.tryStartPlayback(video);
-                  });
-
-                  hls.on(Hls.Events.ERROR, (_, data) => {
-                    if (data?.fatal) {
-                      this.playerLoading = false;
-                      this.playerError =
-                        "استریم HLS با خطا مواجه شد. لینک را مستقیم باز کنید یا منبع دیگری انتخاب کنید.";
-                      try {
-                        hls.destroy();
-                      } catch (e) {}
-                      if (this.hlsInstance === hls) this.hlsInstance = null;
-                    }
-                  });
-
-                  hls.loadSource(url);
-                  hls.attachMedia(video);
-                  this.hlsInstance = hls;
-                  return;
-                }
-
-                if (video.canPlayType("application/vnd.apple.mpegurl")) {
-                  this.setPlayerSource(url, "application/vnd.apple.mpegurl");
-                  this.tryStartPlayback(video);
-                  return;
-                }
-
-                this.playerLoading = false;
-                this.playerError =
-                  "مرورگر از پخش HLS پشتیبانی نمی‌کند. لینک را مستقیم باز کنید.";
-                return;
-              }
-
-              if (
-                !this.canBrowserPlayMime(mime) &&
-                this.isMatroskaSource(url, mime)
-              ) {
-                this.playerError =
-                  "فرمت MKV در این مرورگر پشتیبانی محدودی دارد. اگر پخش نشد، لینک را مستقیم باز کنید.";
-              }
-
-              this.setPlayerSource(url, mime);
-              this.tryStartPlayback(video);
-            });
           },
 
           async copyDownloadLink(url) {
@@ -2140,35 +1783,6 @@
             } catch (e) {
               this.showToast("کپی لینک‌ها انجام نشد");
             }
-          },
-
-          clearPlayer() {
-            const video = this.$refs?.onlinePlayer;
-            this.disposeHls();
-            if (video) {
-              try {
-                video.pause();
-              } catch (e) {}
-              try {
-                video.removeAttribute("src");
-                video.load();
-              } catch (e) {}
-            }
-            if (this.playerInstance?.stop) {
-              try {
-                this.playerInstance.stop();
-              } catch (e) {}
-            }
-            if (this.playerInstance?.destroy) {
-              try {
-                this.playerInstance.destroy();
-              } catch (e) {}
-              this.playerInstance = null;
-            }
-            this.playerSrc = "";
-            this.playerLabel = "";
-            this.playerError = "";
-            this.playerLoading = false;
           },
 
           // Theme (no toast)
@@ -2488,11 +2102,6 @@
             this.openSeasons = [];
             this.resetExtras();
             this.resetBinoSuggestions();
-            this.disposeHls();
-            this.playerSrc = "";
-            this.playerLabel = "";
-            this.playerError = "";
-            this.playerLoading = false;
 
             // ✅ ریست‌های ظاهری (بدون flicker)
             this.posterLoaded = false;
