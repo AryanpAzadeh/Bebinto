@@ -842,7 +842,7 @@
                             class="w-full"
                           >
                             <source
-                              :src="playerSource?.url || ''"
+                              :src="getPlayerStreamUrl()"
                               :type="playerSource?.mime || null"
                             />
                           </video>
@@ -1721,7 +1721,10 @@
               .trim();
             if (type.includes("/")) return type;
 
-            const ext = this.getMediaExtension(url);
+            const knownTypes = ["mp4", "m3u8", "webm", "ogv", "ogg", "mov", "mkv"];
+            const ext = knownTypes.includes(type)
+              ? type
+              : this.getMediaExtension(url);
             if (ext === "mp4") return "video/mp4";
             if (ext === "m3u8") return "application/vnd.apple.mpegurl";
             if (ext === "webm") return "video/webm";
@@ -2293,13 +2296,62 @@
             );
           },
 
+          isPlayableSource(source) {
+            const type = String(source?.type || "")
+              .toLowerCase()
+              .trim();
+            return (
+              ["mp4", "m3u8", "webm", "ogv", "ogg", "mov", "mkv"].includes(
+                type,
+              ) || this.isPlayableVideoUrl(source?.url || source?.src)
+            );
+          },
+
+          getSourceId(source) {
+            const id = source?.id;
+            return id == null ? "" : id.toString().trim();
+          },
+
+          getSourceStreamUrl(sourceId) {
+            const id = sourceId?.toString().trim();
+            if (!id) return "";
+            return `${this.baseUrl}${this.apiPrefix}/stream/${encodeURIComponent(
+              id,
+            )}`;
+          },
+
+          normalizeStreamUrl(url) {
+            const streamUrl = (url || "").toString().trim();
+            if (!streamUrl) return "";
+
+            try {
+              return new URL(streamUrl, this.baseUrl).toString();
+            } catch (e) {
+              return "";
+            }
+          },
+
+          getSourcePlaybackUrl(source) {
+            const streamUrl = this.normalizeStreamUrl(source?.stream_url);
+            if (streamUrl) return streamUrl;
+            return this.getSourceStreamUrl(this.getSourceId(source));
+          },
+
+          getPlayerStreamUrl() {
+            return this.playerSource?.streamUrl || "";
+          },
+
           resolvePlayerCandidate(source, fallbackLabel = "") {
-            const url = (source?.url || source?.src || "").toString().trim();
-            if (!url || !this.isPlayableVideoUrl(url)) return null;
+            const sourceId = this.getSourceId(source);
+            if (!sourceId || !this.isPlayableSource(source)) return null;
+
+            const streamUrl = this.getSourcePlaybackUrl(source);
+            if (!streamUrl) return null;
 
             return {
-              url,
-              mime: this.getMediaMime(url, source?.type),
+              sourceId,
+              streamUrl,
+              mime: this.getMediaMime(streamUrl, source?.type),
               label:
                 source?.quality ||
                 source?.label ||
