@@ -47,15 +47,15 @@
       }
 
       .download-tip {
-        border-color: rgba(245, 158, 11, 0.35);
-        background-color: rgba(245, 158, 11, 0.14);
-        color: #fde68a;
+        border-color: rgba(59, 130, 246, 0.4);
+        background-color: rgba(59, 130, 246, 0.14);
+        color: #bfdbfe;
       }
 
       .light .download-tip {
-        border-color: rgba(217, 119, 6, 0.35);
-        background-color: rgba(254, 243, 199, 0.9);
-        color: #92400e;
+        border-color: rgba(37, 99, 235, 0.3);
+        background-color: rgba(219, 234, 254, 0.92);
+        color: #1e40af;
       }
 
       .bino-swiper .swiper-pagination-bullet {
@@ -838,6 +838,7 @@
                             x-ref="playerEl"
                             controls
                             playsinline
+                            crossorigin="anonymous"
                             referrerpolicy="no-referrer"
                             class="w-full"
                           >
@@ -845,6 +846,18 @@
                               :src="getPlayerStreamUrl()"
                               :type="playerSource?.mime || null"
                             />
+                            <template
+                              x-for="subtitle in (playerSource?.subtitles || [])"
+                              :key="subtitle.src"
+                            >
+                              <track
+                                kind="subtitles"
+                                :label="subtitle.label"
+                                :srclang="subtitle.srclang"
+                                :src="subtitle.src"
+                                :default="subtitle.default"
+                              />
+                            </template>
                           </video>
                         </div>
                       </section>
@@ -873,8 +886,16 @@
                         <div
                           class="download-tip mt-3 rounded-2xl border px-3 py-2 text-xs"
                         >
-                          برای دانلود پایدارتر، بهتره از برنامه‌های مدیریت
-                          دانلود مثل IDM استفاده کنید.
+                          برای دانلود پایدارتر، بهتره از برنامه‌های مدیریت دانلود
+                          مثل IDM استفاده کنید. برای استفاده در VLC از «کپی لینک»
+                          استفاده کنید.
+                          <button
+                            type="button"
+                            @click="haptic('light'); vlcGuideOpen = true"
+                            class="font-bold underline underline-offset-4 hover:opacity-80 transition-opacity"
+                          >
+                            آموزش
+                          </button>
                         </div>
 
                         <div class="mt-3 grid gap-2 xl:grid-cols-2">
@@ -1013,8 +1034,16 @@
                           <div
                           class="download-tip rounded-2xl border px-3 py-2 text-xs"
                         >
-                          برای دانلود پایدارتر، بهتره از برنامه‌های مدیریت
-                          دانلود مثل IDM استفاده کنید.
+                          برای دانلود پایدارتر، بهتره از برنامه‌های مدیریت دانلود
+                          مثل IDM استفاده کنید. برای استفاده در VLC از «کپی لینک»
+                          استفاده کنید.
+                          <button
+                            type="button"
+                            @click="haptic('light'); vlcGuideOpen = true"
+                            class="font-bold underline underline-offset-4 hover:opacity-80 transition-opacity"
+                          >
+                            آموزش
+                          </button>
                         </div>
                             <template
                               x-for="season in seasons"
@@ -1138,7 +1167,7 @@
                                               >
                                                 <button
                                                   type="button"
-                                                  @click="haptic('light'); playSource(src, ep?.title || season?.title || '')"
+                                                  @click="haptic('light'); playSource(src, ep?.title || season?.title || '', ep, season)"
                                                   class="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-2xl bg-surface text-text-primary text-xs font-bold border border-border hover:bg-surface-highlight transition-colors"
                                                 >
                                                   <svg
@@ -1450,6 +1479,103 @@
         </svg>
       </button>
 
+      <!-- VLC Guide Modal -->
+      <div
+        x-show="vlcGuideOpen"
+        x-transition.opacity
+        x-cloak
+        class="fixed inset-0 z-[70] flex items-center justify-center bg-black/65 px-4 py-6 backdrop-blur-sm"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="vlcGuideTitle"
+        @click.self="vlcGuideOpen = false"
+      >
+        <div
+          class="w-full max-w-lg rounded-2xl border border-border bg-surface p-5 shadow-2xl"
+        >
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h2
+                id="vlcGuideTitle"
+                class="text-lg font-bold font-heading type-section-title"
+              >
+                راهنمای پخش با VLC
+              </h2>
+              <p class="mt-2 text-sm text-text-secondary">
+                برای پخش فیلم با VLC:
+              </p>
+            </div>
+            <button
+              type="button"
+              @click="haptic('light'); vlcGuideOpen = false"
+              class="shrink-0 rounded-full border border-border bg-surface-highlight p-2 text-text-secondary hover:text-text-primary transition-colors"
+              aria-label="بستن راهنما"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <ol class="mt-5 space-y-3 text-sm leading-7 text-text-primary">
+            <li class="flex gap-3">
+              <span class="font-bold text-accent">1.</span>
+              <span>ابتدا VLC را از سایت رسمی دانلود و نصب کنید</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="font-bold text-accent">2.</span>
+              <span>لینک زیر را کپی کنید</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="font-bold text-accent">3.</span>
+              <span>VLC را باز کنید</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="font-bold text-accent">4.</span>
+              <span>از منوی Media گزینه Open Network Stream را انتخاب کنید</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="font-bold text-accent">5.</span>
+              <span>لینک کپی شده را در قسمت URL وارد کنید</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="font-bold text-accent">6.</span>
+              <span>روی دکمه Play کلیک کنید</span>
+            </li>
+          </ol>
+
+          <div class="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              @click="haptic('light'); vlcGuideOpen = false"
+              class="inline-flex items-center justify-center rounded-2xl border border-border bg-surface-highlight px-4 py-2 text-sm font-bold text-text-primary hover:bg-surface transition-colors"
+            >
+              بستن
+            </button>
+            <a
+              href="https://www.videolan.org/vlc/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center rounded-2xl bg-accent px-4 py-2 text-sm font-bold text-accent-text hover:opacity-90 transition-opacity"
+            >
+              دانلود VLC
+            </a>
+          </div>
+        </div>
+      </div>
+
       <!-- Toast (kept for watchlist actions; NOT for theme) -->
       <div
         class="hidden lg:block fixed left-1/2 -translate-x-1/2 bottom-6 z-50 pointer-events-none"
@@ -1635,6 +1761,7 @@
           binoSwiperInitAttempts: 0,
           player: null,
           playerSource: null,
+          vlcGuideOpen: false,
 
           showCompactHeader: false,
           forceCompactHeader: false,
@@ -1692,7 +1819,9 @@
             this.toastTimer = setTimeout(() => (this.toast.show = false), 1800);
           },
 
-          handleEscape() {},
+          handleEscape() {
+            if (this.vlcGuideOpen) this.vlcGuideOpen = false;
+          },
 
           handleScroll() {
             const y = window.scrollY || 0;
@@ -1734,6 +1863,17 @@
             if (ext === "mov") return "video/quicktime";
             if (ext === "mkv") return "video/x-matroska";
             return "";
+          },
+
+          normalizeUrl(url) {
+            const value = (url || "").toString().trim();
+            if (!value) return "";
+
+            try {
+              return new URL(value, this.baseUrl).toString();
+            } catch (e) {
+              return "";
+            }
           },
 
           async copyDownloadLink(url) {
@@ -2161,6 +2301,93 @@
             return Array.isArray(v) ? v : [];
           },
 
+          normalizeSubtitleCandidate(candidate, index = 0) {
+            if (!candidate) return null;
+
+            if (typeof candidate === "string") {
+              const src = this.normalizeUrl(candidate);
+              if (!src) return null;
+              return {
+                src,
+                label: "فارسی",
+                srclang: "fa",
+                default: index === 0,
+              };
+            }
+
+            if (typeof candidate !== "object") return null;
+
+            const src = this.normalizeUrl(
+              candidate.url ||
+                candidate.src ||
+                candidate.file ||
+                candidate.path ||
+                candidate.vtt_url ||
+                candidate.srt_url,
+            );
+            if (!src) return null;
+
+            const lang = (
+              candidate.srclang ||
+              candidate.lang ||
+              candidate.language ||
+              "fa"
+            )
+              .toString()
+              .trim();
+
+            return {
+              src,
+              label:
+                candidate.label ||
+                candidate.title ||
+                candidate.name ||
+                (lang === "fa" || lang === "fa-IR" ? "فارسی" : lang),
+              srclang: lang || "fa",
+              default:
+                candidate.default === true ||
+                candidate.is_default === true ||
+                index === 0,
+            };
+          },
+
+          normalizeSubtitles(...owners) {
+            const candidates = owners.flatMap((owner) => {
+              if (!owner) return [];
+              return [
+                owner?.subtitle_url,
+                owner?.subtitleUrl,
+                owner?.subtitle,
+                owner?.subtitles,
+                owner?.caption_url,
+                owner?.captionUrl,
+                owner?.caption,
+                owner?.captions,
+                owner?.tracks,
+              ];
+            });
+
+            const flattened = candidates.flatMap((candidate) => {
+              if (!candidate) return [];
+              return Array.isArray(candidate) ? candidate : [candidate];
+            });
+
+            const seen = new Set();
+            return flattened
+              .map((candidate, index) =>
+                this.normalizeSubtitleCandidate(candidate, index),
+              )
+              .filter((subtitle) => {
+                if (!subtitle?.src || seen.has(subtitle.src)) return false;
+                seen.add(subtitle.src);
+                return true;
+              })
+              .map((subtitle, index) => ({
+                ...subtitle,
+                default: index === 0,
+              }));
+          },
+
           normalizeDetailsPayload(payload) {
             const p = payload || {};
 
@@ -2323,14 +2550,7 @@
           },
 
           normalizeStreamUrl(url) {
-            const streamUrl = (url || "").toString().trim();
-            if (!streamUrl) return "";
-
-            try {
-              return new URL(streamUrl, this.baseUrl).toString();
-            } catch (e) {
-              return "";
-            }
+            return this.normalizeUrl(url);
           },
 
           getSourcePlaybackUrl(source) {
@@ -2343,7 +2563,7 @@
             return this.playerSource?.streamUrl || "";
           },
 
-          resolvePlayerCandidate(source, fallbackLabel = "") {
+          resolvePlayerCandidate(source, fallbackLabel = "", ...subtitleOwners) {
             const sourceId = this.getSourceId(source);
             if (!sourceId || !this.isPlayableSource(source)) return null;
 
@@ -2354,6 +2574,11 @@
               sourceId,
               streamUrl,
               mime: this.getMediaMime(streamUrl, source?.type),
+              subtitles: this.normalizeSubtitles(
+                source,
+                ...subtitleOwners,
+                this.item,
+              ),
               label:
                 source?.quality ||
                 source?.label ||
@@ -2363,8 +2588,12 @@
             };
           },
 
-          playSource(source, fallbackLabel = "") {
-            const candidate = this.resolvePlayerCandidate(source, fallbackLabel);
+          playSource(source, fallbackLabel = "", ...subtitleOwners) {
+            const candidate = this.resolvePlayerCandidate(
+              source,
+              fallbackLabel,
+              ...subtitleOwners,
+            );
             if (!candidate) {
               this.showToast("این لینک برای پخش در مرورگر مناسب نیست");
               return;
@@ -2396,7 +2625,21 @@
               }
 
               this.destroyPlayer();
-              this.player = new Plyr(el);
+              this.player = new Plyr(el, {
+                captions: {
+                  active: true,
+                  language: "fa",
+                  update: true,
+                },
+                i18n: {
+                  captions: "زیرنویس",
+                  disabled: "خاموش",
+                  enabled: "روشن",
+                  settings: "تنظیمات",
+                  speed: "سرعت",
+                  normal: "معمولی",
+                },
+              });
 
               if (shouldAutoplay) {
                 const tryPlay = () => {
